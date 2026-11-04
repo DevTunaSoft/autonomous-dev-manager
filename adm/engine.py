@@ -110,7 +110,8 @@ def proof(root, evidence_dir, repair=demo_repair, interrupt_after_failure=False)
     evidence_dir.mkdir(parents=True, exist_ok=True)
     db = Supervisor(evidence_dir / 'supervisor')
     report_path = evidence_dir / 'proof-report.json'
-    test_argv = [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py', '-v']
+    from .pyruntime import project_python
+    test_argv = [project_python(), '-B', '-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py', '-v']
     try:
         report = {'schema_version': 1, 'project': str(root), 'environment': resources(),
                   'resource_mode': mode(resources()), 'tests': [], 'repair': None,

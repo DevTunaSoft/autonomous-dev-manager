@@ -39,9 +39,9 @@ def start_pipeline(state_dir, project, evidence, *, model='ollama/qwen2.5-coder:
         # Worker process must be importable from a checkout without pip install.
         entry = Path(__file__).resolve().parents[1] / 'adm' / 'agent_cli.py'
         # `-m adm.agent_cli` works when running from the checkout's root.
-        command = [sys.executable, '-B', '-m', 'adm.agent_cli', 'repair',
-                   '--root', str(project), '--evidence', str(evidence),
-                   '--model', model, '--repairs', str(max_repairs)]
+        from .pyruntime import self_command
+        command = self_command('adm.agent_cli', ['repair', '--root', str(project), '--evidence', str(evidence),
+                                                 '--model', model, '--repairs', str(max_repairs)])
         jid = sup.add('supervised-local-ai-repair', command, entry.parent.parent,
                       max_attempts=1)
         # Job is intentionally not retried: unknown external agent edits cannot

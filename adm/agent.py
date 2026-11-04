@@ -74,7 +74,8 @@ def atomic_json(path: Path, value: dict) -> None:
 
 
 def test_command() -> list[str]:
-    return [sys.executable, '-B', '-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py', '-v']
+    from .pyruntime import project_python
+    return [project_python(), '-B', '-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py', '-v']
 
 
 def make_prompt(requirements: str, failing_output: str, attempt: int) -> str:

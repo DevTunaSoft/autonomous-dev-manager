@@ -62,11 +62,9 @@ def enqueue_repair(state, root, evidence_base, *, model='ollama/qwen2.5-coder:3b
     # Each queued job owns a unique evidence directory; worker retries disabled to
     # avoid replaying partially completed model edits after a crash.
     evidence = evidence_base / ('job-' + uuid.uuid4().hex)
-    package_root = str(Path(__file__).resolve().parent.parent)
-    launcher = ('import sys; sys.path.insert(0, ' + repr(package_root) + '); '
-                'from adm.ollama_cli import main; main()')
-    argv = [sys.executable, '-B', '-c', launcher, '--root', str(root),
-            '--evidence', str(evidence), '--model', model, '--repairs', str(repairs)]
+    from .pyruntime import self_command
+    argv = self_command('adm.ollama_cli', ['--root', str(root), '--evidence', str(evidence),
+                                          '--model', model, '--repairs', str(repairs)])
     worker = WorkerSupervisor(state)
     try:
         job_id = worker.add('local-ai-repair', argv, root, max_attempts=1)

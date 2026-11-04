@@ -34,6 +34,9 @@ jobs:
       - name: Build and run packaged smoke test
         shell: cmd
         run: BUILD-WINDOWS-DESKTOP.cmd
+      - name: Packaged EXE end-to-end repair against FAKE Ollama
+        shell: pwsh
+        run: ./tools/verify-packaged-repair.ps1
       - name: Print build evidence to the log
         if: always()
         shell: pwsh
@@ -45,7 +48,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ADM-Windows-build-evidence
-          path: build-evidence/
+          path: |
+            build-evidence/
+            packaged-repair-evidence/
           if-no-files-found: warn
           retention-days: 14
       - name: Upload Windows EXE for acceptance testing
