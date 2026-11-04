@@ -13,8 +13,13 @@ import time
 from .engine import SafetyError
 
 
+# Windows byte-range locks are MANDATORY: other handles cannot read the locked
+# bytes. Lock a byte far beyond the JSON metadata so owner info stays readable.
+_WINDOWS_LOCK_OFFSET = 1 << 30
+
+
 def _acquire(stream):
-    stream.seek(0)
+    stream.seek(_WINDOWS_LOCK_OFFSET if os.name == 'nt' else 0)
     if os.name == 'nt':
         import msvcrt
         try:
@@ -30,7 +35,7 @@ def _acquire(stream):
 
 
 def _release(stream):
-    stream.seek(0)
+    stream.seek(_WINDOWS_LOCK_OFFSET if os.name == 'nt' else 0)
     if os.name == 'nt':
         import msvcrt
         msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)

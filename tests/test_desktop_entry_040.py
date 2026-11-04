@@ -1,3 +1,4 @@
+import contextlib
 import sqlite3
 import tempfile
 import unittest
@@ -31,10 +32,11 @@ class SingleExecutableTests(unittest.TestCase):
     def test_read_only_jobs(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / 'jobs.sqlite'
-            with sqlite3.connect(path) as db:
+            with contextlib.closing(sqlite3.connect(path)) as db:
                 db.execute('CREATE TABLE jobs(id INTEGER, label TEXT, state TEXT, attempts INTEGER, exit_code INTEGER)')
                 db.execute("INSERT INTO jobs VALUES(1,'build','pending',0,NULL)")
                 db.execute("INSERT INTO jobs VALUES(2,'test','passed',1,0)")
+                db.commit()
             self.assertEqual([j['id'] for j in recent_jobs(temp, limit=1)], [2])
             self.assertEqual(recent_jobs(temp)[1]['label'], 'build')
     def test_limit_validation(self):

@@ -94,7 +94,7 @@ def apply_patch(root: Path, patch: dict) -> list[str]:
         for path, content in updates:
             fd, tmp = tempfile.mkstemp(prefix='.adm-patch-', dir=root)
             try:
-                with os.fdopen(fd, 'w', encoding='utf-8') as stream:
+                with os.fdopen(fd, 'w', encoding='utf-8', newline='') as stream:
                     stream.write(content)
                     stream.flush()
                     os.fsync(stream.fileno())

@@ -1,0 +1,618 @@
+09Z Current runner version: '2.338.2'
+ ##[group]Runner Image Provisioner
+ Hosted Compute Agent
+ Version: 20261028.624
+ Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+ Build Date: 2026-10-28T21:51:42Z
+ Worker ID: {d6341590-024a-4127-b570-20add7f386de}
+ Region: centralus
+ Cloud: Azure
+ ##[endgroup]
+ ##[group]Operating System
+ Microsoft Windows Server 2022
+ 10.0.20348
+ Datacenter
+ ##[endgroup]
+ ##[group]Runner Image
+ Image: windows-2022
+ Version: 20261101.353.1
+ Included Software: https://github.com/actions/runner-images/blob/win22/20261101.353/images/windows/Windows2022-Readme.md
+ Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261101.353
+ ##[endgroup]
+ ##[group]GITHUB_TOKEN Permissions
+ Contents: read
+ Metadata: read
+ ##[endgroup]
+ Secret source: Actions
+ Cache mode: write
+ Prepare workflow directory
+ Prepare all required actions
+ Getting action download info
+ Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+ Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+ Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+ Complete job name: windows-full-regression
+ ##[group]Run actions/checkout@v4
+ with:
+   repository: DevTunaSoft/autonomous-dev-manager
+   token: ***
+   ssh-strict: true
+   ssh-user: git
+   persist-credentials: true
+   clean: true
+   sparse-checkout-cone-mode: true
+   fetch-depth: 1
+   fetch-tags: false
+   show-progress: true
+   lfs: false
+   submodules: false
+   set-safe-directory: true
+   allow-unsafe-pr-checkout: false
+ ##[endgroup]
+ Syncing repository: DevTunaSoft/autonomous-dev-manager
+ ##[group]Getting Git version info
+ Working directory is 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+ [command]"C:\Program Files\Git\bin\git.exe" version
+ git version 2.56.0.windows.4
+ ##[endgroup]
+ Temporarily overriding HOME='D:\a\_temp\b427d6d8-5602-4f90-b9d3-4d386998ddb0' before making global git config changes
+ Adding repository directory to the temporary git global config as a safe directory
+ [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+ Deleting the contents of 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+ ##[group]Initializing the repository
+ [command]"C:\Program Files\Git\bin\git.exe" init D:\a\autonomous-dev-manager\autonomous-dev-manager
+ Initialized empty Git repository in D:/a/autonomous-dev-manager/autonomous-dev-manager/.git/
+ [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/DevTunaSoft/autonomous-dev-manager
+ ##[endgroup]
+ ##[group]Disabling automatic garbage collection
+ [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+ ##[endgroup]
+ ##[group]Setting up auth
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+ ##[endgroup]
+ ##[group]Fetching the repository
+ [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +3822a54e9b2cb97af942f42da1f690cadb175e55:refs/remotes/origin/main
+ From https://github.com/DevTunaSoft/autonomous-dev-manager
+  * [new ref]         3822a54e9b2cb97af942f42da1f690cadb175e55 -> origin/main
+ ##[endgroup]
+ ##[group]Determining the checkout info
+ ##[endgroup]
+ [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+ ##[group]Checking out the ref
+ [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+ Switched to a new branch 'main'
+ branch 'main' set up to track 'origin/main'.
+ ##[endgroup]
+ [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+ 3822a54e9b2cb97af942f42da1f690cadb175e55
+ ##[group]Run actions/setup-python@v5
+ with:
+   python-version: 3.12
+   check-latest: false
+   token: ***
+   update-environment: true
+   allow-prereleases: false
+   freethreaded: false
+ ##[endgroup]
+ ##[group]Installed versions
+ (node:2392) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ Successfully set up CPython (3.12.10)
+ ##[endgroup]
+ ##[group]Run python -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json
+ [36;1mpython -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json[0m
+ [36;1m$code = $LASTEXITCODE[0m
+ [36;1mpython -c "import json;r=json.load(open('win-regression/regression.json'));[print('=== %s %s (%s tests)\n%s' % (m['module'],m['status'],m['tests'],m['output_tail'][-2500:])) for m in r['modules'] if m['status']!='passed']"[0m
+ [36;1mexit $code[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ test_acceptance.py: started
+ test_acceptance.py: passed
+ test_adaptive.py: started
+ test_adaptive.py: passed
+ test_adaptive_worker.py: started
+ test_adaptive_worker.py: passed
+ test_agent.py: started
+ test_agent.py: passed
+ test_ai_inspection.py: started
+ test_ai_inspection.py: passed
+ test_auto_queue.py: started
+ test_auto_queue.py: passed
+ test_build_hidden_imports_049.py: started
+ test_build_hidden_imports_049.py: passed
+ test_core.py: started
+ test_core.py: passed
+ test_daemon.py: started
+ test_daemon.py: passed
+ test_daemon_lifecycle.py: started
+ test_daemon_lifecycle.py: passed
+ test_desktop.py: started
+ test_desktop.py: passed
+ test_desktop_entry_040.py: started
+ test_desktop_entry_040.py: failed
+ test_desktop_entry_exit.py: started
+ test_desktop_entry_exit.py: passed
+ test_engine.py: started
+ test_engine.py: passed
+ test_independent_retest.py: started
+ test_independent_retest.py: failed
+ test_live_acceptance.py: started
+ test_live_acceptance.py: passed
+ test_local_transport_security.py: started
+ test_local_transport_security.py: passed
+ test_model_probe.py: started
+ test_model_probe.py: passed
+ test_model_selection.py: started
+ test_model_selection.py: passed
+ test_ollama_direct.py: started
+ test_ollama_direct.py: failed
+ test_ollama_health.py: started
+ test_ollama_health.py: passed
+ test_packaged_smoke_041.py: started
+ test_packaged_smoke_041.py: passed
+ test_pipeline.py: started
+ test_pipeline.py: passed
+ test_process_tree.py: started
+ test_process_tree.py: passed
+ test_project_lock.py: started
+ test_project_lock.py: failed
+ test_provision.py: started
+ test_provision.py: passed
+ test_queued_ai.py: started
+ test_queued_ai.py: passed
+ test_recovery.py: started
+ test_recovery.py: passed
+ test_regression.py: started
+ test_regression.py: passed
+ test_regression_evidence_047.py: started
+ test_regression_evidence_047.py: passed
+ test_regression_guards.py: started
+ test_regression_guards.py: passed
+ test_regression_log_isolation_048.py: started
+ test_regression_log_isolation_048.py: passed
+ test_regression_retention_049.py: started
+ test_regression_retention_049.py: passed
+ test_release.py: started
+ test_release.py: passed
+ test_repair_commit.py: started
+ test_repair_commit.py: failed
+ test_repair_recovery.py: started
+ test_repair_recovery.py: failed
+ test_setup.py: started
+ test_setup.py: passed
+ test_supervisor_singleton_045.py: started
+ test_supervisor_singleton_045.py: passed
+ test_windows_build_verifier_044.py: started
+ test_windows_build_verifier_044.py: passed
+ test_windows_startup.py: started
+ test_windows_startup.py: passed
+ test_worker.py: started
+ test_worker.py: passed
+ test_acceptance.py: passed (2 tests; 1.672s)
+ test_adaptive.py: passed (8 tests; 0.109s)
+ test_adaptive_worker.py: passed (4 tests; 1.828s)
+ test_agent.py: passed (10 tests; 2.516s)
+ test_ai_inspection.py: passed (7 tests; 1.297s)
+ test_auto_queue.py: passed (7 tests; 0.718s)
+ test_build_hidden_imports_049.py: passed (1 tests; 0.094s)
+ test_core.py: passed (6 tests; 1.641s)
+ test_daemon.py: passed (4 tests; 1.375s)
+ test_daemon_lifecycle.py: passed (3 tests; 0.281s)
+ test_desktop.py: passed (7 tests; 0.25s)
+ test_desktop_entry_040.py: failed (7 tests; 0.344s)
+ test_desktop_entry_exit.py: passed (4 tests; 0.515s)
+ test_engine.py: passed (9 tests; 0.953s)
+ test_independent_retest.py: failed (2 tests; 0.875s)
+ test_live_acceptance.py: passed (4 tests; 0.313s)
+ test_local_transport_security.py: passed (2 tests; 0.968s)
+ test_model_probe.py: passed (10 tests; 0.25s)
+ test_model_selection.py: passed (7 tests; 0.25s)
+ test_ollama_direct.py: failed (6 tests; 0.875s)
+ test_ollama_health.py: passed (7 tests; 4.625s)
+ test_packaged_smoke_041.py: passed (5 tests; 0.469s)
+ test_pipeline.py: passed (8 tests; 0.812s)
+ test_process_tree.py: passed (3 tests; 2.281s)
+ test_project_lock.py: failed (7 tests; 0.36s)
+ test_provision.py: passed (8 tests; 0.234s)
+ test_queued_ai.py: passed (5 tests; 5.265s)
+ test_recovery.py: passed (7 tests; 2.735s)
+ test_regression.py: passed (18 tests; 8.078s)
+ test_regression_evidence_047.py: passed (5 tests; 1.687s)
+ test_regression_guards.py: passed (3 tests; 0.375s)
+ test_regression_log_isolation_048.py: passed (2 tests; 0.766s)
+ test_regression_retention_049.py: passed (4 tests; 0.406s)
+ test_release.py: passed (8 tests; 0.282s)
+ test_repair_commit.py: failed (2 tests; 1.312s)
+ test_repair_recovery.py: failed (5 tests; 0.156s)
+ test_setup.py: passed (14 tests; 0.234s)
+ test_supervisor_singleton_045.py: passed (2 tests; 0.375s)
+ test_windows_build_verifier_044.py: passed (3 tests; 0.094s)
+ test_windows_startup.py: passed (6 tests; 0.297s)
+ test_worker.py: passed (11 tests; 2.891s)
+ OVERALL: FAIL; 243 completed tests
+ === test_desktop_entry_040.py failed (7 tests)
+ ses_embedded_supervisor) ... ok
+ 
+ test_limit_validation (test_desktop_entry_040.SingleExecutableTests.test_limit_validation) ... ok
+ 
+ test_missing_db_does_not_create (test_desktop_entry_040.SingleExecutableTests.test_missing_db_does_not_create) ... ok
+ 
+ test_read_only_jobs (test_desktop_entry_040.SingleExecutableTests.test_read_only_jobs) ... ERROR
+ 
+ test_unknown_args_rejected (test_desktop_entry_040.SingleExecutableTests.test_unknown_args_rejected) ... ok
+ 
+ 
+ 
+ ======================================================================
+ 
+ ERROR: test_read_only_jobs (test_desktop_entry_040.SingleExecutableTests.test_read_only_jobs)
+ 
+ ----------------------------------------------------------------------
+ 
+ Traceback (most recent call last):
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\shutil.py", line 633, in _rmtree_unsafe
+ 
+     os.unlink(fullname)
+ 
+ PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\tmp3r3deimr\\jobs.sqlite'
+ 
+ 
+ 
+ During handling of the above exception, another exception occurred:
+ 
+ 
+ 
+ Traceback (most recent call last):
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\tests\test_desktop_entry_040.py", line 32, in test_read_only_jobs
+ 
+     with tempfile.TemporaryDirectory() as temp:
+ 
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\tempfile.py", line 950, in __exit__
+ 
+     self.cleanup()
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\tempfile.py", line 954, in cleanup
+ 
+     self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\tempfile.py", line 934, in _rmtree
+ 
+     _shutil.rmtree(name, onexc=onexc)
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\shutil.py", line 781, in rmtree
+ 
+     return _rmtree_unsafe(path, onexc)
+ 
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\shutil.py", line 635, in _rmtree_unsafe
+ 
+     onexc(os.unlink, fullname, err)
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\tempfile.py", line 909, in onexc
+ 
+     _os.unlink(path)
+ 
+ PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\tmp3r3deimr\\jobs.sqlite'
+ 
+ 
+ 
+ ----------------------------------------------------------------------
+ 
+ Ran 7 tests in 0.096s
+ 
+ 
+ 
+ FAILED (errors=1)
+ 
+ 
+ === test_independent_retest.py failed (2 tests)
+ test_second_test_failure_rolls_back (test_independent_retest.IndependentRetestTests.test_second_test_failure_rolls_back) ... ERROR
+ 
+ test_success_contains_two_passes (test_independent_retest.IndependentRetestTests.test_success_contains_two_passes) ... ok
+ 
+ 
+ 
+ ======================================================================
+ 
+ ERROR: test_second_test_failure_rolls_back (test_independent_retest.IndependentRetestTests.test_second_test_failure_rolls_back)
+ 
+ ----------------------------------------------------------------------
+ 
+ Traceback (most recent call last):
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\tests\test_independent_retest.py", line 34, in test_second_test_failure_rolls_back
+ 
+     report = direct_repair(self.root, self.evidence, generator=self.fix, max_repairs=1)
+ 
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\ollama_direct.py", line 204, in direct_repair
+ 
+     return _direct_repair_unlocked(root, evidence, model=model,
+ 
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\ollama_direct.py", line 185, in _direct_repair_unlocked
+ 
+     recover_journal(root, evidence)
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\repair_recovery.py", line 79, in recover_journal
+ 
+     raise SafetyError('Recovery blocked: unexpected source change')
+ 
+ adm.engine.SafetyError: Recovery blocked: unexpected source change
+ 
+ 
+ 
+ ----------------------------------------------------------------------
+ 
+ Ran 2 tests in 0.537s
+ 
+ 
+ 
+ FAILED (errors=1)
+ 
+ 
+ === test_ollama_direct.py failed (6 tests)
+ test_failed_patch_restores_source (test_ollama_direct.DirectTests.test_failed_patch_restores_source) ... ERROR
+ 
+ test_http_protocol_fake_local_server (test_ollama_direct.DirectTests.test_http_protocol_fake_local_server) ... ok
+ 
+ test_invalid_syntax_rejected_without_edit (test_ollama_direct.DirectTests.test_invalid_syntax_rejected_without_edit) ... ok
+ 
+ test_no_cloud_endpoint (test_ollama_direct.DirectTests.test_no_cloud_endpoint) ... ok
+ 
+ test_protected_edits_rejected (test_ollama_direct.DirectTests.test_protected_edits_rejected) ... ok
+ 
+ test_successful_repair_from_fake_generator (test_ollama_direct.DirectTests.test_successful_repair_from_fake_generator) ... ok
+ 
+ 
+ 
+ ======================================================================
+ 
+ ERROR: test_failed_patch_restores_source (test_ollama_direct.DirectTests.test_failed_patch_restores_source)
+ 
+ ----------------------------------------------------------------------
+ 
+ Traceback (most recent call last):
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\tests\test_ollama_direct.py", line 30, in test_failed_patch_restores_source
+ 
+     result = direct_repair(self.root, self.evidence, max_repairs=1,
+ 
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\ollama_direct.py", line 204, in direct_repair
+ 
+     return _direct_repair_unlocked(root, evidence, model=model,
+ 
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\ollama_direct.py", line 185, in _direct_repair_unlocked
+ 
+     recover_journal(root, evidence)
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\repair_recovery.py", line 79, in recover_journal
+ 
+     raise SafetyError('Recovery blocked: unexpected source change')
+ 
+ adm.engine.SafetyError: Recovery blocked: unexpected source change
+ 
+ 
+ 
+ ----------------------------------------------------------------------
+ 
+ Ran 6 tests in 0.533s
+ 
+ 
+ 
+ FAILED (errors=1)
+ 
+ 
+ === test_project_lock.py failed (7 tests)
+ test_abandoned_metadata_does_not_block_recovery (test_project_lock.ProjectLockTests.test_abandoned_metadata_does_not_block_recovery) ... ok
+ 
+ test_crashed_process_releases_ownership (test_project_lock.ProjectLockTests.test_crashed_process_releases_ownership) ... ok
+ 
+ test_cross_process_exclusion_and_recovery (test_project_lock.ProjectLockTests.test_cross_process_exclusion_and_recovery) ... ok
+ 
+ test_exception_releases_kernel_lock (test_project_lock.ProjectLockTests.test_exception_releases_kernel_lock) ... ok
+ 
+ test_metadata_and_persistent_lock_file (test_project_lock.ProjectLockTests.test_metadata_and_persistent_lock_file) ... ERROR
+ 
+ test_same_process_second_owner_refused (test_project_lock.ProjectLockTests.test_same_process_second_owner_refused) ... ok
+ 
+ test_symlink_refused (test_project_lock.ProjectLockTests.test_symlink_refused) ... ok
+ 
+ 
+ 
+ ======================================================================
+ 
+ ERROR: test_metadata_and_persistent_lock_file (test_project_lock.ProjectLockTests.test_metadata_and_persistent_lock_file)
+ 
+ ----------------------------------------------------------------------
+ 
+ Traceback (most recent call last):
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\tests\test_project_lock.py", line 18, in test_metadata_and_persistent_lock_file
+ 
+     self.assertEqual(json.loads((self.root/'.adm-repair.lock').read_text())['token'],record['token'])
+ 
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\pathlib.py", line 1028, in read_text
+ 
+     return f.read()
+ 
+            ^^^^^^^^
+ 
+ PermissionError: [Errno 13] Permission denied
+ 
+ 
+ 
+ ----------------------------------------------------------------------
+ 
+ Ran 7 tests in 0.244s
+ 
+ 
+ 
+ FAILED (errors=1)
+ 
+ 
+ === test_repair_commit.py failed (2 tests)
+ test_commit_failure_never_publishes_success_and_restores_source (test_repair_commit.RepairCommitTests.test_commit_failure_never_publishes_success_and_restores_source) ... ERROR
+ 
+ test_success_clears_journal_before_publishing_verified (test_repair_commit.RepairCommitTests.test_success_clears_journal_before_publishing_verified) ... ok
+ 
+ 
+ 
+ ======================================================================
+ 
+ ERROR: test_commit_failure_never_publishes_success_and_restores_source (test_repair_commit.RepairCommitTests.test_commit_failure_never_publishes_success_and_restores_source)
+ 
+ ----------------------------------------------------------------------
+ 
+ Traceback (most recent call last):
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\tests\test_repair_commit.py", line 38, in test_commit_failure_never_publishes_success_and_restores_source
+ 
+     report = direct_repair(self.root, self.evidence, generator=self.good_patch, max_repairs=1)
+ 
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\ollama_direct.py", line 204, in direct_repair
+ 
+     return _direct_repair_unlocked(root, evidence, model=model,
+ 
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\ollama_direct.py", line 185, in _direct_repair_unlocked
+ 
+     recover_journal(root, evidence)
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\repair_recovery.py", line 79, in recover_journal
+ 
+     raise SafetyError('Recovery blocked: unexpected source change')
+ 
+ adm.engine.SafetyError: Recovery blocked: unexpected source change
+ 
+ 
+ 
+ ----------------------------------------------------------------------
+ 
+ Ran 2 tests in 0.976s
+ 
+ 
+ 
+ FAILED (errors=1)
+ 
+ 
+ === test_repair_recovery.py failed (5 tests)
+ test_finish_commits_successful_repair (test_repair_recovery.RepairRecoveryTests.test_finish_commits_successful_repair) ... ok
+ 
+ test_interrupted_replacement_restores_original (test_repair_recovery.RepairRecoveryTests.test_interrupted_replacement_restores_original) ... ERROR
+ 
+ test_project_mismatch_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_project_mismatch_blocks_recovery) ... ok
+ 
+ test_symlink_swap_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_symlink_swap_blocks_recovery) ... ok
+ 
+ test_unexpected_edit_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_unexpected_edit_blocks_recovery) ... ok
+ 
+ 
+ 
+ ======================================================================
+ 
+ ERROR: test_interrupted_replacement_restores_original (test_repair_recovery.RepairRecoveryTests.test_interrupted_replacement_restores_original)
+ 
+ ----------------------------------------------------------------------
+ 
+ Traceback (most recent call last):
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\tests\test_repair_recovery.py", line 21, in test_interrupted_replacement_restores_original
+ 
+     self.assertTrue(recover_journal(self.root, self.evidence))
+ 
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\repair_recovery.py", line 79, in recover_journal
+ 
+     raise SafetyError('Recovery blocked: unexpected source change')
+ 
+ adm.engine.SafetyError: Recovery blocked: unexpected source change
+ 
+ 
+ 
+ ----------------------------------------------------------------------
+ 
+ Ran 5 tests in 0.055s
+ 
+ 
+ 
+ FAILED (errors=1)
+ 
+ 
+ ##[error]Process completed with exit code 1.
+ ##[group]Run actions/upload-artifact@v4
+ with:
+   name: ADM-Windows-regression
+   path: win-regression/
+   if-no-files-found: warn
+   retention-days: 14
+   compression-level: 6
+   overwrite: false
+   include-hidden-files: false
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ (node:6916) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ With the provided path, there will be 42 files uploaded
+ Artifact name is valid!
+ Root directory input is valid!
+ Beginning upload of artifact content to blob storage
+ (node:6916) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+ Uploaded bytes 28982
+ Finished uploading artifact content to blob storage!
+ SHA256 digest of uploaded artifact zip is 1e4bef5a2e5413581f66f814f6806ffd30e35e03a55cbfca1fbae14d43623ce4
+ Finalizing artifact upload
+ Artifact ADM-Windows-regression.zip successfully finalized. Artifact ID 13365331123
+ Artifact ADM-Windows-regression has been successfully uploaded! Final size is 28982 bytes. Artifact ID is 13365331123
+ Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41915984988/artifacts/13365331123
+ Post job cleanup.
+ [command]"C:\Program Files\Git\bin\git.exe" version
+ git version 2.56.0.windows.4
+ Temporarily overriding HOME='D:\a\_temp\c99e83a4-92ce-4997-bb3e-49f6a56a74b4' before making global git config changes
+ Adding repository directory to the temporary git global config as a safe directory
+ [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ http.https://github.com/.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ Cleaning up orphan processes
+ ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
