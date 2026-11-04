@@ -28,11 +28,42 @@ CREATE TABLE IF NOT EXISTS job_events (
 FINAL = {'passed','failed','blocked'}
 
 
-def pid_alive(pid: int | None) -> bool:
-    if not isinstance(pid, int) or pid <= 0:
-        return False
+def _windows_pid_alive(pid: int) -> bool:
+    """Probe a PID without signalling it.
+
+    os.kill(pid, 0) must NOT be used on Windows: signal 0 is CTRL_C_EVENT, so it
+    sends Ctrl+C to the process group (found by Windows CI: it interrupted the
+    test runner itself).
+    """
+    import ctypes
+    from ctypes import wintypes
+    kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel32.OpenProcess.restype = wintypes.HANDLE
+    kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    kernel32.GetExitCodeProcess.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    PROCESS_QUERY_LIMITED_INFORMATION, STILL_ACTIVE = 0x1000, 259
+    ERROR_ACCESS_DENIED = 5
+    handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+    if not handle:
+        # Access denied means the process exists but belongs to someone else.
+        return ctypes.get_last_error() == ERROR_ACCESS_DENIED
     try:
-        if os.name == 'posix' and Path(f'/proc/{pid}/stat').exists():
+        code = wintypes.DWORD()
+        if not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
+            return True  # cannot tell: fail safe (treat as alive -> job is blocked, not replayed)
+        return code.value == STILL_ACTIVE
+    finally:
+        kernel32.CloseHandle(handle)
+
+
+def pid_alive(pid: int | None) -> bool:
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        return False
+    if os.name == 'nt':
+        return _windows_pid_alive(pid)
+    try:
+        if Path(f'/proc/{pid}/stat').exists():
             stat = Path(f'/proc/{pid}/stat').read_text()
             if stat.rsplit(')', 1)[-1].split()[0] == 'Z':
                 return False

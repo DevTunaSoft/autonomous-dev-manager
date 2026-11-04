@@ -1,0 +1,231 @@
+25Z Current runner version: '2.338.2'
+ ##[group]Runner Image Provisioner
+ Hosted Compute Agent
+ Version: 20261028.624
+ Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+ Build Date: 2026-10-28T21:51:42Z
+ Worker ID: {b11a05ce-0c73-4f16-a1d4-b968e14c07d6}
+ Region: westus
+ Cloud: Azure
+ ##[endgroup]
+ ##[group]Operating System
+ Microsoft Windows Server 2022
+ 10.0.20348
+ Datacenter
+ ##[endgroup]
+ ##[group]Runner Image
+ Image: windows-2022
+ Version: 20261101.353.1
+ Included Software: https://github.com/actions/runner-images/blob/win22/20261101.353/images/windows/Windows2022-Readme.md
+ Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261101.353
+ ##[endgroup]
+ ##[group]GITHUB_TOKEN Permissions
+ Contents: read
+ Metadata: read
+ ##[endgroup]
+ Secret source: Actions
+ Cache mode: write
+ Prepare workflow directory
+ Prepare all required actions
+ Getting action download info
+ Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+ Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+ Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+ Complete job name: windows-full-regression
+ ##[group]Run actions/checkout@v4
+ with:
+   repository: DevTunaSoft/autonomous-dev-manager
+   token: ***
+   ssh-strict: true
+   ssh-user: git
+   persist-credentials: true
+   clean: true
+   sparse-checkout-cone-mode: true
+   fetch-depth: 1
+   fetch-tags: false
+   show-progress: true
+   lfs: false
+   submodules: false
+   set-safe-directory: true
+   allow-unsafe-pr-checkout: false
+ ##[endgroup]
+ Syncing repository: DevTunaSoft/autonomous-dev-manager
+ ##[group]Getting Git version info
+ Working directory is 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+ [command]"C:\Program Files\Git\bin\git.exe" version
+ git version 2.56.0.windows.4
+ ##[endgroup]
+ Temporarily overriding HOME='D:\a\_temp\f143daf5-9a35-408a-9d00-df19f7f7633e' before making global git config changes
+ Adding repository directory to the temporary git global config as a safe directory
+ [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+ Deleting the contents of 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+ ##[group]Initializing the repository
+ [command]"C:\Program Files\Git\bin\git.exe" init D:\a\autonomous-dev-manager\autonomous-dev-manager
+ Initialized empty Git repository in D:/a/autonomous-dev-manager/autonomous-dev-manager/.git/
+ [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/DevTunaSoft/autonomous-dev-manager
+ ##[endgroup]
+ ##[group]Disabling automatic garbage collection
+ [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+ ##[endgroup]
+ ##[group]Setting up auth
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+ ##[endgroup]
+ ##[group]Fetching the repository
+ [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +429d0966bcdc865ad9c075c3df024ff3f10ba9b2:refs/remotes/origin/main
+ From https://github.com/DevTunaSoft/autonomous-dev-manager
+  * [new ref]         429d0966bcdc865ad9c075c3df024ff3f10ba9b2 -> origin/main
+ ##[endgroup]
+ ##[group]Determining the checkout info
+ ##[endgroup]
+ [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+ ##[group]Checking out the ref
+ [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+ Switched to a new branch 'main'
+ branch 'main' set up to track 'origin/main'.
+ ##[endgroup]
+ [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+ 429d0966bcdc865ad9c075c3df024ff3f10ba9b2
+ ##[group]Run actions/setup-python@v5
+ with:
+   python-version: 3.12
+   check-latest: false
+   token: ***
+   update-environment: true
+   allow-prereleases: false
+   freethreaded: false
+ ##[endgroup]
+ ##[group]Installed versions
+ (node:2416) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ Successfully set up CPython (3.12.10)
+ ##[endgroup]
+ ##[group]Run python -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json
+ [36;1mpython -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json[0m
+ [36;1m$code = $LASTEXITCODE[0m
+ [36;1mpython -c "import json;r=json.load(open('win-regression/regression.json'));[print('=== %s %s (%s tests)\n%s' % (m['module'],m['status'],m['tests'],m['output_tail'][-2500:])) for m in r['modules'] if m['status']!='passed']"[0m
+ [36;1mexit $code[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ test_acceptance.py: started
+ test_acceptance.py: passed
+ test_adaptive.py: started
+ test_adaptive.py: passed
+ test_adaptive_worker.py: started
+ test_adaptive_worker.py: passed
+ test_agent.py: started
+ test_agent.py: passed
+ test_ai_inspection.py: started
+ test_ai_inspection.py: passed
+ test_auto_queue.py: started
+ test_auto_queue.py: passed
+ test_build_hidden_imports_049.py: started
+ test_build_hidden_imports_049.py: passed
+ test_core.py: started
+ test_core.py: passed
+ test_daemon.py: started
+ test_daemon.py: passed
+ test_daemon_lifecycle.py: started
+ test_daemon_lifecycle.py: passed
+ test_desktop.py: started
+ test_desktop.py: passed
+ test_desktop_entry_040.py: started
+ test_desktop_entry_040.py: passed
+ test_desktop_entry_exit.py: started
+ test_desktop_entry_exit.py: passed
+ test_engine.py: started
+ test_engine.py: passed
+ test_independent_retest.py: started
+ test_independent_retest.py: passed
+ test_live_acceptance.py: started
+ test_live_acceptance.py: passed
+ test_local_transport_security.py: started
+ test_local_transport_security.py: passed
+ test_model_probe.py: started
+ test_model_probe.py: passed
+ test_model_selection.py: started
+ test_model_selection.py: passed
+ test_ollama_direct.py: started
+ test_ollama_direct.py: passed
+ test_ollama_health.py: started
+ test_ollama_health.py: passed
+ test_packaged_smoke_041.py: started
+ test_packaged_smoke_041.py: passed
+ test_pid_alive_049.py: started
+ Traceback (most recent call last):
+   File "<frozen runpy>", line 198, in _run_module_as_main
+   File "<frozen runpy>", line 88, in _run_code
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\regression.py", line 259, in <module>
+     raise SystemExit(main())
+                      ^^^^^^
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\regression.py", line 243, in main
+     report = run_suite(args.root, timeout_per_module=args.timeout, progress_path=args.output,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\regression.py", line 189, in run_suite
+     proc.wait(timeout=min(timeout_per_module, remaining) if remaining is not None else timeout_per_module)
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1264, in wait
+     return self._wait(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1590, in _wait
+     result = _winapi.WaitForSingleObject(self._handle,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ KeyboardInterrupt
+ ##[error]Process completed with exit code 1.
+ ##[group]Run actions/upload-artifact@v4
+ with:
+   name: ADM-Windows-regression
+   path: win-regression/
+   if-no-files-found: warn
+   retention-days: 14
+   compression-level: 6
+   overwrite: false
+   include-hidden-files: false
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ (node:1824) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ With the provided path, there will be 24 files uploaded
+ Artifact name is valid!
+ Root directory input is valid!
+ Beginning upload of artifact content to blob storage
+ (node:1824) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+ Uploaded bytes 14340
+ Finished uploading artifact content to blob storage!
+ SHA256 digest of uploaded artifact zip is 9e19386c39a7a3162d93e8fffa52a015a753df453e29404b5569c26e67ab7db5
+ Finalizing artifact upload
+ Artifact ADM-Windows-regression.zip successfully finalized. Artifact ID 13366860142
+ Artifact ADM-Windows-regression has been successfully uploaded! Final size is 14340 bytes. Artifact ID is 13366860142
+ Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41918347028/artifacts/13366860142
+ Post job cleanup.
+ [command]"C:\Program Files\Git\bin\git.exe" version
+ git version 2.56.0.windows.4
+ Temporarily overriding HOME='D:\a\_temp\dd7c689b-bb19-4e67-8d5e-49fedc32dec3' before making global git config changes
+ Adding repository directory to the temporary git global config as a safe directory
+ [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ http.https://github.com/.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ Cleaning up orphan processes
+ ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
