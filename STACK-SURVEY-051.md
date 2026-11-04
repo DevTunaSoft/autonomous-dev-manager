@@ -460,3 +460,10 @@ lm-sys/RouteLLM | 5675* | apache-2.0 | 2024-08-10 (stale)
 beeware/briefcase | 3376* | bsd-3-clause | 2026-11-03
 kivy/buildozer | 2046* | mit | 2026-11-02
 ```
+
+## Appendix C. Owner decisions on section 9 (2026-11-04)
+Recorded from the owner's reply, read in the order of the section 9 bullets:
+1. Codex / Cerebras (paid or card-required): **paid accounts are optional.** Free is the default. ADM never requires or assumes a paid account; the owner may add one by choice.
+2. Node-based tools (Pullboard, little-coder, FreeLLMAPI): **OK**, as separate bundled programs, if needed.
+3. OpenHands / SWE-ReX (Docker or WSL2): **drop.**
+4. Janas: **drop.**
