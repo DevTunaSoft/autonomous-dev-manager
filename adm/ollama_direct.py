@@ -15,6 +15,9 @@ from .agent import (safe_local_model, validate_project, protected_hashes,
 from .engine import SafetyError, run_checked
 from .repair_recovery import prepare_journal, recover_journal, finish_journal
 from .project_lock import exclusive_project
+from .context import (excerpt_failure, AttemptLedger, check_patch, build_repair_prompt)
+from .repomap import select_context
+from .backends import safe_model
 
 DEFAULT_ENDPOINT = 'http://127.0.0.1:11434'
 # Ollama truncates prompts that exceed the context window WITHOUT telling the caller,
@@ -69,6 +72,9 @@ def request_patch(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
     return answer
 
 
+request_patch.adm_live_generator = True      # talks to a real model server
+
+
 def apply_patch(root: Path, patch: dict) -> list[str]:
     """Validate *all* changes before writing any; only replace existing app .py files."""
     files = patch['files']
@@ -116,13 +122,27 @@ def apply_patch(root: Path, patch: dict) -> list[str]:
     return [p.name for p, _ in updates]
 
 
+def _save_text(path: Path, text: str) -> None:
+    path.write_text(text, encoding='utf-8', errors='replace', newline='')
+
+
 def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                   max_repairs=2, timeout=90, generator=request_patch,
-                  inference_timeout=DEFAULT_INFERENCE_TIMEOUT):
-    """Evidence-backed repair. Generator injection permits fake-server tests, not live claims."""
-    safe_local_model(model)
+                  inference_timeout=DEFAULT_INFERENCE_TIMEOUT,
+                  escalation_model=None, escalation_generator=None, escalate_after=2):
+    """Evidence-backed repair. Generator injection permits fake-server tests, not live claims.
+
+    The test runner is the only gate. The model sees a bounded excerpt of each failure
+    and the files that matter, but full output is saved and every failing test is named.
+    """
+    if safe_model(model)[0] == 'remote':
+        raise SafetyError('The primary model must run on this PC')
     if not 1 <= max_repairs <= 5:
         raise SafetyError('Invalid repair count')
+    if escalation_generator is not None and not escalation_model:
+        raise SafetyError('An escalation generator needs an escalation model name')
+    if escalation_model:
+        safe_model(escalation_model, allow_remote=True)   # remote needs consent inside its generator
     root, evidence = Path(root).resolve(), Path(evidence).resolve()
     validate_project(root, evidence)
     evidence.mkdir(parents=True, exist_ok=True)
@@ -137,30 +157,42 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
     baseline = run_checked(test_command(), root, root, timeout=timeout)
     report = {'status': 'baseline_passed' if baseline['exit_code'] == 0 else 'baseline_failed',
               'model': model, 'baseline': baseline, 'attempts': [], 'live_model_verified': False,
+              'gate': 'tests_only',
+              'escalation': {'configured': escalation_generator is not None,
+                             'model': escalation_model, 'used': False},
               'warning': 'Trusted disposable projects only; no OS sandbox'}
     atomic_json(report_path, report)
     if baseline['exit_code'] == 0:
         return report
     requirements = (root / 'requirements.json').read_text(encoding='utf-8')
     failure = baseline['output']
+    _save_text(evidence / 'baseline-output.log', failure)
+    failure_file = 'baseline-output.log'
+    ledger = AttemptLedger()
+    budget = int(NUM_CTX * CHARS_PER_TOKEN * 0.8)
     for index in range(1, max_repairs + 1):
         # Save originals for rollback if the model touches tests or a test fails.
         originals = {p.name: p.read_bytes() for p in root.glob('*.py') if not p.name.startswith('test_')}
         report['status'] = 'inference_in_progress'
         atomic_json(report_path, report)
+        view = ctx = patch = None
+        escalated = (escalation_generator is not None
+                     and (index > escalate_after or ledger.stuck()))
+        use_generator = escalation_generator if escalated else generator
+        use_model = escalation_model if escalated else model
         try:
-            for name, data in originals.items():
-                if len(data) > MAX_SOURCE_FILE_CHARS:
-                    # Never show the model a truncated file and then accept a "complete replacement".
-                    raise SafetyError(f'{name} is too large for the model context window; split it into smaller files')
-            prompt = make_prompt(requirements, failure, index) + ('\nReturn ONLY JSON of the form '
-                     '{"files":[{"path":"existing.py","content":"complete replacement Python source"}]}. '
-                     'No markdown, no test edits, no shell commands.\nCurrent application source:\n' +
-                     '\n'.join(f'FILE {name}:\n{data.decode("utf-8", errors="replace")}'
-                               for name, data in originals.items()))
-            if len(prompt) > NUM_CTX * CHARS_PER_TOKEN * 0.8:
+            view = excerpt_failure(failure, saved_to=failure_file)
+            notes = ledger.notes()
+            fixed = len(requirements[:12000]) + len(view['text']) + len(notes) + 1400
+            ctx = select_context(root, failure, budget - fixed)
+            prompt = build_repair_prompt(requirements, view['text'], index, ctx['text'], notes)
+            if len(prompt) > budget:
                 raise SafetyError('Prompt would exceed the model context window; refusing silent truncation')
-            patch = generator(model, prompt, timeout=inference_timeout)
+            patch = use_generator(use_model, prompt, timeout=inference_timeout)
+            repeated = ledger.seen_patch(patch)
+            if repeated is not None:
+                raise SafetyError(f'Model repeated the patch from attempt {repeated}; not applied again')
+            check_patch(root, patch, set(ctx['full']))
             prepare_journal(root, evidence, patch)
             changed = apply_patch(root, patch)
             report['status'] = 'testing_patch'
@@ -177,7 +209,15 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                           and safe and source_hashes(root) != initial)
             report['attempts'].append({'number': index, 'files': changed, 'test': result,
                                        'independent_retest': verification,
-                                       'protected_unchanged': safe, 'passed': successful})
+                                       'protected_unchanged': safe, 'passed': successful,
+                                       'generator': 'escalation' if escalated else 'primary',
+                                       'model': use_model,
+                                       'failure_view': {k: view[k] for k in (
+                                           'total_chars', 'shown_chars', 'omitted_chars',
+                                           'failing_tests', 'all_failures_named')},
+                                       'context': {'full': ctx['full'], 'map_only': ctx['map_only']}})
+            if escalated:
+                report['escalation']['used'] = True
             if successful:
                 # Commit the recovery journal BEFORE publishing success. A crash
                 # between those operations must never leave a "verified" report
@@ -186,13 +226,24 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                 atomic_json(report_path, report)
                 finish_journal(evidence)
                 report['status'] = 'verified_direct_repair'
-                report['live_model_verified'] = generator is request_patch
+                report['live_model_verified'] = bool(getattr(use_generator, 'adm_live_generator', False))
                 atomic_json(report_path, report)
                 return report
             failure = result['output']
+            failure_file = f'attempt-{index}-output.log'
+            _save_text(evidence / failure_file, failure)
+            ledger.record(index, patch, failure, changed)
         except (SafetyError, ValueError, OSError) as exc:
-            report['attempts'].append({'number': index, 'error': str(exc), 'passed': False})
-            failure = str(exc)
+            report['attempts'].append({'number': index, 'error': str(exc), 'passed': False,
+                                       'generator': 'escalation' if escalated else 'primary',
+                                       'model': use_model,
+                                       'failure_view': ({k: view[k] for k in (
+                                           'total_chars', 'shown_chars', 'omitted_chars',
+                                           'failing_tests', 'all_failures_named')} if view else None)})
+            if escalated:
+                report['escalation']['used'] = True
+            # Keep the real test output for the next try; just tell the model what was refused.
+            ledger.add_note(f'Attempt {index} was rejected before testing: {str(exc)[:200]}.')
         finally:
             if report['status'] != 'verified_direct_repair':
                 if (evidence / 'repair-journal.json').exists():
@@ -213,9 +264,13 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
 
 def direct_repair(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                   max_repairs=2, timeout=90, generator=request_patch,
-                  inference_timeout=DEFAULT_INFERENCE_TIMEOUT):
+                  inference_timeout=DEFAULT_INFERENCE_TIMEOUT,
+                  escalation_model=None, escalation_generator=None, escalate_after=2):
     """Hold exclusive project ownership across baseline, inference, edits and tests."""
     with exclusive_project(root):
         return _direct_repair_unlocked(root, evidence, model=model,
                                        max_repairs=max_repairs, timeout=timeout,
-                                       generator=generator, inference_timeout=inference_timeout)
+                                       generator=generator, inference_timeout=inference_timeout,
+                                       escalation_model=escalation_model,
+                                       escalation_generator=escalation_generator,
+                                       escalate_after=escalate_after)
