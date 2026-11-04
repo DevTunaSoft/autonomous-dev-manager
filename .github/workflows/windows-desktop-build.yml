@@ -37,6 +37,12 @@ jobs:
       - name: Packaged EXE end-to-end repair against FAKE Ollama
         shell: pwsh
         run: ./tools/verify-packaged-repair.ps1
+      - name: First-run local-AI prompt (real Windows window, prompt captured)
+        shell: pwsh
+        run: |
+          python -c "import json; from adm import firstrun; a=firstrun.assess(); print(json.dumps(a, indent=1)); print('----- TEXT THE USER SEES -----'); print(firstrun.prompt_text(a)[1])"
+          python -c "from adm import desktop; desktop.main(auto_close_ms=6000, ask=lambda t, m: (print('GUI PROMPT SHOWN:', t), print(m), False)[2])"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Print build evidence to the log
         if: always()
         shell: pwsh

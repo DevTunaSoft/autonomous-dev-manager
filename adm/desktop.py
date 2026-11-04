@@ -4,7 +4,6 @@ Tkinter is supplied by many Python installations but must be verified on target
 Windows. This is a control panel, not an untrusted-code sandbox or AI builder.
 """
 from __future__ import annotations
-import json
 import sqlite3
 import os
 from pathlib import Path
@@ -76,7 +75,7 @@ def recent_jobs(state, limit=30):
         connection.close()
 
 
-def main():
+def main(*, auto_close_ms=None, ask=None):
     import tkinter as tk
     from tkinter import messagebox
     state = Path.home() / 'AppData' / 'Local' / 'ADM' / 'state' if os.name == 'nt' else Path.home() / '.adm-worker-state'
@@ -135,6 +134,57 @@ def main():
                 pass
         threading.Thread(target=check, daemon=True).start()
     tk.Button(window, text='Check local Ollama', command=check_models).pack(pady=5)
+    setup_status = tk.StringVar(value='Local AI setup: not checked')
+    tk.Label(window, textvariable=setup_status, wraplength=700, justify='left').pack(pady=2)
+    busy = {'setup': False}
+    def say(text):
+        # Called from worker threads; Tk is only touched on the main thread.
+        try:
+            window.after(0, lambda: setup_status.set(text))
+        except RuntimeError:
+            pass
+    def setup_flow(*, prompt_only_if_missing):
+        if busy['setup']:
+            return
+        busy['setup'] = True
+        import threading
+        def work():
+            from . import firstrun
+            try:
+                a = firstrun.assess()
+            except Exception as exc:
+                busy['setup'] = False
+                say('Local AI setup: could not check (' + str(exc) + ')')
+                return
+            def decide():
+                title, message = firstrun.prompt_text(a)
+                if a['ready']:
+                    say('Local AI ready: ' + str(a['usable_model']))
+                    busy['setup'] = False
+                    if not prompt_only_if_missing:
+                        messagebox.showinfo(title, message)
+                    return
+                can_act = bool({'ollama', 'start_ollama', 'model'} & set(a['needs']))
+                say('Local AI needs setup: ' + ', '.join(a['needs']))
+                yes = (ask or messagebox.askyesno)(title, message) if can_act else (messagebox.showinfo(title, message) and False)
+                if not yes:
+                    busy['setup'] = False
+                    return
+                def install():
+                    try:
+                        result = firstrun.run_setup(a, approved=True, on_status=say)
+                    except Exception as exc:
+                        result = {'status': 'failed', 'message': str(exc)}
+                    busy['setup'] = False
+                    say('Local AI setup: ' + result['message'])
+                    window.after(0, lambda: messagebox.showinfo('Local AI setup', result['message']))
+                threading.Thread(target=install, daemon=True).start()
+            try:
+                window.after(0, decide)
+            except RuntimeError:
+                pass
+        threading.Thread(target=work, daemon=True).start()
+    tk.Button(window, text='Set up local AI...', command=lambda: setup_flow(prompt_only_if_missing=False)).pack(pady=5)
     def refresh():
         data = status_summary(state)
         status.set(f"Status: {data['state']}   |   Supervisor cycles: {data['cycles']}")
@@ -150,6 +200,9 @@ def main():
         refresh()
         window.after(2000, tick)
     tick()
+    window.after(800, lambda: setup_flow(prompt_only_if_missing=True))   # first-run prompt
+    if auto_close_ms:
+        window.after(auto_close_ms, window.destroy)
     window.mainloop()
 
 if __name__ == '__main__':
