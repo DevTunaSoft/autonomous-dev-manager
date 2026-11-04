@@ -1,0 +1,837 @@
+windows-build	Set up job	﻿2026-11-04T23:38:39.7678825Z Current runner version: '2.338.2'
+windows-build	Set up job	2026-11-04T23:38:39.7728606Z ##[group]Runner Image Provisioner
+windows-build	Set up job	2026-11-04T23:38:39.7729448Z Hosted Compute Agent
+windows-build	Set up job	2026-11-04T23:38:39.7729970Z Version: 20261021.618
+windows-build	Set up job	2026-11-04T23:38:39.7730510Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+windows-build	Set up job	2026-11-04T23:38:39.7731196Z Build Date: 2026-10-21T00:45:21Z
+windows-build	Set up job	2026-11-04T23:38:39.7731808Z Worker ID: {e32240ae-52ad-4a41-acad-d183e6cf1c4b}
+windows-build	Set up job	2026-11-04T23:38:39.7732443Z Region: eastus
+windows-build	Set up job	2026-11-04T23:38:39.7732912Z Cloud: Azure
+windows-build	Set up job	2026-11-04T23:38:39.7733387Z ##[endgroup]
+windows-build	Set up job	2026-11-04T23:38:39.7734716Z ##[group]Operating System
+windows-build	Set up job	2026-11-04T23:38:39.7735320Z Microsoft Windows Server 2022
+windows-build	Set up job	2026-11-04T23:38:39.7735890Z 10.0.20348
+windows-build	Set up job	2026-11-04T23:38:39.7736361Z Datacenter
+windows-build	Set up job	2026-11-04T23:38:39.7736805Z ##[endgroup]
+windows-build	Set up job	2026-11-04T23:38:39.7737325Z ##[group]Runner Image
+windows-build	Set up job	2026-11-04T23:38:39.7737837Z Image: windows-2022
+windows-build	Set up job	2026-11-04T23:38:39.7738320Z Version: 20261025.346.1
+windows-build	Set up job	2026-11-04T23:38:39.7739302Z Included Software: https://github.com/actions/runner-images/blob/win22/20261025.346/images/windows/Windows2022-Readme.md
+windows-build	Set up job	2026-11-04T23:38:39.7741043Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261025.346
+windows-build	Set up job	2026-11-04T23:38:39.7741915Z ##[endgroup]
+windows-build	Set up job	2026-11-04T23:38:39.7742912Z ##[group]GITHUB_TOKEN Permissions
+windows-build	Set up job	2026-11-04T23:38:39.7744749Z Contents: read
+windows-build	Set up job	2026-11-04T23:38:39.7745327Z Metadata: read
+windows-build	Set up job	2026-11-04T23:38:39.7745829Z ##[endgroup]
+windows-build	Set up job	2026-11-04T23:38:39.7747863Z Secret source: Actions
+windows-build	Set up job	2026-11-04T23:38:39.7748754Z Cache mode: write
+windows-build	Set up job	2026-11-04T23:38:39.7749408Z Prepare workflow directory
+windows-build	Set up job	2026-11-04T23:38:39.8233151Z Prepare all required actions
+windows-build	Set up job	2026-11-04T23:38:39.8304961Z Getting action download info
+windows-build	Set up job	2026-11-04T23:38:40.0388037Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+windows-build	Set up job	2026-11-04T23:38:40.1669958Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+windows-build	Set up job	2026-11-04T23:38:40.3001400Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+windows-build	Set up job	2026-11-04T23:38:40.6469407Z Complete job name: windows-build
+windows-build	Run actions/checkout@v4	﻿2026-11-04T23:38:40.8179994Z ##[group]Run actions/checkout@v4
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8181239Z with:
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8181819Z   repository: DevTunaSoft/autonomous-dev-manager
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8186862Z   token: ***
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8187248Z   ssh-strict: true
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8187635Z   ssh-user: git
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8188029Z   persist-credentials: true
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8188520Z   clean: true
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8188922Z   sparse-checkout-cone-mode: true
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8189391Z   fetch-depth: 1
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8189877Z   fetch-tags: false
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8190517Z   show-progress: true
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8190925Z   lfs: false
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8191285Z   submodules: false
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8191910Z   set-safe-directory: true
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8192656Z   allow-unsafe-pr-checkout: false
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.8193907Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.9756562Z Syncing repository: DevTunaSoft/autonomous-dev-manager
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.9758417Z ##[group]Getting Git version info
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:40.9759277Z Working directory is 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.0888589Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.4509215Z git version 2.56.0.windows.3
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.4557705Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.4577373Z Temporarily overriding HOME='D:\a\_temp\7264fc7d-5f12-4fc7-acec-d17dce960398' before making global git config changes
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.4579296Z Adding repository directory to the temporary git global config as a safe directory
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.4588860Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.5251404Z Deleting the contents of 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.5256659Z ##[group]Initializing the repository
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.5266008Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\autonomous-dev-manager\autonomous-dev-manager
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.6061165Z Initialized empty Git repository in D:/a/autonomous-dev-manager/autonomous-dev-manager/.git/
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.6105969Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/DevTunaSoft/autonomous-dev-manager
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.6724663Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.6726205Z ##[group]Disabling automatic garbage collection
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.6732833Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.7029767Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.7031361Z ##[group]Setting up auth
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.7042380Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:41.7343945Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:43.1671744Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:43.1971248Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:43.6880451Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:43.7183269Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:44.2034230Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:44.2391233Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:44.2391896Z ##[group]Fetching the repository
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:44.2410488Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b24b0a33406bde8739138ce771ef48c9fe710bd8:refs/remotes/origin/main
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.1821218Z From https://github.com/DevTunaSoft/autonomous-dev-manager
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.1822255Z  * [new ref]         b24b0a33406bde8739138ce771ef48c9fe710bd8 -> origin/main
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.1857099Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.1857772Z ##[group]Determining the checkout info
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.1860015Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.1869699Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.2308426Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.2622629Z ##[group]Checking out the ref
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.2631139Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.3842036Z Switched to a new branch 'main'
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.3910888Z branch 'main' set up to track 'origin/main'.
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.3952543Z ##[endgroup]
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.4430439Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+windows-build	Run actions/checkout@v4	2026-11-04T23:38:45.4717051Z b24b0a33406bde8739138ce771ef48c9fe710bd8
+windows-build	Run actions/setup-python@v5	﻿2026-11-04T23:38:45.5254487Z ##[group]Run actions/setup-python@v5
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5254892Z with:
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5255090Z   python-version: 3.12
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5255330Z   check-latest: false
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5257908Z   token: ***
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5258111Z   update-environment: true
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5258347Z   allow-prereleases: false
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5258574Z   freethreaded: false
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.5258776Z ##[endgroup]
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.6792906Z ##[group]Installed versions
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.6905112Z (node:8552) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.6907115Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.6908456Z Successfully set up CPython (3.12.10)
+windows-build	Run actions/setup-python@v5	2026-11-04T23:38:45.6909363Z ##[endgroup]
+windows-build	Install pinned packaging tool	﻿2026-11-04T23:38:45.7153904Z ##[group]Run python -m pip install --disable-pip-version-check pyinstaller==6.11.1
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7154667Z [36;1mpython -m pip install --disable-pip-version-check pyinstaller==6.11.1[0m
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7289882Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7290296Z env:
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7290581Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7291095Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7291592Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7292056Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7292541Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Install pinned packaging tool	2026-11-04T23:38:45.7292880Z ##[endgroup]
+windows-build	Install pinned packaging tool	2026-11-04T23:38:50.7311051Z Collecting pyinstaller==6.11.1
+windows-build	Install pinned packaging tool	2026-11-04T23:38:50.9983644Z   Downloading pyinstaller-6.11.1-py3-none-win_amd64.whl.metadata (8.3 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.2041941Z Collecting setuptools>=42.0.0 (from pyinstaller==6.11.1)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.2446445Z   Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.3385725Z Collecting altgraph (from pyinstaller==6.11.1)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.3781930Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.4822018Z Collecting pyinstaller-hooks-contrib>=2024.9 (from pyinstaller==6.11.1)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.5249147Z   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl.metadata (16 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.5658228Z Requirement already satisfied: packaging>=22.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pyinstaller==6.11.1) (26.3)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.6228111Z Collecting pefile!=2024.8.26,>=2022.5.30 (from pyinstaller==6.11.1)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.6656238Z   Downloading pefile-2023.2.7-py3-none-any.whl.metadata (1.4 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.7543523Z Collecting pywin32-ctypes>=0.2.1 (from pyinstaller==6.11.1)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.7958851Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl.metadata (3.9 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:51.8863497Z Downloading pyinstaller-6.11.1-py3-none-win_amd64.whl (1.3 MB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.0974693Z    ---------------------------------------- 1.3/1.3 MB 9.8 MB/s  0:00:00
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.1378764Z Downloading pefile-2023.2.7-py3-none-any.whl (71 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.2020815Z Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.2687237Z Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.3275768Z Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.3588810Z    ---------------------------------------- 876.3/876.3 kB 19.8 MB/s  0:00:00
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.3989894Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+windows-build	Install pinned packaging tool	2026-11-04T23:38:52.7242493Z Installing collected packages: altgraph, setuptools, pywin32-ctypes, pyinstaller-hooks-contrib, pefile, pyinstaller
+windows-build	Install pinned packaging tool	2026-11-04T23:38:58.6452863Z 
+windows-build	Install pinned packaging tool	2026-11-04T23:38:58.6474021Z Successfully installed altgraph-0.17.5 pefile-2023.2.7 pyinstaller-6.11.1 pyinstaller-hooks-contrib-2026.9 pywin32-ctypes-0.2.3 setuptools-84.2.1
+windows-build	Verify sources compile	﻿2026-11-04T23:38:58.8135488Z ##[group]Run python -m compileall -q adm tests
+windows-build	Verify sources compile	2026-11-04T23:38:58.8135948Z [36;1mpython -m compileall -q adm tests[0m
+windows-build	Verify sources compile	2026-11-04T23:38:58.8181592Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows-build	Verify sources compile	2026-11-04T23:38:58.8181959Z env:
+windows-build	Verify sources compile	2026-11-04T23:38:58.8182233Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Verify sources compile	2026-11-04T23:38:58.8182706Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Verify sources compile	2026-11-04T23:38:58.8183165Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Verify sources compile	2026-11-04T23:38:58.8183763Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Verify sources compile	2026-11-04T23:38:58.8184157Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Verify sources compile	2026-11-04T23:38:58.8184467Z ##[endgroup]
+windows-build	Windows startup and packaged-entry tests	﻿2026-11-04T23:38:59.4283201Z ##[group]Run python -m unittest discover -s tests -p 'test_windows_startup.py' -v
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4283917Z [36;1mpython -m unittest discover -s tests -p 'test_windows_startup.py' -v[0m
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4284381Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4284817Z [36;1mpython -m unittest discover -s tests -p 'test_desktop_entry_exit.py' -v[0m
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4285313Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4327053Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4327407Z env:
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4327686Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4328170Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4328625Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4329045Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4329488Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:38:59.4329798Z ##[endgroup]
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6908176Z test_existing_stop_request_is_not_discarded (test_windows_startup.StartupTests.test_existing_stop_request_is_not_discarded) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6926685Z test_frozen_startup_uses_supervisor_flag (test_windows_startup.StartupTests.test_frozen_startup_uses_supervisor_flag) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6936194Z test_missing_python_is_rejected (test_windows_startup.StartupTests.test_missing_python_is_rejected) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6937549Z test_no_automatic_install (test_windows_startup.StartupTests.test_no_automatic_install) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6948490Z test_source_startup_uses_module (test_windows_startup.StartupTests.test_source_startup_uses_module) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6966826Z test_windows_command_is_argv_not_shell (test_windows_startup.StartupTests.test_windows_command_is_argv_not_shell) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6967770Z 
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6967993Z ----------------------------------------------------------------------
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6968331Z Ran 6 tests in 0.205s
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6968498Z 
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.6968566Z OK
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:00.9171381Z test_real_script_propagates_invalid_arguments (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_propagates_invalid_arguments) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3881630Z test_real_script_smoke_produces_success_exit (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_smoke_produces_success_exit) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3892842Z test_smoke_failure_returns_nonzero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_failure_returns_nonzero) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3895732Z test_smoke_success_returns_zero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_success_returns_zero) ... ok
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3896675Z 
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3896940Z ----------------------------------------------------------------------
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3897505Z Ran 4 tests in 0.541s
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3897737Z 
+windows-build	Windows startup and packaged-entry tests	2026-11-04T23:39:01.3897849Z OK
+windows-build	Build and run packaged smoke test	﻿2026-11-04T23:39:01.5169981Z ##[group]Run BUILD-WINDOWS-DESKTOP.cmd
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5170393Z [36;1mBUILD-WINDOWS-DESKTOP.cmd[0m
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5193441Z shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5193800Z env:
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5194060Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5194537Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5195000Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5195407Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5195979Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:01.5196291Z ##[endgroup]
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5412703Z 125 INFO: PyInstaller: 6.11.1, contrib hooks: 2026.9
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5416021Z 125 INFO: Python: 3.12.10
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5617623Z 140 INFO: Platform: Windows-2022Server-10.0.20348-SP0
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5618239Z 140 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5622984Z 140 INFO: wrote D:\a\autonomous-dev-manager\autonomous-dev-manager\ADM-Desktop.spec
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5652485Z 140 INFO: Removing temporary files and cleaning cache in C:\Users\runneradmin\AppData\Local\pyinstaller
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5667461Z 140 INFO: Module search paths (PYTHONPATH):
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5668056Z ['D:\\a\\autonomous-dev-manager\\autonomous-dev-manager',
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5668575Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5669024Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5669397Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5669746Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5670133Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5670567Z  'D:\\a\\autonomous-dev-manager\\autonomous-dev-manager',
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.5670945Z  'D:\\a\\autonomous-dev-manager\\autonomous-dev-manager']
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.8039006Z 390 INFO: checking Analysis
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.8040001Z 390 INFO: Building Analysis because Analysis-00.toc is non existent
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.8040858Z 390 INFO: Running Analysis Analysis-00.toc
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.8041735Z 390 INFO: Target bytecode optimization level: 0
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.8042457Z 390 INFO: Initializing module dependency graph...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.8071088Z 390 INFO: Initializing module graph hook caches...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:03.8236176Z 406 INFO: Analyzing base_library.zip ...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:04.5312440Z 1109 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:04.9554618Z 1532 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:06.5014488Z 3080 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:08.6298320Z 5206 INFO: Caching module dependency graph...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:08.7355403Z 5315 INFO: Looking for Python shared library...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:08.7685854Z 5347 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:08.7686765Z 5347 INFO: Analyzing D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\desktop_entry.py
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:08.8447893Z 5426 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:08.8489871Z 5426 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:09.2067829Z 5785 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:09.2071991Z 5785 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:09.8113026Z 6384 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.2717603Z 6853 INFO: Analyzing hidden import 'adm.ollama_cli'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.2739009Z 6853 INFO: Analyzing hidden import 'adm.agent_cli'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.2791884Z 6853 INFO: Processing module hooks (post-graph stage)...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.3045450Z 6885 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.3157372Z 6900 INFO: Performing binary vs. data reclassification (928 entries)
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.9221942Z 7500 INFO: Looking for ctypes DLLs
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.9330836Z 7515 INFO: Analyzing run-time hooks ...
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.9348338Z 7515 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.9367586Z 7515 INFO: Including run-time hook 'pyi_rth__tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:10.9637908Z 7546 INFO: Looking for dynamic libraries
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.0993401Z 7671 INFO: Extra DLL search directories (AddDllDirectory): []
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.0994209Z 7687 INFO: Extra DLL search directories (PATH): []
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.8751511Z 8454 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.dll'.
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.9029705Z 8485 INFO: Warnings written to D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\warn-ADM-Desktop.txt
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.9228533Z 8501 INFO: Graph cross-reference written to D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\xref-ADM-Desktop.html
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.9564019Z 8532 INFO: checking PYZ
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.9565319Z 8532 INFO: Building PYZ because PYZ-00.toc is non existent
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:11.9566491Z 8532 INFO: Building PYZ (ZlibArchive) D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\PYZ-00.pyz
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:12.3229200Z 8907 INFO: Building PYZ (ZlibArchive) D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\PYZ-00.pyz completed successfully.
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:12.3715285Z 8954 INFO: checking PKG
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:12.3716530Z 8954 INFO: Building PKG because PKG-00.toc is non existent
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:12.3717488Z 8954 INFO: Building PKG (CArchive) ADM-Desktop.pkg
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7046516Z 13288 INFO: Building PKG (CArchive) ADM-Desktop.pkg completed successfully.
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7237893Z 13304 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7238918Z 13304 INFO: checking EXE
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7239407Z 13304 INFO: Building EXE because EXE-00.toc is non existent
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7239786Z 13304 INFO: Building EXE from EXE-00.toc
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7241599Z 13304 INFO: Copying bootloader EXE to D:\a\autonomous-dev-manager\autonomous-dev-manager\dist\ADM-Desktop.exe
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7320098Z 13320 INFO: Copying icon to EXE
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7337435Z 13320 INFO: Copying 0 resources to EXE
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7337882Z 13320 INFO: Embedding manifest in EXE
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7353400Z 13320 INFO: Appending PKG archive to EXE
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.7423088Z 13320 INFO: Fixing EXE headers
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:16.8366878Z 13413 INFO: Building EXE from EXE-00.toc completed successfully.
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:25.0107947Z Packaged smoke passed; SHA256: 4cffe8ece738f2bd3617ba92164449531f1e6e7e30e717cda8e5e6f607f32a83
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:25.0761553Z Build complete: dist\ADM-Desktop.exe
+windows-build	Build and run packaged smoke test	2026-11-04T23:39:25.0764788Z IMPORTANT: Runtime acceptance on Windows and OS sandboxing remain unverified.
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	﻿2026-11-04T23:39:25.0911096Z ##[group]Run ./tools/verify-packaged-repair.ps1
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0911576Z [36;1m./tools/verify-packaged-repair.ps1[0m
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0951972Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0952321Z env:
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0952578Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0953201Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0953650Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0954052Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0954450Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:25.0954757Z ##[endgroup]
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:30.3101395Z EXE exit code: 0
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:30.3304968Z Report status: verified_direct_repair; attempts: 1; baseline exit: 1
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:30.3321804Z def add(a, b):
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:30.3322150Z     return a + b
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:30.3322434Z 
+windows-build	Packaged EXE end-to-end repair against FAKE Ollama	2026-11-04T23:39:30.3351519Z PACKAGED REPAIR PLUMBING OK (fake Ollama; not a real model)
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	﻿2026-11-04T23:39:30.3962905Z ##[group]Run python -c "import json; from adm import firstrun; a=firstrun.assess(); print(json.dumps(a, indent=1)); print('----- TEXT THE USER SEES -----'); print(firstrun.prompt_text(a)[1])"
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.3964346Z [36;1mpython -c "import json; from adm import firstrun; a=firstrun.assess(); print(json.dumps(a, indent=1)); print('----- TEXT THE USER SEES -----'); print(firstrun.prompt_text(a)[1])"[0m
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.3965463Z [36;1mpython -c "from adm import desktop; desktop.main(auto_close_ms=6000, ask=lambda t, m: (print('GUI PROMPT SHOWN:', t), print(m), False)[2])"[0m
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.3966117Z [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4005119Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4005480Z env:
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4005983Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4006453Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4006969Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4007381Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4007800Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:30.4008122Z ##[endgroup]
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0732985Z {
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0733478Z  "ram_gib": 16.0,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0733779Z  "python": {
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0734048Z   "found": true,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0734550Z   "path": "C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe"
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0735114Z  },
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0735347Z  "ollama": {
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0735631Z   "installed": false,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0735937Z   "exe": null,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0736201Z   "reachable": false
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0736483Z  },
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0736745Z  "installed_models": [],
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0737070Z  "usable_model": null,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0737411Z  "recommended_model": "qwen2.5-coder:3b",
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0737887Z  "recommended_size_gb": 2.0,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0738315Z  "models_dir": "C:\\Users\\runneradmin\\.ollama\\models",
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0738800Z  "models_dir_free_gb": 81.0,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0739203Z  "winget": false,
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0739475Z  "needs": [
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0739713Z   "ollama",
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0739945Z   "model"
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0740172Z  ],
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0740396Z  "ready": false
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0740634Z }
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0740876Z ----- TEXT THE USER SEES -----
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0741365Z ADM runs its AI on your own PC, so a few one-time downloads are needed:
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0741780Z 
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0742010Z 1. Ollama (the program that runs AI models on your PC, free).
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0742675Z    Download and run the installer from https://ollama.com/download first.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0743311Z 2. AI model: qwen2.5-coder:3b (about 2.0 GB download).
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0743783Z    Chosen for your PC's 16.0 GB of memory.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0744266Z    It will be saved in: C:\Users\runneradmin\.ollama\models
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0744741Z    Free space on that drive: 81.0 GB.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0745353Z 
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0745575Z An internet connection is needed only for these downloads.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0746025Z 
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:33.0746156Z Download and set up now?
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8180686Z GUI PROMPT SHOWN: Set up local AI
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8182052Z ADM runs its AI on your own PC, so a few one-time downloads are needed:
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8182573Z 
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8182840Z 1. Ollama (the program that runs AI models on your PC, free).
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8183588Z    Download and run the installer from https://ollama.com/download first.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8185690Z 2. AI model: qwen2.5-coder:3b (about 2.0 GB download).
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8186323Z    Chosen for your PC's 16.0 GB of memory.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8188150Z    It will be saved in: C:\Users\runneradmin\.ollama\models
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8192870Z    Free space on that drive: 81.0 GB.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8193203Z 
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8193446Z An internet connection is needed only for these downloads.
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8194477Z 
+windows-build	First-run local-AI prompt (real Windows window, prompt captured)	2026-11-04T23:39:39.8194662Z Download and set up now?
+windows-build	Print build evidence to the log	﻿2026-11-04T23:39:39.9618063Z ##[group]Run Get-ChildItem build-evidence -ErrorAction SilentlyContinue | ForEach-Object { "--- $($_.Name)"; Get-Content $_.FullName -Raw }
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9619225Z [36;1mGet-ChildItem build-evidence -ErrorAction SilentlyContinue | ForEach-Object { "--- $($_.Name)"; Get-Content $_.FullName -Raw }[0m
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9620269Z [36;1mif (Test-Path build\ADM-Desktop\warn-ADM-Desktop.txt) { '--- PyInstaller warnings'; Get-Content build\ADM-Desktop\warn-ADM-Desktop.txt -TotalCount 80 }[0m
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9659587Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9659943Z env:
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9660213Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9660694Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9661149Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9661572Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9662031Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Print build evidence to the log	2026-11-04T23:39:39.9662361Z ##[endgroup]
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2898511Z --- packaged-smoke.json
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2965998Z {
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2966388Z   "checks": {
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2966772Z     "import:adm.agent_cli": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2967263Z     "import:adm.backends": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2967705Z     "import:adm.context": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2968141Z     "import:adm.daemon": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2968571Z     "import:adm.desktop": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2969037Z     "import:adm.model_selection": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2969530Z     "import:adm.ollama_cli": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2970010Z     "import:adm.ollama_direct": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2970487Z     "import:adm.pyruntime": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2970983Z     "import:adm.repomap": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2971428Z     "import:adm.worker": "passed",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2971883Z     "sqlite_wal_and_schema": "passed"
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2972271Z   },
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2972562Z   "format": "ADM-packaged-smoke-v1",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2972977Z   "passed": true,
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2973646Z   "scope": "imports and SQLite only; NOT a Windows GUI, sandbox, AI or end-to-end acceptance test",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2974454Z   "timestamp": 1793835562.8526368
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2974832Z }
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2975129Z --- windows-build-verification.json
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2981702Z {
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2982125Z     "format":  "ADM-windows-build-verification-v1",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2982652Z     "passed":  true,
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2983026Z     "executable_name":  "ADM-Desktop.exe",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2983724Z     "sha256":  "4cffe8ece738f2bd3617ba92164449531f1e6e7e30e717cda8e5e6f607f32a83",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2984417Z     "bytes":  13130855,
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2985153Z     "smoke_exit_code":  0,
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2985507Z     "smoke_checks":  [
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2985880Z                          "import:adm.agent_cli",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2986366Z                          "import:adm.backends",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2986839Z                          "import:adm.context",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2987305Z                          "import:adm.daemon",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2987774Z                          "import:adm.desktop",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2988253Z                          "import:adm.model_selection",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2988752Z                          "import:adm.ollama_cli",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2989248Z                          "import:adm.ollama_direct",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2989751Z                          "import:adm.pyruntime",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2990226Z                          "import:adm.repomap",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2990684Z                          "import:adm.worker",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2991141Z                          "sqlite_wal_and_schema"
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2991590Z                      ],
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2991986Z     "started_utc":  "2026-11-04T23:39:20.7083115+00:00",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2995183Z     "finished_utc":  "2026-11-04T23:39:24.9021525+00:00",
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2996168Z     "scope":  "Packaged imports and SQLite only; GUI, autonomous AI, isolation, and Windows user acceptance NOT verified"
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2997063Z }
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.2997218Z 
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3017403Z --- PyInstaller warnings
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3027230Z 
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3029760Z This file lists modules PyInstaller was not able to find. This does not
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3031428Z necessarily mean this module is required for running your program. Python and
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3033286Z Python 3rd-party packages include a lot of conditional or optional modules. For
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3035674Z example the module 'ntpath' only exists on Windows, whereas the module
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3037352Z 'posixpath' only exists on Posix systems.
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3038680Z 
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3040278Z Types if import:
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3042143Z * top-level: imported at the top-level - look at these first
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3043691Z * conditional: imported within an if-statement
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3045378Z * delayed: imported within a function
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3047228Z * optional: imported within a try-except-statement
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3048482Z 
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3050281Z IMPORTANT: Do NOT post this list to the issue-tracker. Use it as a basis for
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3051704Z             tracking down the missing module yourself. Thanks!
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3052585Z 
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3054806Z missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3056157Z excluded module named _frozen_importlib - imported by importlib (optional), importlib.abc (optional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3058589Z missing module named pwd - imported by posixpath (delayed, conditional, optional), subprocess (delayed, conditional, optional), shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), netrc (delayed, conditional), getpass (delayed)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3061355Z missing module named grp - imported by subprocess (delayed, conditional, optional), shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3063323Z missing module named posix - imported by os (conditional, optional), posixpath (optional), shutil (conditional), importlib._bootstrap_external (conditional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3064742Z missing module named resource - imported by posix (top-level)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3065550Z missing module named vms_lib - imported by platform (delayed, optional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3066422Z missing module named 'java.lang' - imported by platform (delayed, optional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3067239Z missing module named java - imported by platform (delayed)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3069391Z missing module named _winreg - imported by platform (delayed, optional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3069938Z missing module named _posixsubprocess - imported by subprocess (conditional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3071086Z missing module named fcntl - imported by subprocess (optional), adm.project_lock (delayed, conditional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3072818Z missing module named readline - imported by code (delayed, conditional, optional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3073900Z missing module named _scproxy - imported by urllib.request (conditional)
+windows-build	Print build evidence to the log	2026-11-04T23:39:40.3075951Z missing module named termios - imported by getpass (optional)
+windows-build	Upload build verification evidence	﻿2026-11-04T23:39:40.3609706Z ##[group]Run actions/upload-artifact@v4
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3610173Z with:
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3610497Z   name: ADM-Windows-build-evidence
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3610890Z   path: build-evidence/
+windows-build	Upload build verification evidence	packaged-repair-evidence/
+windows-build	Upload build verification evidence	
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3621453Z   if-no-files-found: warn
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3621880Z   retention-days: 14
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3622186Z   compression-level: 6
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3622406Z   overwrite: false
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3622613Z   include-hidden-files: false
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3622837Z env:
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3623101Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3623567Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3624035Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3624440Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3624836Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.3625194Z ##[endgroup]
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.5494537Z (node:4264) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.5495309Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.5616178Z Multiple search paths detected. Calculating the least common ancestor of all paths
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.5620115Z The least common ancestor is D:\a\autonomous-dev-manager\autonomous-dev-manager. This will be the root directory of the artifact
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.5621220Z With the provided path, there will be 7 files uploaded
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.5626199Z Artifact name is valid!
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.5628249Z Root directory input is valid!
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.7737737Z Beginning upload of artifact content to blob storage
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.8061372Z (node:4264) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.8395743Z Uploaded bytes 3637
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.8537988Z Finished uploading artifact content to blob storage!
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.8539473Z SHA256 digest of uploaded artifact zip is 5f836d0166374f9da82040511c61adf124b6af1872e8b8e586b9a90184c2e85a
+windows-build	Upload build verification evidence	2026-11-04T23:39:40.8542096Z Finalizing artifact upload
+windows-build	Upload build verification evidence	2026-11-04T23:39:41.3200456Z Artifact ADM-Windows-build-evidence.zip successfully finalized. Artifact ID 13372803676
+windows-build	Upload build verification evidence	2026-11-04T23:39:41.3201530Z Artifact ADM-Windows-build-evidence has been successfully uploaded! Final size is 3637 bytes. Artifact ID is 13372803676
+windows-build	Upload build verification evidence	2026-11-04T23:39:41.3210627Z Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41935328816/artifacts/13372803676
+windows-build	Upload Windows EXE for acceptance testing	﻿2026-11-04T23:39:41.3460199Z ##[group]Run actions/upload-artifact@v4
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3460563Z with:
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3460773Z   name: ADM-Desktop-Windows-unverified
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3461063Z   path: dist/ADM-Desktop.exe
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3461297Z   if-no-files-found: error
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3461512Z   retention-days: 7
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3461711Z   compression-level: 6
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3461918Z   overwrite: false
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3462113Z   include-hidden-files: false
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3462329Z env:
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3462789Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3463254Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3463705Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3464105Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3464498Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.3464850Z ##[endgroup]
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.5391185Z (node:6188) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.5391959Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.5444207Z With the provided path, there will be 1 file uploaded
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.5450265Z Artifact name is valid!
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.5452793Z Root directory input is valid!
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:41.7567621Z Beginning upload of artifact content to blob storage
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.0460708Z (node:6188) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.1722088Z Uploaded bytes 8388608
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.3366820Z Uploaded bytes 12886730
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.3498252Z Finished uploading artifact content to blob storage!
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.3500116Z SHA256 digest of uploaded artifact zip is f7edb64e46f31ed8d611c977e14fa81336cea73365d68181f2abd2430559f458
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.3502340Z Finalizing artifact upload
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.7365127Z Artifact ADM-Desktop-Windows-unverified.zip successfully finalized. Artifact ID 13373786385
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.7366503Z Artifact ADM-Desktop-Windows-unverified has been successfully uploaded! Final size is 12886730 bytes. Artifact ID is 13373786385
+windows-build	Upload Windows EXE for acceptance testing	2026-11-04T23:39:42.7379049Z Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41935328816/artifacts/13373786385
+windows-build	Post Run actions/setup-python@v5	﻿2026-11-04T23:39:42.7686258Z Post job cleanup.
+windows-build	Post Run actions/setup-python@v5	2026-11-04T23:39:42.9103114Z (node:9124) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows-build	Post Run actions/setup-python@v5	2026-11-04T23:39:42.9104105Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows-build	Post Run actions/checkout@v4	﻿2026-11-04T23:39:42.9359773Z Post job cleanup.
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.1402659Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.1671565Z git version 2.56.0.windows.3
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.1733212Z Temporarily overriding HOME='D:\a\_temp\e659e1c1-1458-47cd-8735-73a66206a7ce' before making global git config changes
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.1734123Z Adding repository directory to the temporary git global config as a safe directory
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.1745630Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.2051367Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.2347499Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.7606036Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.7865920Z http.https://github.com/.extraheader
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.7901590Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:43.8197577Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:44.2920192Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows-build	Post Run actions/checkout@v4	2026-11-04T23:39:44.3210934Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows-build	Complete job	﻿2026-11-04T23:39:44.8101739Z Cleaning up orphan processes
+windows-build	Complete job	2026-11-04T23:39:44.8351886Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+windows-full-regression	Set up job	﻿2026-11-04T23:38:39.6973352Z Current runner version: '2.338.2'
+windows-full-regression	Set up job	2026-11-04T23:38:39.7011805Z ##[group]Runner Image Provisioner
+windows-full-regression	Set up job	2026-11-04T23:38:39.7012343Z Hosted Compute Agent
+windows-full-regression	Set up job	2026-11-04T23:38:39.7012678Z Version: 20261021.618
+windows-full-regression	Set up job	2026-11-04T23:38:39.7013090Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+windows-full-regression	Set up job	2026-11-04T23:38:39.7013498Z Build Date: 2026-10-21T00:45:21Z
+windows-full-regression	Set up job	2026-11-04T23:38:39.7013900Z Worker ID: {45ff0662-2c29-4010-95ed-327bcd076789}
+windows-full-regression	Set up job	2026-11-04T23:38:39.7014290Z Region: centralus
+windows-full-regression	Set up job	2026-11-04T23:38:39.7014591Z Cloud: Azure
+windows-full-regression	Set up job	2026-11-04T23:38:39.7014900Z ##[endgroup]
+windows-full-regression	Set up job	2026-11-04T23:38:39.7015625Z ##[group]Operating System
+windows-full-regression	Set up job	2026-11-04T23:38:39.7015992Z Microsoft Windows Server 2022
+windows-full-regression	Set up job	2026-11-04T23:38:39.7016328Z 10.0.20348
+windows-full-regression	Set up job	2026-11-04T23:38:39.7016609Z Datacenter
+windows-full-regression	Set up job	2026-11-04T23:38:39.7016909Z ##[endgroup]
+windows-full-regression	Set up job	2026-11-04T23:38:39.7017209Z ##[group]Runner Image
+windows-full-regression	Set up job	2026-11-04T23:38:39.7017525Z Image: windows-2022
+windows-full-regression	Set up job	2026-11-04T23:38:39.7017846Z Version: 20261025.346.1
+windows-full-regression	Set up job	2026-11-04T23:38:39.7018431Z Included Software: https://github.com/actions/runner-images/blob/win22/20261025.346/images/windows/Windows2022-Readme.md
+windows-full-regression	Set up job	2026-11-04T23:38:39.7019499Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261025.346
+windows-full-regression	Set up job	2026-11-04T23:38:39.7020004Z ##[endgroup]
+windows-full-regression	Set up job	2026-11-04T23:38:39.7020629Z ##[group]GITHUB_TOKEN Permissions
+windows-full-regression	Set up job	2026-11-04T23:38:39.7021701Z Contents: read
+windows-full-regression	Set up job	2026-11-04T23:38:39.7022025Z Metadata: read
+windows-full-regression	Set up job	2026-11-04T23:38:39.7022328Z ##[endgroup]
+windows-full-regression	Set up job	2026-11-04T23:38:39.7023624Z Secret source: Actions
+windows-full-regression	Set up job	2026-11-04T23:38:39.7024114Z Cache mode: write
+windows-full-regression	Set up job	2026-11-04T23:38:39.7024527Z Prepare workflow directory
+windows-full-regression	Set up job	2026-11-04T23:38:39.7249787Z Prepare all required actions
+windows-full-regression	Set up job	2026-11-04T23:38:39.7293125Z Getting action download info
+windows-full-regression	Set up job	2026-11-04T23:38:40.0256406Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+windows-full-regression	Set up job	2026-11-04T23:38:40.1235463Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+windows-full-regression	Set up job	2026-11-04T23:38:40.2007575Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+windows-full-regression	Set up job	2026-11-04T23:38:40.4336033Z Complete job name: windows-full-regression
+windows-full-regression	Run actions/checkout@v4	﻿2026-11-04T23:38:40.5576130Z ##[group]Run actions/checkout@v4
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5576884Z with:
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5577162Z   repository: DevTunaSoft/autonomous-dev-manager
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5579450Z   token: ***
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5579879Z   ssh-strict: true
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5580189Z   ssh-user: git
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5580430Z   persist-credentials: true
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5580691Z   clean: true
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5580929Z   sparse-checkout-cone-mode: true
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5581206Z   fetch-depth: 1
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5581433Z   fetch-tags: false
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5581674Z   show-progress: true
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5581914Z   lfs: false
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5582131Z   submodules: false
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5582374Z   set-safe-directory: true
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5582648Z   allow-unsafe-pr-checkout: false
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.5583061Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.6659311Z Syncing repository: DevTunaSoft/autonomous-dev-manager
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.6660559Z ##[group]Getting Git version info
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.6661057Z Working directory is 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:40.7292809Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.0528008Z git version 2.56.0.windows.3
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.0558752Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.0572181Z Temporarily overriding HOME='D:\a\_temp\7a73b443-1682-405d-9d6e-df9263947076' before making global git config changes
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.0572971Z Adding repository directory to the temporary git global config as a safe directory
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.0580500Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.1407069Z Deleting the contents of 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.1410434Z ##[group]Initializing the repository
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.1417522Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\autonomous-dev-manager\autonomous-dev-manager
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2064366Z Initialized empty Git repository in D:/a/autonomous-dev-manager/autonomous-dev-manager/.git/
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2100121Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/DevTunaSoft/autonomous-dev-manager
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2632611Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2633714Z ##[group]Disabling automatic garbage collection
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2639878Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2862039Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2862989Z ##[group]Setting up auth
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.2870965Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:41.3129470Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:42.5101446Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:42.5305350Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:42.8689338Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:42.8897575Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:43.2419700Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:43.2637318Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:43.2637751Z ##[group]Fetching the repository
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:43.2645227Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +b24b0a33406bde8739138ce771ef48c9fe710bd8:refs/remotes/origin/main
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.3861050Z From https://github.com/DevTunaSoft/autonomous-dev-manager
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.3861720Z  * [new ref]         b24b0a33406bde8739138ce771ef48c9fe710bd8 -> origin/main
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.3883406Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.3883908Z ##[group]Determining the checkout info
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.3885484Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.3891762Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.4207973Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.4405258Z ##[group]Checking out the ref
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.4410503Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.5177009Z Switched to a new branch 'main'
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.5231754Z branch 'main' set up to track 'origin/main'.
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.5264673Z ##[endgroup]
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.5627709Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+windows-full-regression	Run actions/checkout@v4	2026-11-04T23:38:44.5824960Z b24b0a33406bde8739138ce771ef48c9fe710bd8
+windows-full-regression	Run actions/setup-python@v5	﻿2026-11-04T23:38:44.6130739Z ##[group]Run actions/setup-python@v5
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6130999Z with:
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6131119Z   python-version: 3.12
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6131255Z   check-latest: false
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6132643Z   token: ***
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6132762Z   update-environment: true
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6132903Z   allow-prereleases: false
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6133035Z   freethreaded: false
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.6133156Z ##[endgroup]
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.7184814Z ##[group]Installed versions
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.7252869Z (node:1196) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.7254182Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.7254815Z Successfully set up CPython (3.12.10)
+windows-full-regression	Run actions/setup-python@v5	2026-11-04T23:38:44.7255417Z ##[endgroup]
+windows-full-regression	Full regression on Windows	﻿2026-11-04T23:38:44.7450670Z ##[group]Run python -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7451203Z [36;1mpython -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json[0m
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7451477Z [36;1m$code = $LASTEXITCODE[0m
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7451928Z [36;1mpython -c "import json;r=json.load(open('win-regression/regression.json'));[print('=== %s %s (%s tests)\n%s' % (m['module'],m['status'],m['tests'],m['output_tail'][-2500:])) for m in r['modules'] if m['status']!='passed']"[0m
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7452386Z [36;1mexit $code[0m
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7552169Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7552430Z env:
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7552600Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7552869Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7553130Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7553379Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7553605Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:44.7553784Z ##[endgroup]
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:46.5705172Z test_acceptance.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:47.9312829Z test_acceptance.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:47.9317257Z test_adaptive.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:48.0192390Z test_adaptive.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:48.0197460Z test_adaptive_worker.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:48.9273481Z test_adaptive_worker.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:48.9278796Z test_agent.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:51.3664199Z test_agent.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:51.3670607Z test_ai_inspection.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:52.2079795Z test_ai_inspection.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:52.2084931Z test_auto_queue.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:52.9871635Z test_auto_queue.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:52.9877186Z test_build_hidden_imports_049.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:53.0768141Z test_build_hidden_imports_049.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:53.0773597Z test_context_051.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:54.7244936Z test_context_051.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:54.7250731Z test_core.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:55.6788621Z test_core.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:55.6794438Z test_daemon.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:57.0461582Z test_daemon.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:57.0468627Z test_daemon_lifecycle.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:57.3504716Z test_daemon_lifecycle.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:38:57.3511350Z test_daemon_robustness_050.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:00.6587512Z test_daemon_robustness_050.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:00.6593359Z test_desktop.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:00.8938878Z test_desktop.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:00.8945270Z test_desktop_entry_040.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:01.1527789Z test_desktop_entry_040.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:01.1534633Z test_desktop_entry_exit.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:01.7738731Z test_desktop_entry_exit.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:01.7746025Z test_engine.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:02.8443469Z test_engine.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:02.8450326Z test_firstrun_050.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:03.1959673Z test_firstrun_050.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:03.1966911Z test_hardening_050.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:04.5608834Z test_hardening_050.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:04.5615830Z test_independent_retest.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:05.6212739Z test_independent_retest.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:05.6219852Z test_live_acceptance.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:05.9346640Z test_live_acceptance.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:05.9355367Z test_local_transport_security.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:06.9211428Z test_local_transport_security.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:06.9218898Z test_model_probe.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:07.1235129Z test_model_probe.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:07.1242395Z test_model_selection.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:07.4171198Z test_model_selection.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:07.4178363Z test_ollama_direct.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:08.4899759Z test_ollama_direct.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:08.4906616Z test_ollama_health.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:13.1301958Z test_ollama_health.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:13.1310194Z test_packaged_smoke_041.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:13.7064550Z test_packaged_smoke_041.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:13.7071982Z test_pid_alive_049.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:14.8187319Z test_pid_alive_049.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:14.8195820Z test_pipeline.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:15.8995429Z test_pipeline.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:15.9003053Z test_process_tree.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:18.1865345Z test_process_tree.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:18.1873292Z test_project_lock.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:18.4940214Z test_project_lock.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:18.4947655Z test_provision.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:18.7615215Z test_provision.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:18.7624329Z test_pyruntime_050.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:19.2766853Z test_pyruntime_050.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:19.2774733Z test_queued_ai.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:24.4037408Z test_queued_ai.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:24.4046127Z test_recovery.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:27.1887572Z test_recovery.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:27.1895860Z test_regression.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:34.9362093Z test_regression.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:34.9370419Z test_regression_evidence_047.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:35.9186509Z test_regression_evidence_047.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:35.9195274Z test_regression_guards.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:36.1882812Z test_regression_guards.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:36.1892038Z test_regression_log_isolation_048.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:36.8795338Z test_regression_log_isolation_048.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:36.8804979Z test_regression_retention_049.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:37.2103741Z test_regression_retention_049.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:37.2113036Z test_release.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:37.4435583Z test_release.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:37.4444352Z test_release_hidden_imports_049.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:37.5361822Z test_release_hidden_imports_049.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:37.5370620Z test_repair_commit.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:38.6796211Z test_repair_commit.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:38.6806058Z test_repair_recovery.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:38.8286837Z test_repair_recovery.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:38.8296766Z test_repomap_backends_051.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:42.5744419Z test_repomap_backends_051.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:42.5753987Z test_setup.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:42.7604740Z test_setup.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:42.7616032Z test_supervisor_singleton_045.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:43.0033148Z test_supervisor_singleton_045.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:43.0042297Z test_windows_build_verifier_044.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:43.0780235Z test_windows_build_verifier_044.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:43.0790030Z test_windows_startup.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:43.3416606Z test_windows_startup.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:43.3426149Z test_worker.py: started
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2554027Z test_worker.py: passed
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2570017Z test_acceptance.py: passed (2 tests; 1.359s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2570299Z test_adaptive.py: passed (8 tests; 0.094s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2570567Z test_adaptive_worker.py: passed (4 tests; 0.906s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2570873Z test_agent.py: passed (10 tests; 2.438s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2572624Z test_ai_inspection.py: passed (7 tests; 0.828s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2573010Z test_auto_queue.py: passed (7 tests; 0.797s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2573302Z test_build_hidden_imports_049.py: passed (1 tests; 0.094s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2573626Z test_context_051.py: passed (16 tests; 1.625s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2574145Z test_core.py: passed (6 tests; 0.968s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2574522Z test_daemon.py: passed (4 tests; 1.375s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2574967Z test_daemon_lifecycle.py: passed (3 tests; 0.297s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2575343Z test_daemon_robustness_050.py: passed (8 tests; 3.297s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2576361Z test_desktop.py: passed (7 tests; 0.235s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2576643Z test_desktop_entry_040.py: passed (7 tests; 0.25s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2576951Z test_desktop_entry_exit.py: passed (4 tests; 0.625s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2577247Z test_engine.py: passed (9 tests; 1.078s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2577516Z test_firstrun_050.py: passed (16 tests; 0.344s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2577801Z test_hardening_050.py: passed (8 tests; 1.359s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2578102Z test_independent_retest.py: passed (2 tests; 1.063s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2578416Z test_live_acceptance.py: passed (4 tests; 0.312s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2578729Z test_local_transport_security.py: passed (2 tests; 0.985s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2579032Z test_model_probe.py: passed (10 tests; 0.203s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2579299Z test_model_selection.py: passed (7 tests; 0.297s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2579570Z test_ollama_direct.py: passed (6 tests; 1.062s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2579829Z test_ollama_health.py: passed (7 tests; 4.657s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2580098Z test_packaged_smoke_041.py: passed (5 tests; 0.578s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2580372Z test_pid_alive_049.py: passed (3 tests; 1.109s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2580620Z test_pipeline.py: passed (8 tests; 1.063s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2580867Z test_process_tree.py: passed (3 tests; 2.297s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2581128Z test_project_lock.py: passed (7 tests; 0.297s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2581372Z test_provision.py: passed (8 tests; 0.266s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2581613Z test_pyruntime_050.py: passed (8 tests; 0.515s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2581888Z test_queued_ai.py: passed (5 tests; 5.125s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2582184Z test_recovery.py: passed (7 tests; 2.797s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2582425Z test_regression.py: passed (18 tests; 7.75s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2582707Z test_regression_evidence_047.py: passed (5 tests; 0.969s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2582996Z test_regression_guards.py: passed (3 tests; 0.281s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2583324Z test_regression_log_isolation_048.py: passed (2 tests; 0.688s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2583648Z test_regression_retention_049.py: passed (4 tests; 0.328s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2583918Z test_release.py: passed (8 tests; 0.234s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2584191Z test_release_hidden_imports_049.py: passed (1 tests; 0.094s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2584477Z test_repair_commit.py: passed (2 tests; 1.14s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2584734Z test_repair_recovery.py: passed (5 tests; 0.157s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2585010Z test_repomap_backends_051.py: passed (17 tests; 3.734s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2585268Z test_setup.py: passed (14 tests; 0.188s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2585535Z test_supervisor_singleton_045.py: passed (2 tests; 0.234s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2585905Z test_windows_build_verifier_044.py: passed (3 tests; 0.078s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2586214Z test_windows_startup.py: passed (6 tests; 0.266s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2586463Z test_worker.py: passed (11 tests; 1.906s)
+windows-full-regression	Full regression on Windows	2026-11-04T23:39:45.2586720Z OVERALL: PASS; 320 completed tests
+windows-full-regression	Upload Windows regression evidence	﻿2026-11-04T23:39:45.3220588Z ##[group]Run actions/upload-artifact@v4
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3220822Z with:
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3220952Z   name: ADM-Windows-regression
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3221103Z   path: win-regression/
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3221239Z   if-no-files-found: warn
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3221373Z   retention-days: 14
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3221499Z   compression-level: 6
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3221626Z   overwrite: false
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3221753Z   include-hidden-files: false
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3221889Z env:
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3222057Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3222330Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3223163Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3223402Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3223638Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.3223829Z ##[endgroup]
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.4447442Z (node:4848) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.4447923Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.4556658Z With the provided path, there will be 50 files uploaded
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.4560207Z Artifact name is valid!
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.4561336Z Root directory input is valid!
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.7264801Z Beginning upload of artifact content to blob storage
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.7814477Z (node:4848) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:45.9771072Z Uploaded bytes 33580
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:46.0368746Z Finished uploading artifact content to blob storage!
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:46.0369317Z SHA256 digest of uploaded artifact zip is 831e43f90ccf21698c0ecf985e05c67b014909853cb8e7609344ce482b15df82
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:46.0371040Z Finalizing artifact upload
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:46.4777230Z Artifact ADM-Windows-regression.zip successfully finalized. Artifact ID 13374166258
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:46.4777894Z Artifact ADM-Windows-regression has been successfully uploaded! Final size is 33580 bytes. Artifact ID is 13374166258
+windows-full-regression	Upload Windows regression evidence	2026-11-04T23:39:46.4785483Z Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41935328816/artifacts/13374166258
+windows-full-regression	Post Run actions/setup-python@v5	﻿2026-11-04T23:39:46.5054145Z Post job cleanup.
+windows-full-regression	Post Run actions/setup-python@v5	2026-11-04T23:39:46.5985041Z (node:1144) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+windows-full-regression	Post Run actions/setup-python@v5	2026-11-04T23:39:46.5985502Z (Use `node --trace-deprecation ...` to show where the warning was created)
+windows-full-regression	Post Run actions/checkout@v4	﻿2026-11-04T23:39:46.6191003Z Post job cleanup.
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:46.7240630Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:46.7440736Z git version 2.56.0.windows.3
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:46.7479547Z Temporarily overriding HOME='D:\a\_temp\de086e9c-1f24-44e1-9d40-92508770eb57' before making global git config changes
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:46.7480078Z Adding repository directory to the temporary git global config as a safe directory
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:46.7487045Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:46.7704670Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:46.7915460Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:47.1372779Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:47.1559746Z http.https://github.com/.extraheader
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:47.1585286Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:47.1794496Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:47.5443470Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+windows-full-regression	Post Run actions/checkout@v4	2026-11-04T23:39:47.5676992Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+windows-full-regression	Complete job	﻿2026-11-04T23:39:47.9463906Z Cleaning up orphan processes
+windows-full-regression	Complete job	2026-11-04T23:39:47.9691396Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

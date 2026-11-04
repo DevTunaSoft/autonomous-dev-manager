@@ -222,7 +222,7 @@ KochC/opencode-llm-proxy | 86* | mit | pushed 2026-10-29 |  | Local OpenCode-bac
 
 ### freeapi  ::  free llm api
 unclecode/crawl4ai | 86905* | apache-2.0 | pushed 2026-11-04 |  | Official Crawl4AI Cloud: a hosted web scraping, extraction, and search API for AI agents. Free API key, 1,000 
-Ebony-Vinyl/dsh-our-free-model | 60667* | mit | pushed 2026-11-04 |  | 在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全�
+Ebony-Vinyl/dsh-our-free-model | 60667* | mit | pushed 2026-11-04 |  | 在 dsh 里装上这个插件即可，无需登录、注册或填 API Key，就能使用包括 DeepSeek V4.1 Flash、Kimi K3 在内的前沿模型——完全�
 mnfst/awesome-free-llm-apis | 12225* | cc0-1.0 | pushed 2026-11-04 |  | List of Permanent Free LLM API  (API Keys)
 Arthur-Ficial/apfel | 6549* | mit | pushed 2026-10-14 |  | The free AI already on your Mac. CLI tool, OpenAI-compatible server, and interactive chat — all on-device via 
 open-free-llm-api/awesome-freellm-apis | 5141* | mit | pushed 2026-10-27 |  | 134+ free LLM APIs & AI API keys from 40+ providers. Google Gemini, NVIDIA NIM, Groq, OpenRouter & more. One-c
@@ -360,7 +360,7 @@ peak-flow/jana | 0* |  | pushed 2026-06-30 |  | Local-first desktop notes with A
 ### named-codeg  ::  codeg
 colbymchenry/codegraph | 76573* | mit | pushed 2026-11-01 |  | Pre-indexed code knowledge graph, auto syncs on code changes, for Claude Code, Codex, Gemini, Cursor, OpenCode
 swagger-api/swagger-codegen | 17795* | apache-2.0 | pushed 2026-11-04 |  | swagger-codegen contains a template-driven engine to generate documentation, API clients and server stubs in d
-fuzhengwei/CodeGuide | 11924* | apache-2.0 | pushed 2026-11-01 |  | :books: 本代码库是作者小傅哥多年从事一线互联网 Java 开发的学习历程技术汇总，旨在为大家提供一个清晰详细的学习教程�
+fuzhengwei/CodeGuide | 11924* | apache-2.0 | pushed 2026-11-01 |  | :books: 本代码库是作者小傅哥多年从事一线互联网 Java 开发的学习历程技术汇总，旨在为大家提供一个清晰详细的学习教程�
 zai-org/CodeGeeX | 8794* | apache-2.0 | pushed 2024-08-13 |  | CodeGeeX: An Open Multilingual Code Generation Model (KDD 2023)
 oapi-codegen/oapi-codegen | 8642* | apache-2.0 | pushed 2026-11-04 |  | Generate Go client and server boilerplate from OpenAPI 3 specifications
 zai-org/CodeGeeX2 | 7508* | apache-2.0 | pushed 2024-07-10 |  | CodeGeeX2: A More Powerful Multilingual Code Generation Model
@@ -391,7 +391,7 @@ nglmercer/freellmapiV2 | 20* | mit | pushed 2026-11-01 |  | One OpenAI-compatibl
 
 ### named-anythingllm  ::  anythingllm
 Mintplex-Labs/anything-llm | 67943* | mit | pushed 2026-11-04 |  | Stop renting your intelligence. Own it with AnythingLLM. Everything you need for a powerful local-first agent 
-ArvinLovegood/go-stock | 8052* | gpl-3.0 | pushed 2026-11-03 |  | 🦄🦄🦄AI赋能股票分析：AI加持的股票分析/选股工具。股票行情获取，AI热点资讯分析，AI资金/财务分析，涨跌报警推送。�
+ArvinLovegood/go-stock | 8052* | gpl-3.0 | pushed 2026-11-03 |  | 🦄🦄🦄AI赋能股票分析：AI加持的股票分析/选股工具。股票行情获取，AI热点资讯分析，AI资金/财务分析，涨跌报警推送。�
 techjarves/Portable-AI-USB | 2278* | mit | pushed 2026-07-04 | ARCHIVED | A 100% offline, fully portable, zero-trace AI (Ollama + Llama 3 + AnythingLLM) that runs natively from a USB d
 travisvn/chatterbox-tts-api | 692* | agpl-3.0 | pushed 2025-12-23 |  | Local, OpenAI-compatible text-to-speech (TTS) API using Chatterbox, enabling users to generate voice cloned sp
 Mintplex-Labs/anythingllm-docs | 431* | mit | pushed 2026-11-03 |  | Documentation of AnythingLLM by Mintplex Labs Inc.
