@@ -28,7 +28,12 @@ try {
     throw "Packaged smoke test timed out after $TimeoutSeconds seconds"
   }
   $exitCode = $process.ExitCode
-  if ($exitCode -ne 0) { throw "Packaged smoke test exited $exitCode" }
+  if ($exitCode -ne 0) {
+    # Surface the packaged report (if written) so CI logs show WHICH check failed.
+    if (Test-Path -LiteralPath $report -PathType Leaf) { Write-Host (Get-Content -LiteralPath $report -Raw -Encoding UTF8) }
+    else { Write-Host 'No packaged smoke report was written (EXE may have crashed before the self-test).' }
+    throw "Packaged smoke test exited $exitCode"
+  }
   if (-not (Test-Path -LiteralPath $report -PathType Leaf)) { throw 'Packaged smoke report missing' }
   $data = Get-Content -LiteralPath $report -Raw -Encoding UTF8 | ConvertFrom-Json
   if ($data.format -cne 'ADM-packaged-smoke-v1' -or $data.passed -cne $true) { throw 'Packaged smoke report failed format/pass validation' }

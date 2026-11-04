@@ -34,6 +34,12 @@ jobs:
       - name: Build and run packaged smoke test
         shell: cmd
         run: BUILD-WINDOWS-DESKTOP.cmd
+      - name: Print build evidence to the log
+        if: always()
+        shell: pwsh
+        run: |
+          Get-ChildItem build-evidence -ErrorAction SilentlyContinue | ForEach-Object { "--- $($_.Name)"; Get-Content $_.FullName -Raw }
+          if (Test-Path build\ADM-Desktop\warn-ADM-Desktop.txt) { '--- PyInstaller warnings'; Get-Content build\ADM-Desktop\warn-ADM-Desktop.txt -TotalCount 80 }
       - name: Upload build verification evidence
         if: always()
         uses: actions/upload-artifact@v4
