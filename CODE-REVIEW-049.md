@@ -41,3 +41,30 @@ Status key: **FIXED** = verified fix pushed. **VERIFIED** = reproduced by experi
 
 ## Suggested order
 5 (packaged Python), 6 (heartbeat), 7+8 (timeouts and context), 9 (wire admission), then sandbox design.
+
+---
+# Status update (ADM-050)
+
+| # | Status | How verified |
+|---|---|---|
+| 1 pid_alive Windows Ctrl+C | FIXED | Windows CI |
+| 2,3,4 | FIXED | Windows CI |
+| 5 Packaged EXE cannot run repair jobs | **FIXED** (`adm/pyruntime.py`, `--adm-module` dispatch) | Windows CI runs the built EXE through baseline-fail, patch, retest against a FAKE Ollama (`tools/verify-packaged-repair.ps1`). Python itself must already be installed (see open items). |
+| 6 GUI "unresponsive" during jobs | **FIXED** (heartbeat thread, `daemon.py`) | `tests/test_daemon_robustness_050.py` |
+| 7 Job/inference timeouts | **FIXED** (daemon default 1800 s; separate `inference_timeout` default 300 s) | unit tests; real-model timing still unmeasured |
+| 8 Ollama context truncation | **FIXED** (`num_ctx` 8192 requested, oversized prompt or file fails closed) | unit tests; real memory use at 8192 on 16 GB unmeasured |
+| 9 Admission not wired | **FIXED** (daemon applies `adaptive` check before each spawn; `--no-admission` to disable) | unit tests. Per-job RAM figure is a placeholder (2 GiB). |
+| 10 Stale stop request | **FIXED** in GUI (Stop only writes the request if a supervisor is running) | by design; library behaviour unchanged |
+| 11 Unbounded test output in memory | **FIXED** (disk-spooled, 64 MiB cap, process tree killed) | unit tests, Linux and Windows |
+| 12 No way to unblock jobs | **PARTIAL**: `WorkerSupervisor.resolve_blocked()` added and tested; no GUI button yet | unit tests |
+| 13 PATH stale after winget | **PARTIAL**: `find_executable()` knows the default Ollama folder; not exercised on a real install |
+| 14 preflight proxies | FIXED | |
+| 15 OpenCode .cmd shim | FIXED (resolved path used); prompt-length limit not addressed | |
+| 16 schtasks 261 limit | FIXED (validated, clear error) | |
+| 17 symlink check order | FIXED | |
+
+## Still open (new or carried)
+- **Python must be installed on the PC** for the packaged app to run a project's tests. `pyruntime` finds it (PATH, python.org default folders, ADM folder) and gives a plain-language error if absent. No automatic install step yet.
+- **`live_model_verified` is set when the default request function is used, not when a real model answered.** The Windows CI fake server therefore yields `live_model_verified: true` in the report; CI evidence must not be read as live inference. Needs a stronger check (e.g. model digest from `/api/show`).
+- Blocked/deferred jobs are not visible in the GUI (no error column, no resolve button).
+- Sandbox for generated code (Critical). GUI cannot accept a project/request. Real Ollama run on real hardware. Reboot/crash-recovery on Windows. Duplicate queue modules (`core` vs `worker`). Unused imports.

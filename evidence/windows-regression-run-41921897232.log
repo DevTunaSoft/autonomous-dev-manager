@@ -1,11 +1,11 @@
-25Z Current runner version: '2.338.2'
+86Z Current runner version: '2.338.2'
  ##[group]Runner Image Provisioner
  Hosted Compute Agent
  Version: 20261028.624
  Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
  Build Date: 2026-10-28T21:51:42Z
- Worker ID: {b11a05ce-0c73-4f16-a1d4-b968e14c07d6}
- Region: westus
+ Worker ID: {0ea4a1de-bb5b-4977-a718-62335b7b3100}
+ Region: eastus3
  Cloud: Azure
  ##[endgroup]
  ##[group]Operating System
@@ -55,7 +55,7 @@
  [command]"C:\Program Files\Git\bin\git.exe" version
  git version 2.56.0.windows.4
  ##[endgroup]
- Temporarily overriding HOME='D:\a\_temp\f143daf5-9a35-408a-9d00-df19f7f7633e' before making global git config changes
+ Temporarily overriding HOME='D:\a\_temp\c20d80f2-8f1d-42fa-8c0a-0c0f7bfd85f8' before making global git config changes
  Adding repository directory to the temporary git global config as a safe directory
  [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
  Deleting the contents of 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
@@ -77,9 +77,9 @@
  [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
  ##[endgroup]
  ##[group]Fetching the repository
- [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +429d0966bcdc865ad9c075c3df024ff3f10ba9b2:refs/remotes/origin/main
+ [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +1795201b1d50ac8327b5526e7ef88b861b8e9e78:refs/remotes/origin/main
  From https://github.com/DevTunaSoft/autonomous-dev-manager
-  * [new ref]         429d0966bcdc865ad9c075c3df024ff3f10ba9b2 -> origin/main
+  * [new ref]         1795201b1d50ac8327b5526e7ef88b861b8e9e78 -> origin/main
  ##[endgroup]
  ##[group]Determining the checkout info
  ##[endgroup]
@@ -91,7 +91,7 @@
  branch 'main' set up to track 'origin/main'.
  ##[endgroup]
  [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
- 429d0966bcdc865ad9c075c3df024ff3f10ba9b2
+ 1795201b1d50ac8327b5526e7ef88b861b8e9e78
  ##[group]Run actions/setup-python@v5
  with:
    python-version: 3.12
@@ -102,7 +102,7 @@
    freethreaded: false
  ##[endgroup]
  ##[group]Installed versions
- (node:2416) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (node:2700) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
  (Use `node --trace-deprecation ...` to show where the warning was created)
  Successfully set up CPython (3.12.10)
  ##[endgroup]
@@ -139,6 +139,8 @@
  test_daemon.py: passed
  test_daemon_lifecycle.py: started
  test_daemon_lifecycle.py: passed
+ test_daemon_robustness_050.py: started
+ test_daemon_robustness_050.py: passed
  test_desktop.py: started
  test_desktop.py: passed
  test_desktop_entry_040.py: started
@@ -147,6 +149,8 @@
  test_desktop_entry_exit.py: passed
  test_engine.py: started
  test_engine.py: passed
+ test_hardening_050.py: started
+ test_hardening_050.py: passed
  test_independent_retest.py: started
  test_independent_retest.py: passed
  test_live_acceptance.py: started
@@ -164,25 +168,96 @@
  test_packaged_smoke_041.py: started
  test_packaged_smoke_041.py: passed
  test_pid_alive_049.py: started
- Traceback (most recent call last):
-   File "<frozen runpy>", line 198, in _run_module_as_main
-   File "<frozen runpy>", line 88, in _run_code
-   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\regression.py", line 259, in <module>
-     raise SystemExit(main())
-                      ^^^^^^
-   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\regression.py", line 243, in main
-     report = run_suite(args.root, timeout_per_module=args.timeout, progress_path=args.output,
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   File "D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\regression.py", line 189, in run_suite
-     proc.wait(timeout=min(timeout_per_module, remaining) if remaining is not None else timeout_per_module)
-   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1264, in wait
-     return self._wait(timeout=timeout)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\subprocess.py", line 1590, in _wait
-     result = _winapi.WaitForSingleObject(self._handle,
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- KeyboardInterrupt
- ##[error]Process completed with exit code 1.
+ test_pid_alive_049.py: passed
+ test_pipeline.py: started
+ test_pipeline.py: passed
+ test_process_tree.py: started
+ test_process_tree.py: passed
+ test_project_lock.py: started
+ test_project_lock.py: passed
+ test_provision.py: started
+ test_provision.py: passed
+ test_pyruntime_050.py: started
+ test_pyruntime_050.py: passed
+ test_queued_ai.py: started
+ test_queued_ai.py: passed
+ test_recovery.py: started
+ test_recovery.py: passed
+ test_regression.py: started
+ test_regression.py: passed
+ test_regression_evidence_047.py: started
+ test_regression_evidence_047.py: passed
+ test_regression_guards.py: started
+ test_regression_guards.py: passed
+ test_regression_log_isolation_048.py: started
+ test_regression_log_isolation_048.py: passed
+ test_regression_retention_049.py: started
+ test_regression_retention_049.py: passed
+ test_release.py: started
+ test_release.py: passed
+ test_release_hidden_imports_049.py: started
+ test_release_hidden_imports_049.py: passed
+ test_repair_commit.py: started
+ test_repair_commit.py: passed
+ test_repair_recovery.py: started
+ test_repair_recovery.py: passed
+ test_setup.py: started
+ test_setup.py: passed
+ test_supervisor_singleton_045.py: started
+ test_supervisor_singleton_045.py: passed
+ test_windows_build_verifier_044.py: started
+ test_windows_build_verifier_044.py: passed
+ test_windows_startup.py: started
+ test_windows_startup.py: passed
+ test_worker.py: started
+ test_worker.py: passed
+ test_acceptance.py: passed (2 tests; 1.407s)
+ test_adaptive.py: passed (8 tests; 0.14s)
+ test_adaptive_worker.py: passed (4 tests; 0.844s)
+ test_agent.py: passed (10 tests; 3.265s)
+ test_ai_inspection.py: passed (7 tests; 0.813s)
+ test_auto_queue.py: passed (7 tests; 0.781s)
+ test_build_hidden_imports_049.py: passed (1 tests; 0.141s)
+ test_core.py: passed (6 tests; 0.828s)
+ test_daemon.py: passed (4 tests; 1.437s)
+ test_daemon_lifecycle.py: passed (3 tests; 0.313s)
+ test_daemon_robustness_050.py: passed (8 tests; 3.297s)
+ test_desktop.py: passed (7 tests; 0.328s)
+ test_desktop_entry_040.py: passed (7 tests; 0.328s)
+ test_desktop_entry_exit.py: passed (4 tests; 0.687s)
+ test_engine.py: passed (9 tests; 1.391s)
+ test_hardening_050.py: passed (8 tests; 1.046s)
+ test_independent_retest.py: passed (2 tests; 1.329s)
+ test_live_acceptance.py: passed (4 tests; 0.328s)
+ test_local_transport_security.py: passed (2 tests; 1.656s)
+ test_model_probe.py: passed (10 tests; 0.328s)
+ test_model_selection.py: passed (7 tests; 0.312s)
+ test_ollama_direct.py: passed (6 tests; 1.875s)
+ test_ollama_health.py: passed (7 tests; 4.688s)
+ test_packaged_smoke_041.py: passed (5 tests; 0.593s)
+ test_pid_alive_049.py: passed (3 tests; 1.172s)
+ test_pipeline.py: passed (8 tests; 1.078s)
+ test_process_tree.py: passed (3 tests; 2.344s)
+ test_project_lock.py: passed (7 tests; 0.453s)
+ test_provision.py: passed (8 tests; 0.266s)
+ test_pyruntime_050.py: passed (8 tests; 0.625s)
+ test_queued_ai.py: passed (5 tests; 5.265s)
+ test_recovery.py: passed (7 tests; 3.016s)
+ test_regression.py: passed (18 tests; 8.266s)
+ test_regression_evidence_047.py: passed (5 tests; 1.359s)
+ test_regression_guards.py: passed (3 tests; 0.422s)
+ test_regression_log_isolation_048.py: passed (2 tests; 0.875s)
+ test_regression_retention_049.py: passed (4 tests; 0.469s)
+ test_release.py: passed (8 tests; 0.359s)
+ test_release_hidden_imports_049.py: passed (1 tests; 0.141s)
+ test_repair_commit.py: passed (2 tests; 1.484s)
+ test_repair_recovery.py: passed (5 tests; 0.203s)
+ test_setup.py: passed (14 tests; 0.297s)
+ test_supervisor_singleton_045.py: passed (2 tests; 0.234s)
+ test_windows_build_verifier_044.py: passed (3 tests; 0.125s)
+ test_windows_startup.py: passed (6 tests; 0.344s)
+ test_worker.py: passed (11 tests; 1.625s)
+ OVERALL: PASS; 271 completed tests
  ##[group]Run actions/upload-artifact@v4
  with:
    name: ADM-Windows-regression
@@ -199,24 +274,27 @@
    Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
    Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
  ##[endgroup]
- (node:1824) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (node:5128) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
  (Use `node --trace-deprecation ...` to show where the warning was created)
- With the provided path, there will be 24 files uploaded
+ With the provided path, there will be 47 files uploaded
  Artifact name is valid!
  Root directory input is valid!
  Beginning upload of artifact content to blob storage
- (node:1824) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
- Uploaded bytes 14340
+ (node:5128) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+ Uploaded bytes 29813
  Finished uploading artifact content to blob storage!
- SHA256 digest of uploaded artifact zip is 9e19386c39a7a3162d93e8fffa52a015a753df453e29404b5569c26e67ab7db5
+ SHA256 digest of uploaded artifact zip is 4bbda69ca8136bbc8a3138eeb16b062c867ecb33e377a53638547d5487967629
  Finalizing artifact upload
- Artifact ADM-Windows-regression.zip successfully finalized. Artifact ID 13366860142
- Artifact ADM-Windows-regression has been successfully uploaded! Final size is 14340 bytes. Artifact ID is 13366860142
- Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41918347028/artifacts/13366860142
+ Artifact ADM-Windows-regression.zip successfully finalized. Artifact ID 13367053462
+ Artifact ADM-Windows-regression has been successfully uploaded! Final size is 29813 bytes. Artifact ID is 13367053462
+ Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41921897232/artifacts/13367053462
+ Post job cleanup.
+ (node:6968) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
  Post job cleanup.
  [command]"C:\Program Files\Git\bin\git.exe" version
  git version 2.56.0.windows.4
- Temporarily overriding HOME='D:\a\_temp\dd7c689b-bb19-4e67-8d5e-49fedc32dec3' before making global git config changes
+ Temporarily overriding HOME='D:\a\_temp\12987b85-0e33-4806-bf25-fa479cbbd8ff' before making global git config changes
  Adding repository directory to the temporary git global config as a safe directory
  [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
  [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
