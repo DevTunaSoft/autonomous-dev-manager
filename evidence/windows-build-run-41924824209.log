@@ -1,0 +1,513 @@
+10Z Current runner version: '2.338.2'
+ ##[group]Runner Image Provisioner
+ Hosted Compute Agent
+ Version: 20261028.624
+ Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+ Build Date: 2026-10-28T21:51:42Z
+ Worker ID: {b1414d1d-2fab-493b-814f-8c85911ffbca}
+ Region: eastus
+ Cloud: Azure
+ ##[endgroup]
+ ##[group]Operating System
+ Microsoft Windows Server 2022
+ 10.0.20348
+ Datacenter
+ ##[endgroup]
+ ##[group]Runner Image
+ Image: windows-2022
+ Version: 20261101.353.1
+ Included Software: https://github.com/actions/runner-images/blob/win22/20261101.353/images/windows/Windows2022-Readme.md
+ Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261101.353
+ ##[endgroup]
+ ##[group]GITHUB_TOKEN Permissions
+ Contents: read
+ Metadata: read
+ ##[endgroup]
+ Secret source: Actions
+ Cache mode: write
+ Prepare workflow directory
+ Prepare all required actions
+ Getting action download info
+ Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+ Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+ Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+ Complete job name: windows-build
+ ##[group]Run actions/checkout@v4
+ with:
+   repository: DevTunaSoft/autonomous-dev-manager
+   token: ***
+   ssh-strict: true
+   ssh-user: git
+   persist-credentials: true
+   clean: true
+   sparse-checkout-cone-mode: true
+   fetch-depth: 1
+   fetch-tags: false
+   show-progress: true
+   lfs: false
+   submodules: false
+   set-safe-directory: true
+   allow-unsafe-pr-checkout: false
+ ##[endgroup]
+ Syncing repository: DevTunaSoft/autonomous-dev-manager
+ ##[group]Getting Git version info
+ Working directory is 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+ [command]"C:\Program Files\Git\bin\git.exe" version
+ git version 2.56.0.windows.4
+ ##[endgroup]
+ Temporarily overriding HOME='D:\a\_temp\91a1e410-363e-44ae-8a9e-ab83de4a05a9' before making global git config changes
+ Adding repository directory to the temporary git global config as a safe directory
+ [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+ Deleting the contents of 'D:\a\autonomous-dev-manager\autonomous-dev-manager'
+ ##[group]Initializing the repository
+ [command]"C:\Program Files\Git\bin\git.exe" init D:\a\autonomous-dev-manager\autonomous-dev-manager
+ Initialized empty Git repository in D:/a/autonomous-dev-manager/autonomous-dev-manager/.git/
+ [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/DevTunaSoft/autonomous-dev-manager
+ ##[endgroup]
+ ##[group]Disabling automatic garbage collection
+ [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+ ##[endgroup]
+ ##[group]Setting up auth
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+ ##[endgroup]
+ ##[group]Fetching the repository
+ [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +8270b097be543d8d6c3f7d94c70f7566875c00bd:refs/remotes/origin/main
+ From https://github.com/DevTunaSoft/autonomous-dev-manager
+  * [new ref]         8270b097be543d8d6c3f7d94c70f7566875c00bd -> origin/main
+ ##[endgroup]
+ ##[group]Determining the checkout info
+ ##[endgroup]
+ [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+ ##[group]Checking out the ref
+ [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B main refs/remotes/origin/main
+ Switched to a new branch 'main'
+ branch 'main' set up to track 'origin/main'.
+ ##[endgroup]
+ [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+ 8270b097be543d8d6c3f7d94c70f7566875c00bd
+ ##[group]Run actions/setup-python@v5
+ with:
+   python-version: 3.12
+   check-latest: false
+   token: ***
+   update-environment: true
+   allow-prereleases: false
+   freethreaded: false
+ ##[endgroup]
+ ##[group]Installed versions
+ (node:7300) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ Successfully set up CPython (3.12.10)
+ ##[endgroup]
+ ##[group]Run python -m pip install --disable-pip-version-check pyinstaller==6.11.1
+ [36;1mpython -m pip install --disable-pip-version-check pyinstaller==6.11.1[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ Collecting pyinstaller==6.11.1
+   Downloading pyinstaller-6.11.1-py3-none-win_amd64.whl.metadata (8.3 kB)
+ Collecting setuptools>=42.0.0 (from pyinstaller==6.11.1)
+   Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+ Collecting altgraph (from pyinstaller==6.11.1)
+   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+ Collecting pyinstaller-hooks-contrib>=2024.9 (from pyinstaller==6.11.1)
+   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl.metadata (16 kB)
+ Requirement already satisfied: packaging>=22.0 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from pyinstaller==6.11.1) (26.3)
+ Collecting pefile!=2024.8.26,>=2022.5.30 (from pyinstaller==6.11.1)
+   Downloading pefile-2023.2.7-py3-none-any.whl.metadata (1.4 kB)
+ Collecting pywin32-ctypes>=0.2.1 (from pyinstaller==6.11.1)
+   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl.metadata (3.9 kB)
+ Downloading pyinstaller-6.11.1-py3-none-win_amd64.whl (1.3 MB)
+    ---------------------------------------- 1.3/1.3 MB 17.1 MB/s  0:00:00
+ Downloading pefile-2023.2.7-py3-none-any.whl (71 kB)
+ Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+ Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+ Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+    ---------------------------------------- 876.3/876.3 kB 19.8 MB/s  0:00:00
+ Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+ Installing collected packages: altgraph, setuptools, pywin32-ctypes, pyinstaller-hooks-contrib, pefile, pyinstaller
+ 
+ Successfully installed altgraph-0.17.5 pefile-2023.2.7 pyinstaller-6.11.1 pyinstaller-hooks-contrib-2026.9 pywin32-ctypes-0.2.3 setuptools-84.2.1
+ ##[group]Run python -m compileall -q adm tests
+ [36;1mpython -m compileall -q adm tests[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ ##[group]Run python -m unittest discover -s tests -p 'test_windows_startup.py' -v
+ [36;1mpython -m unittest discover -s tests -p 'test_windows_startup.py' -v[0m
+ [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+ [36;1mpython -m unittest discover -s tests -p 'test_desktop_entry_exit.py' -v[0m
+ [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ test_existing_stop_request_is_not_discarded (test_windows_startup.StartupTests.test_existing_stop_request_is_not_discarded) ... ok
+ test_frozen_startup_uses_supervisor_flag (test_windows_startup.StartupTests.test_frozen_startup_uses_supervisor_flag) ... ok
+ test_missing_python_is_rejected (test_windows_startup.StartupTests.test_missing_python_is_rejected) ... ok
+ test_no_automatic_install (test_windows_startup.StartupTests.test_no_automatic_install) ... ok
+ test_source_startup_uses_module (test_windows_startup.StartupTests.test_source_startup_uses_module) ... ok
+ test_windows_command_is_argv_not_shell (test_windows_startup.StartupTests.test_windows_command_is_argv_not_shell) ... ok
+ 
+ ----------------------------------------------------------------------
+ Ran 6 tests in 0.145s
+ 
+ OK
+ test_real_script_propagates_invalid_arguments (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_propagates_invalid_arguments) ... ok
+ test_real_script_smoke_produces_success_exit (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_smoke_produces_success_exit) ... ok
+ test_smoke_failure_returns_nonzero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_failure_returns_nonzero) ... ok
+ test_smoke_success_returns_zero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_success_returns_zero) ... ok
+ 
+ ----------------------------------------------------------------------
+ Ran 4 tests in 0.392s
+ 
+ OK
+ ##[group]Run BUILD-WINDOWS-DESKTOP.cmd
+ [36;1mBUILD-WINDOWS-DESKTOP.cmd[0m
+ shell: C:\Windows\system32\cmd.EXE /D /E:ON /V:OFF /S /C "CALL "{0}""
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ 109 INFO: PyInstaller: 6.11.1, contrib hooks: 2026.9
+ 109 INFO: Python: 3.12.10
+ 140 INFO: Platform: Windows-2022Server-10.0.20348-SP0
+ 140 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ 140 INFO: wrote D:\a\autonomous-dev-manager\autonomous-dev-manager\ADM-Desktop.spec
+ 140 INFO: Removing temporary files and cleaning cache in C:\Users\runneradmin\AppData\Local\pyinstaller
+ 140 INFO: Module search paths (PYTHONPATH):
+ ['D:\\a\\autonomous-dev-manager\\autonomous-dev-manager',
+  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+  'D:\\a\\autonomous-dev-manager\\autonomous-dev-manager',
+  'D:\\a\\autonomous-dev-manager\\autonomous-dev-manager']
+ 406 INFO: checking Analysis
+ 406 INFO: Building Analysis because Analysis-00.toc is non existent
+ 406 INFO: Running Analysis Analysis-00.toc
+ 406 INFO: Target bytecode optimization level: 0
+ 406 INFO: Initializing module dependency graph...
+ 406 INFO: Initializing module graph hook caches...
+ 422 INFO: Analyzing base_library.zip ...
+ 1673 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+ 3331 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+ 4636 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+ 5183 INFO: Caching module dependency graph...
+ 5292 INFO: Looking for Python shared library...
+ 5324 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+ 5324 INFO: Analyzing D:\a\autonomous-dev-manager\autonomous-dev-manager\adm\desktop_entry.py
+ 5399 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+ 5402 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+ 5765 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+ 5765 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+ 6395 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+ 6828 INFO: Analyzing hidden import 'adm.ollama_cli'
+ 6828 INFO: Analyzing hidden import 'adm.agent_cli'
+ 6828 INFO: Processing module hooks (post-graph stage)...
+ 6859 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+ 6875 INFO: Performing binary vs. data reclassification (928 entries)
+ 7411 INFO: Looking for ctypes DLLs
+ 7427 INFO: Analyzing run-time hooks ...
+ 7427 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+ 7427 INFO: Including run-time hook 'pyi_rth__tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+ 7458 INFO: Looking for dynamic libraries
+ 7615 INFO: Extra DLL search directories (AddDllDirectory): []
+ 7615 INFO: Extra DLL search directories (PATH): []
+ 8365 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.dll'.
+ 8395 INFO: Warnings written to D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\warn-ADM-Desktop.txt
+ 8413 INFO: Graph cross-reference written to D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\xref-ADM-Desktop.html
+ 8444 INFO: checking PYZ
+ 8444 INFO: Building PYZ because PYZ-00.toc is non existent
+ 8444 INFO: Building PYZ (ZlibArchive) D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\PYZ-00.pyz
+ 8803 INFO: Building PYZ (ZlibArchive) D:\a\autonomous-dev-manager\autonomous-dev-manager\build\ADM-Desktop\PYZ-00.pyz completed successfully.
+ 8850 INFO: checking PKG
+ 8850 INFO: Building PKG because PKG-00.toc is non existent
+ 8850 INFO: Building PKG (CArchive) ADM-Desktop.pkg
+ 13231 INFO: Building PKG (CArchive) ADM-Desktop.pkg completed successfully.
+ 13247 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+ 13247 INFO: checking EXE
+ 13247 INFO: Building EXE because EXE-00.toc is non existent
+ 13247 INFO: Building EXE from EXE-00.toc
+ 13247 INFO: Copying bootloader EXE to D:\a\autonomous-dev-manager\autonomous-dev-manager\dist\ADM-Desktop.exe
+ 13247 INFO: Copying icon to EXE
+ 13247 INFO: Copying 0 resources to EXE
+ 13247 INFO: Embedding manifest in EXE
+ 13247 INFO: Appending PKG archive to EXE
+ 13262 INFO: Fixing EXE headers
+ 13340 INFO: Building EXE from EXE-00.toc completed successfully.
+ Packaged smoke passed; SHA256: 54e797b66e07508c302e58bb144093bdf56553e9f5fb90f41cb4f0c8299b8f5c
+ Build complete: dist\ADM-Desktop.exe
+ IMPORTANT: Runtime acceptance on Windows and OS sandboxing remain unverified.
+ ##[group]Run ./tools/verify-packaged-repair.ps1
+ [36;1m./tools/verify-packaged-repair.ps1[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ EXE exit code: 0
+ Report status: verified_direct_repair; attempts: 1; baseline exit: 1
+ def add(a, b):
+     return a + b
+ 
+ PACKAGED REPAIR PLUMBING OK (fake Ollama; not a real model)
+ ##[group]Run python -c "import json; from adm import firstrun; a=firstrun.assess(); print(json.dumps(a, indent=1)); print('----- TEXT THE USER SEES -----'); print(firstrun.prompt_text(a)[1])"
+ [36;1mpython -c "import json; from adm import firstrun; a=firstrun.assess(); print(json.dumps(a, indent=1)); print('----- TEXT THE USER SEES -----'); print(firstrun.prompt_text(a)[1])"[0m
+ [36;1mpython -c "from adm import desktop; desktop.main(auto_close_ms=6000, ask=lambda t, m: (print('GUI PROMPT SHOWN:', t), print(m), False)[2])"[0m
+ [36;1mif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ {
+  "ram_gib": 16.0,
+  "python": {
+   "found": true,
+   "path": "C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python.exe"
+  },
+  "ollama": {
+   "installed": false,
+   "exe": null,
+   "reachable": false
+  },
+  "installed_models": [],
+  "usable_model": null,
+  "recommended_model": "qwen2.5-coder:3b",
+  "recommended_size_gb": 2.0,
+  "models_dir": "C:\\Users\\runneradmin\\.ollama\\models",
+  "models_dir_free_gb": 81.5,
+  "winget": false,
+  "needs": [
+   "ollama",
+   "model"
+  ],
+  "ready": false
+ }
+ ----- TEXT THE USER SEES -----
+ ADM runs its AI on your own PC, so a few one-time downloads are needed:
+ 
+ 1. Ollama (the program that runs AI models on your PC, free).
+    Download and run the installer from https://ollama.com/download first.
+ 2. AI model: qwen2.5-coder:3b (about 2.0 GB download).
+    Chosen for your PC's 16.0 GB of memory.
+    It will be saved in: C:\Users\runneradmin\.ollama\models
+    Free space on that drive: 81.5 GB.
+ 
+ An internet connection is needed only for these downloads.
+ 
+ Download and set up now?
+ GUI PROMPT SHOWN: Set up local AI
+ ADM runs its AI on your own PC, so a few one-time downloads are needed:
+ 
+ 1. Ollama (the program that runs AI models on your PC, free).
+    Download and run the installer from https://ollama.com/download first.
+ 2. AI model: qwen2.5-coder:3b (about 2.0 GB download).
+    Chosen for your PC's 16.0 GB of memory.
+    It will be saved in: C:\Users\runneradmin\.ollama\models
+    Free space on that drive: 81.5 GB.
+ 
+ An internet connection is needed only for these downloads.
+ 
+ Download and set up now?
+ ##[group]Run Get-ChildItem build-evidence -ErrorAction SilentlyContinue | ForEach-Object { "--- $($_.Name)"; Get-Content $_.FullName -Raw }
+ [36;1mGet-ChildItem build-evidence -ErrorAction SilentlyContinue | ForEach-Object { "--- $($_.Name)"; Get-Content $_.FullName -Raw }[0m
+ [36;1mif (Test-Path build\ADM-Desktop\warn-ADM-Desktop.txt) { '--- PyInstaller warnings'; Get-Content build\ADM-Desktop\warn-ADM-Desktop.txt -TotalCount 80 }[0m
+ shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ --- packaged-smoke.json
+ {
+   "checks": {
+     "import:adm.agent_cli": "passed",
+     "import:adm.daemon": "passed",
+     "import:adm.desktop": "passed",
+     "import:adm.model_selection": "passed",
+     "import:adm.ollama_cli": "passed",
+     "import:adm.ollama_direct": "passed",
+     "import:adm.pyruntime": "passed",
+     "import:adm.worker": "passed",
+     "sqlite_wal_and_schema": "passed"
+   },
+   "format": "ADM-packaged-smoke-v1",
+   "passed": true,
+   "scope": "imports and SQLite only; NOT a Windows GUI, sandbox, AI or end-to-end acceptance test",
+   "timestamp": 1793831040.15276
+ }
+ --- windows-build-verification.json
+ {
+     "format":  "ADM-windows-build-verification-v1",
+     "passed":  true,
+     "executable_name":  "ADM-Desktop.exe",
+     "sha256":  "54e797b66e07508c302e58bb144093bdf56553e9f5fb90f41cb4f0c8299b8f5c",
+     "bytes":  13108791,
+     "smoke_exit_code":  0,
+     "smoke_checks":  [
+                          "import:adm.agent_cli",
+                          "import:adm.daemon",
+                          "import:adm.desktop",
+                          "import:adm.model_selection",
+                          "import:adm.ollama_cli",
+                          "import:adm.ollama_direct",
+                          "import:adm.pyruntime",
+                          "import:adm.worker",
+                          "sqlite_wal_and_schema"
+                      ],
+     "started_utc":  "2026-11-04T22:23:57.7021689+00:00",
+     "finished_utc":  "2026-11-04T22:24:01.9988336+00:00",
+     "scope":  "Packaged imports and SQLite only; GUI, autonomous AI, isolation, and Windows user acceptance NOT verified"
+ }
+ 
+ --- PyInstaller warnings
+ 
+ This file lists modules PyInstaller was not able to find. This does not
+ necessarily mean this module is required for running your program. Python and
+ Python 3rd-party packages include a lot of conditional or optional modules. For
+ example the module 'ntpath' only exists on Windows, whereas the module
+ 'posixpath' only exists on Posix systems.
+ 
+ Types if import:
+ * top-level: imported at the top-level - look at these first
+ * conditional: imported within an if-statement
+ * delayed: imported within a function
+ * optional: imported within a try-except-statement
+ 
+ IMPORTANT: Do NOT post this list to the issue-tracker. Use it as a basis for
+             tracking down the missing module yourself. Thanks!
+ 
+ missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional)
+ excluded module named _frozen_importlib - imported by importlib (optional), importlib.abc (optional)
+ missing module named pwd - imported by posixpath (delayed, conditional, optional), shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), subprocess (delayed, conditional, optional), netrc (delayed, conditional), getpass (delayed)
+ missing module named grp - imported by shutil (delayed, optional), tarfile (optional), pathlib (delayed, optional), subprocess (delayed, conditional, optional)
+ missing module named posix - imported by os (conditional, optional), shutil (conditional), importlib._bootstrap_external (conditional), posixpath (optional)
+ missing module named resource - imported by posix (top-level)
+ missing module named vms_lib - imported by platform (delayed, optional)
+ missing module named 'java.lang' - imported by platform (delayed, optional)
+ missing module named java - imported by platform (delayed)
+ missing module named _winreg - imported by platform (delayed, optional)
+ missing module named _scproxy - imported by urllib.request (conditional)
+ missing module named termios - imported by getpass (optional)
+ missing module named _posixsubprocess - imported by subprocess (conditional)
+ missing module named fcntl - imported by subprocess (optional), adm.project_lock (delayed, conditional)
+ missing module named readline - imported by code (delayed, conditional, optional)
+ ##[group]Run actions/upload-artifact@v4
+ with:
+   name: ADM-Windows-build-evidence
+   path: build-evidence/
+
+
+   if-no-files-found: warn
+   retention-days: 14
+   compression-level: 6
+   overwrite: false
+   include-hidden-files: false
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ (node:8108) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ Multiple search paths detected. Calculating the least common ancestor of all paths
+ The least common ancestor is D:\a\autonomous-dev-manager\autonomous-dev-manager. This will be the root directory of the artifact
+ With the provided path, there will be 6 files uploaded
+ Artifact name is valid!
+ Root directory input is valid!
+ Beginning upload of artifact content to blob storage
+ (node:8108) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+ Uploaded bytes 2936
+ Finished uploading artifact content to blob storage!
+ SHA256 digest of uploaded artifact zip is 8f228808c2354fa5c17ba6139542f569db527df345c5a4c1cab1cc6daa394454
+ Finalizing artifact upload
+ Artifact ADM-Windows-build-evidence.zip successfully finalized. Artifact ID 13368427563
+ Artifact ADM-Windows-build-evidence has been successfully uploaded! Final size is 2936 bytes. Artifact ID is 13368427563
+ Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41924824209/artifacts/13368427563
+ ##[group]Run actions/upload-artifact@v4
+ with:
+   name: ADM-Desktop-Windows-unverified
+   path: dist/ADM-Desktop.exe
+   if-no-files-found: error
+   retention-days: 7
+   compression-level: 6
+   overwrite: false
+   include-hidden-files: false
+ env:
+   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+ ##[endgroup]
+ (node:4408) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ With the provided path, there will be 1 file uploaded
+ Artifact name is valid!
+ Root directory input is valid!
+ Beginning upload of artifact content to blob storage
+ (node:4408) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+ Uploaded bytes 8388608
+ Uploaded bytes 12864342
+ Finished uploading artifact content to blob storage!
+ SHA256 digest of uploaded artifact zip is fd22c8806b85ba9459f6eecfb374e30b2b6600b3f339cda47be1f53aadd202bb
+ Finalizing artifact upload
+ Artifact ADM-Desktop-Windows-unverified.zip successfully finalized. Artifact ID 13367834708
+ Artifact ADM-Desktop-Windows-unverified has been successfully uploaded! Final size is 12864342 bytes. Artifact ID is 13367834708
+ Artifact download URL: https://github.com/DevTunaSoft/autonomous-dev-manager/actions/runs/41924824209/artifacts/13367834708
+ Post job cleanup.
+ (node:1656) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+ (Use `node --trace-deprecation ...` to show where the warning was created)
+ Post job cleanup.
+ [command]"C:\Program Files\Git\bin\git.exe" version
+ git version 2.56.0.windows.4
+ Temporarily overriding HOME='D:\a\_temp\31bcf7b0-255e-44d6-8368-7c5ccff65af9' before making global git config changes
+ Adding repository directory to the temporary git global config as a safe directory
+ [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\autonomous-dev-manager\autonomous-dev-manager
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+ http.https://github.com/.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+ [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+ [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+ Cleaning up orphan processes
+ ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
