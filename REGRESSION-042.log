@@ -1,0 +1,6 @@
+/usr/lib/python3.13/json/encoder.py:263: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7faa1362f3d0>
+  def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+usage: python -m unittest [-h] --output OUTPUT [--model MODEL]
+                          [--timeout TIMEOUT] [--acknowledge-unsandboxed-code]
+python -m unittest: error: Requires --acknowledge-unsandboxed-code; use a disposable VM

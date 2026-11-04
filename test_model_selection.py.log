@@ -1,0 +1,12 @@
+test_16gb_chooses_small_coding_model (test_model_selection.ModelSelectionTests.test_16gb_chooses_small_coding_model) ... ok
+test_32gb_chooses_larger_model (test_model_selection.ModelSelectionTests.test_32gb_chooses_larger_model) ... ok
+test_does_not_assume_unknown_size (test_model_selection.ModelSelectionTests.test_does_not_assume_unknown_size) ... ok
+test_does_not_choose_non_coding_model (test_model_selection.ModelSelectionTests.test_does_not_choose_non_coding_model) ... ok
+test_explicit_preference_must_fit_and_exist (test_model_selection.ModelSelectionTests.test_explicit_preference_must_fit_and_exist) ... ok
+test_invalid_ram (test_model_selection.ModelSelectionTests.test_invalid_ram) ... ok
+test_malicious_names_ignored (test_model_selection.ModelSelectionTests.test_malicious_names_ignored) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK

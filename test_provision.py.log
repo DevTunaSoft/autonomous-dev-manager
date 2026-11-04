@@ -1,0 +1,13 @@
+test_changed_plan_rejected (test_provision.ProvisionTests.test_changed_plan_rejected) ... ok
+test_consent_required (test_provision.ProvisionTests.test_consent_required) ... ok
+test_dependency_order (test_provision.ProvisionTests.test_dependency_order) ... ok
+test_duplicate_step_rejected (test_provision.ProvisionTests.test_duplicate_step_rejected) ... ok
+test_failure_stops_before_model_pull (test_provision.ProvisionTests.test_failure_stops_before_model_pull) ... ok
+test_non_windows_rejected (test_provision.ProvisionTests.test_non_windows_rejected) ... ok
+test_resume_rechecks_when_not_verified (test_provision.ProvisionTests.test_resume_rechecks_when_not_verified) ... ok
+test_resume_verifies_previous_steps (test_provision.ProvisionTests.test_resume_verifies_previous_steps) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.027s
+
+OK

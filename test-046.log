@@ -1,0 +1,16 @@
+test_abandoned_metadata_does_not_block_recovery (tests.test_project_lock.ProjectLockTests.test_abandoned_metadata_does_not_block_recovery) ... ok
+test_crashed_process_releases_ownership (tests.test_project_lock.ProjectLockTests.test_crashed_process_releases_ownership) ... ok
+test_cross_process_exclusion_and_recovery (tests.test_project_lock.ProjectLockTests.test_cross_process_exclusion_and_recovery) ... ok
+test_exception_releases_kernel_lock (tests.test_project_lock.ProjectLockTests.test_exception_releases_kernel_lock) ... ok
+test_metadata_and_persistent_lock_file (tests.test_project_lock.ProjectLockTests.test_metadata_and_persistent_lock_file) ... ok
+test_same_process_second_owner_refused (tests.test_project_lock.ProjectLockTests.test_same_process_second_owner_refused) ... ok
+test_symlink_refused (tests.test_project_lock.ProjectLockTests.test_symlink_refused) ... ok
+test_invalid_configuration (tests.test_daemon.DaemonTests.test_invalid_configuration) ... ok
+test_multiple_jobs_processed_without_new_prompt (tests.test_daemon.DaemonTests.test_multiple_jobs_processed_without_new_prompt) ... ok
+test_stop_without_jobs (tests.test_daemon.DaemonTests.test_stop_without_jobs) ... ok
+test_waits_for_new_job_without_reprompt (tests.test_daemon.DaemonTests.test_waits_for_new_job_without_reprompt) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 5.767s
+
+OK

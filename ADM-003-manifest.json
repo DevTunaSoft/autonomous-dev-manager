@@ -1,0 +1,19 @@
+{
+  "version": "ADM-003",
+  "test_command": "python -m unittest discover -s tests -q",
+  "tests_passed": 25,
+  "live_opencode_ollama_tested": false,
+  "files": {
+    "README.md": "c2660c5f3589be746b216f36fe12da97581eace5d6ef66c62926c94e10261408",
+    "adm/__init__.py": "8e528fb7f41d2e98145cf47a6fe62da14f278376ea6de7223f34d5a972b79322",
+    "adm/__main__.py": "b91894925262fbe5545bcf17b568793e0f922fe12b7dc0365b8bffa5679ae599",
+    "adm/agent.py": "88d56d1de5a039435c59e57372a267f933b13b3ee4e32a23126cc75b3056697d",
+    "adm/agent_cli.py": "03c13aa24a241fa600357ea67b6b234e91b736875c82c815857583ebe9c1da3f",
+    "adm/cli.py": "c4e56a7205e8f68cf6d70711a133811931e4a3ed2c8363c8f99a37f857bffda9",
+    "adm/core.py": "1f1a639aa2fa8f8b056708b7cc6f5daf58f848af540f70510210d474f543137f",
+    "adm/engine.py": "fbde98f05f75b2a000b7ad45189674930ddd15b42bb51104313676f483335f24",
+    "tests/test_agent.py": "9a93e79cd4ef368fd0cc372b8fb42d30cc8e53c9abed9fa99408db2bcae02da8",
+    "tests/test_core.py": "67af65d975dfaf05e25ce77ebbe58d40608f6cdca0babb0997f97db0fb4a2ff5",
+    "tests/test_engine.py": "043f8b87622aa0254a222981cd64d9093aafc67b9de212649532b89c5b334e28"
+  }
+}

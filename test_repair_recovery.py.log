@@ -1,0 +1,10 @@
+test_finish_commits_successful_repair (test_repair_recovery.RepairRecoveryTests.test_finish_commits_successful_repair) ... ok
+test_interrupted_replacement_restores_original (test_repair_recovery.RepairRecoveryTests.test_interrupted_replacement_restores_original) ... ok
+test_project_mismatch_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_project_mismatch_blocks_recovery) ... ok
+test_symlink_swap_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_symlink_swap_blocks_recovery) ... ok
+test_unexpected_edit_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_unexpected_edit_blocks_recovery) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.014s
+
+OK

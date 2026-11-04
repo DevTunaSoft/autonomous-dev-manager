@@ -1,0 +1,11 @@
+test_failure_and_bounded_retry (test_core.SupervisorTests.test_failure_and_bounded_retry) ... ok
+test_invalid (test_core.SupervisorTests.test_invalid) ... ok
+test_recovery_after_restart (test_core.SupervisorTests.test_recovery_after_restart) ... ok
+test_resource_modes (test_core.SupervisorTests.test_resource_modes) ... ok
+test_success_and_evidence (test_core.SupervisorTests.test_success_and_evidence) ... ok
+test_timeout (test_core.SupervisorTests.test_timeout) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.967s
+
+OK

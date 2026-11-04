@@ -1,0 +1,9 @@
+test_deferred_job_runs_after_resources_recover (test_adaptive_worker.AdaptiveWorkerTests.test_deferred_job_runs_after_resources_recover) ... ok
+test_denied_is_deferred_without_consuming_attempt (test_adaptive_worker.AdaptiveWorkerTests.test_denied_is_deferred_without_consuming_attempt) ... ok
+test_no_admission_keeps_backward_compatibility (test_adaptive_worker.AdaptiveWorkerTests.test_no_admission_keeps_backward_compatibility) ... ok
+test_probe_exception_does_not_launch (test_adaptive_worker.AdaptiveWorkerTests.test_probe_exception_does_not_launch) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.885s
+
+OK

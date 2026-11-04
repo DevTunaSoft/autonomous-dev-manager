@@ -1,0 +1,10 @@
+test_atomic_json (test_packaged_smoke_041.PackagedSmokeTests.test_atomic_json) ... ok
+test_failure_is_nonzero (test_packaged_smoke_041.PackagedSmokeTests.test_failure_is_nonzero) ... ok
+test_frozen_dispatch (test_packaged_smoke_041.PackagedSmokeTests.test_frozen_dispatch) ... ok
+test_missing_parent_fails_closed (test_packaged_smoke_041.PackagedSmokeTests.test_missing_parent_fails_closed) ... ok
+test_real_offline_smoke (test_packaged_smoke_041.PackagedSmokeTests.test_real_offline_smoke) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.060s
+
+OK

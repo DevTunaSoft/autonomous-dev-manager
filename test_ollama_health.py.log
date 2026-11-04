@@ -1,0 +1,17 @@
+test_cli_returns_failure_without_server (test_ollama_health.HealthTests.test_cli_returns_failure_without_server) ... ok
+test_invalid_metadata_rejected (test_ollama_health.HealthTests.test_invalid_metadata_rejected) ... ok
+test_invalid_timeout (test_ollama_health.HealthTests.test_invalid_timeout) ... ok
+test_list_installed_models (test_ollama_health.HealthTests.test_list_installed_models) ... ok
+test_redirect_never_followed (test_ollama_health.HealthTests.test_redirect_never_followed) ... ok
+test_reject_remote_and_non_loopback (test_ollama_health.HealthTests.test_reject_remote_and_non_loopback) ... ok
+test_unavailable_server_reports_error (test_ollama_health.HealthTests.test_unavailable_server_reports_error) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.027s
+
+OK
+{
+  "reachable": false,
+  "error": "Local Ollama is unavailable or rejected the health check: <urlopen error [Errno 111] Connection refused>",
+  "inference_verified": false
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "isolated_regression",
+  "fingerprint": "b6d74e38a33bbb0009924c888dc643221ed2b61d9c7b380b5203caa22f7b9580",
+  "modules": [
+    {
+      "module": "test_agent.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 10,
+      "seconds": 17.426,
+      "output_tail": "test_ambiguous_interrupted_agent_is_not_replayed (test_agent.AgentProofTests.test_ambiguous_interrupted_agent_is_not_replayed) ... ok\ntest_failed_repair_cannot_pass (test_agent.AgentProofTests.test_failed_repair_cannot_pass) ... ok\ntest_interrupted_before_agent_can_resume (test_agent.AgentProofTests.test_interrupted_before_agent_can_resume) ... ok\ntest_local_only_model_guard (test_agent.AgentProofTests.test_local_only_model_guard) ... ok\ntest_modified_test_is_blocked_even_if_tests_pass (test_agent.AgentProofTests.test_modified_test_is_blocked_even_if_tests_pass) ... ok\ntest_no_agent_missing_is_clear (test_agent.AgentProofTests.test_no_agent_missing_is_clear) ... ok\ntest_real_test_failure_fake_agent_repair (test_agent.AgentProofTests.test_real_test_failure_fake_agent_repair) ... ok\ntest_symlink_project_rejected (test_agent.AgentProofTests.test_symlink_project_rejected) ... ok\ntest_workspace_requirement (test_agent.AgentProofTests.test_workspace_requirement) ... ok\ntest_wrong_model_checkpoint_rejected (test_agent.AgentProofTests.test_wrong_model_checkpoint_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 16.485s\n\nOK\n",
+      "log_path": "test_agent.py.log",
+      "log_sha256": "d9bf1636d4352fc839a483d3ccf2bb696fd5fbf74a5c8806ff4818c3db6a4ace"
+    },
+    {
+      "module": "test_regression.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 18,
+      "seconds": 16.536,
+      "output_tail": "test_invalid_total_budget (test_regression.RegressionBudgetTests.test_invalid_total_budget) ... ok\ntest_selected_module_only (test_regression.RegressionBudgetTests.test_selected_module_only) ... ok\ntest_total_budget_marks_unrun_not_pass (test_regression.RegressionBudgetTests.test_total_budget_marks_unrun_not_pass) ... ok\ntest_checkpoint_does_not_leave_temporary_files (test_regression.RegressionCheckpointTests.test_checkpoint_does_not_leave_temporary_files) ... ok\ntest_partial_progress_is_persisted_before_hanging_module (test_regression.RegressionCheckpointTests.test_partial_progress_is_persisted_before_hanging_module) ... ok\ntest_failing_test_keeps_full_diagnostic_log (test_regression.RegressionEvidenceTests.test_failing_test_keeps_full_diagnostic_log) ... ok\ntest_timeout_keeps_partial_output_for_diagnosis (test_regression.RegressionEvidenceTests.test_timeout_keeps_partial_output_for_diagnosis) ... ok\ntest_real_unittest_summary_is_accepted (test_regression.RegressionMissingSummaryTests.test_real_unittest_summary_is_accepted) ... ok\ntest_successful_exit_without_unittest_summary_is_rejected (test_regression.RegressionMissingSummaryTests.test_successful_exit_without_unittest_summary_is_rejected) ... ok\ntest_timeout_stops_descendant_process (test_regression.RegressionProcessTreeTests.test_timeout_stops_descendant_process) ... ok\ntest_resume_refuses_changed_source (test_regression.RegressionResumeTests.test_resume_refuses_changed_source) ... ok\ntest_resume_requires_checkpoint (test_regression.RegressionResumeTests.test_resume_requires_checkpoint) ... ok\ntest_resume_skips_only_passed_modules (test_regression.RegressionResumeTests.test_resume_skips_only_passed_modules) ... ok\ntest_failure_is_not_success (test_regression.RegressionRunnerTests.test_failure_is_not_success) ... ok\ntest_passing_module (test_regression.RegressionRunnerTests.test_passing_module) ... ok\ntest_reject_invalid_timeout (test_regression.RegressionRunnerTests.test_reject_invalid_timeout) ... ok\ntest_reject_missing_tests (test_regression.RegressionRunnerTests.test_reject_missing_tests) ... ok\ntest_timeout_is_reported (test_regression.RegressionRunnerTests.test_timeout_is_reported) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 15.764s\n\nOK\n",
+      "log_path": "test_regression.py.log",
+      "log_sha256": "0630454a7e9f6b74ddfb6b9636dbf326e18339d9368becd03cc5060047fe06b8"
+    }
+  ],
+  "passed": true,
+  "total_tests": 28,
+  "running": null
+}

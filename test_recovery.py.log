@@ -1,0 +1,12 @@
+test_auto_recover_interrupted_agent_and_complete (test_recovery.RecoveryTests.test_auto_recover_interrupted_agent_and_complete) ... ok
+test_damaged_snapshot_is_rejected (test_recovery.RecoveryTests.test_damaged_snapshot_is_rejected) ... ok
+test_no_checkpoint_still_refuses_uncertain_state (test_recovery.RecoveryTests.test_no_checkpoint_still_refuses_uncertain_state) ... ok
+test_preflight_refuses_external_endpoint (test_recovery.RecoveryTests.test_preflight_refuses_external_endpoint) ... ok
+test_preflight_reports_unavailable_services_without_crashing (test_recovery.RecoveryTests.test_preflight_reports_unavailable_services_without_crashing) ... ok
+test_reject_symlink_on_snapshot (test_recovery.RecoveryTests.test_reject_symlink_on_snapshot) ... ok
+test_snapshot_reverts_added_changed_deleted (test_recovery.RecoveryTests.test_snapshot_reverts_added_changed_deleted) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 3.050s
+
+OK

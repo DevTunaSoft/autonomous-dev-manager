@@ -1,0 +1,15 @@
+test_ambiguous_interrupted_agent_is_not_replayed (test_agent.AgentProofTests.test_ambiguous_interrupted_agent_is_not_replayed) ... ok
+test_failed_repair_cannot_pass (test_agent.AgentProofTests.test_failed_repair_cannot_pass) ... ok
+test_interrupted_before_agent_can_resume (test_agent.AgentProofTests.test_interrupted_before_agent_can_resume) ... ok
+test_local_only_model_guard (test_agent.AgentProofTests.test_local_only_model_guard) ... ok
+test_modified_test_is_blocked_even_if_tests_pass (test_agent.AgentProofTests.test_modified_test_is_blocked_even_if_tests_pass) ... ok
+test_no_agent_missing_is_clear (test_agent.AgentProofTests.test_no_agent_missing_is_clear) ... ok
+test_real_test_failure_fake_agent_repair (test_agent.AgentProofTests.test_real_test_failure_fake_agent_repair) ... ok
+test_symlink_project_rejected (test_agent.AgentProofTests.test_symlink_project_rejected) ... ok
+test_workspace_requirement (test_agent.AgentProofTests.test_workspace_requirement) ... ok
+test_wrong_model_checkpoint_rejected (test_agent.AgentProofTests.test_wrong_model_checkpoint_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 25.971s
+
+OK

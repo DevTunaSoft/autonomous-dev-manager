@@ -1,0 +1,13 @@
+test_missing_local_agent_is_not_success (test_pipeline.PipelineTests.test_missing_local_agent_is_not_success) ... ok
+test_no_paid_models (test_pipeline.PipelineTests.test_no_paid_models) ... ok
+test_overlapping_state_rejected (test_pipeline.PipelineTests.test_overlapping_state_rejected) ... ok
+test_prepare_persists_and_is_idempotent (test_pipeline.PipelineTests.test_prepare_persists_and_is_idempotent) ... ok
+test_protected_file_change_rejects_fake_evidence (test_pipeline.PipelineTests.test_protected_file_change_rejects_fake_evidence) ... ok
+test_rejects_changed_spec (test_pipeline.PipelineTests.test_rejects_changed_spec) ... ok
+test_worker_exit_alone_never_proves_success (test_pipeline.PipelineTests.test_worker_exit_alone_never_proves_success) ... ok
+test_supervised_agent_process_end_to_end (test_pipeline.RealProcessIntegrationTests.test_supervised_agent_process_end_to_end) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 4.527s
+
+OK

@@ -1,0 +1,23 @@
+test_invalid_total_budget (test_regression.RegressionBudgetTests.test_invalid_total_budget) ... ok
+test_selected_module_only (test_regression.RegressionBudgetTests.test_selected_module_only) ... ok
+test_total_budget_marks_unrun_not_pass (test_regression.RegressionBudgetTests.test_total_budget_marks_unrun_not_pass) ... ok
+test_checkpoint_does_not_leave_temporary_files (test_regression.RegressionCheckpointTests.test_checkpoint_does_not_leave_temporary_files) ... ok
+test_partial_progress_is_persisted_before_hanging_module (test_regression.RegressionCheckpointTests.test_partial_progress_is_persisted_before_hanging_module) ... ok
+test_failing_test_keeps_full_diagnostic_log (test_regression.RegressionEvidenceTests.test_failing_test_keeps_full_diagnostic_log) ... ok
+test_timeout_keeps_partial_output_for_diagnosis (test_regression.RegressionEvidenceTests.test_timeout_keeps_partial_output_for_diagnosis) ... ok
+test_real_unittest_summary_is_accepted (test_regression.RegressionMissingSummaryTests.test_real_unittest_summary_is_accepted) ... ok
+test_successful_exit_without_unittest_summary_is_rejected (test_regression.RegressionMissingSummaryTests.test_successful_exit_without_unittest_summary_is_rejected) ... ok
+test_timeout_stops_descendant_process (test_regression.RegressionProcessTreeTests.test_timeout_stops_descendant_process) ... ok
+test_resume_refuses_changed_source (test_regression.RegressionResumeTests.test_resume_refuses_changed_source) ... ok
+test_resume_requires_checkpoint (test_regression.RegressionResumeTests.test_resume_requires_checkpoint) ... ok
+test_resume_skips_only_passed_modules (test_regression.RegressionResumeTests.test_resume_skips_only_passed_modules) ... ok
+test_failure_is_not_success (test_regression.RegressionRunnerTests.test_failure_is_not_success) ... ok
+test_passing_module (test_regression.RegressionRunnerTests.test_passing_module) ... ok
+test_reject_invalid_timeout (test_regression.RegressionRunnerTests.test_reject_invalid_timeout) ... ok
+test_reject_missing_tests (test_regression.RegressionRunnerTests.test_reject_missing_tests) ... ok
+test_timeout_is_reported (test_regression.RegressionRunnerTests.test_timeout_is_reported) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 15.764s
+
+OK

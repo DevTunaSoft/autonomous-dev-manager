@@ -1,0 +1,51 @@
+name: Windows desktop build and packaged smoke test
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'adm/**'
+      - 'tests/**'
+      - 'BUILD-WINDOWS-DESKTOP.cmd'
+      - 'VERIFY-WINDOWS-DESKTOP.ps1'
+      - '.github/workflows/windows-desktop-build.yml'
+permissions:
+  contents: read
+jobs:
+  windows-build:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned packaging tool
+        run: python -m pip install --disable-pip-version-check pyinstaller==6.11.1
+      - name: Verify sources compile
+        run: python -m compileall -q adm tests
+      - name: Windows startup and packaged-entry tests
+        shell: pwsh
+        run: |
+          python -m unittest discover -s tests -p 'test_windows_startup.py' -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p 'test_desktop_entry_exit.py' -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build and run packaged smoke test
+        shell: cmd
+        run: BUILD-WINDOWS-DESKTOP.cmd
+      - name: Upload build verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ADM-Windows-build-evidence
+          path: build-evidence/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload Windows EXE for acceptance testing
+        uses: actions/upload-artifact@v4
+        with:
+          name: ADM-Desktop-Windows-unverified
+          path: dist/ADM-Desktop.exe
+          if-no-files-found: error
+          retention-days: 7

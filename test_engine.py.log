@@ -1,0 +1,14 @@
+test_command_argument_validation (test_engine.EngineTests.test_command_argument_validation) ... ok
+test_command_timeout (test_engine.EngineTests.test_command_timeout) ... ok
+test_cwd_escape_blocked (test_engine.EngineTests.test_cwd_escape_blocked) ... ok
+test_end_to_end_repair (test_engine.EngineTests.test_end_to_end_repair) ... ok
+test_evidence_not_inside_project (test_engine.EngineTests.test_evidence_not_inside_project) ... ok
+test_interrupted_resume (test_engine.EngineTests.test_interrupted_resume) ... ok
+test_no_false_success_when_repair_fails (test_engine.EngineTests.test_no_false_success_when_repair_fails) ... ok
+test_no_overwrite (test_engine.EngineTests.test_no_overwrite) ... ok
+test_safe_path (test_engine.EngineTests.test_safe_path) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 4.681s
+
+OK

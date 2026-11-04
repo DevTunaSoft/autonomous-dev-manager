@@ -1,0 +1,8 @@
+test_nonexistent_executable (test_process_tree.ProcessTreeTests.test_nonexistent_executable) ... ok
+test_success_output (test_process_tree.ProcessTreeTests.test_success_output) ... ok
+test_timeout_kills_descendant (test_process_tree.ProcessTreeTests.test_timeout_kills_descendant) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.868s
+
+OK

@@ -1,0 +1,16 @@
+test_ambiguous_starting_is_blocked (test_worker.WorkerTests.test_ambiguous_starting_is_blocked) ... ok
+test_concurrent_claim_unique (test_worker.WorkerTests.test_concurrent_claim_unique) ... ok
+test_exhausted_after_interruption (test_worker.WorkerTests.test_exhausted_after_interruption) ... ok
+test_interrupted_dead_worker_recovered (test_worker.WorkerTests.test_interrupted_dead_worker_recovered) ... ok
+test_invalid_input (test_worker.WorkerTests.test_invalid_input) ... ok
+test_large_output_truncated_in_db (test_worker.WorkerTests.test_large_output_truncated_in_db) ... ok
+test_live_pid_blocks_duplicate_start (test_worker.WorkerTests.test_live_pid_blocks_duplicate_start) ... ok
+test_real_run_and_spooled_logs (test_worker.WorkerTests.test_real_run_and_spooled_logs) ... ok
+test_recent_running_job_is_not_reclaimed (test_worker.WorkerTests.test_recent_running_job_is_not_reclaimed) ... ok
+test_timeout_and_retry_bound (test_worker.WorkerTests.test_timeout_and_retry_bound) ... ok
+test_timeout_kills_descendant (test_worker.WorkerTests.test_timeout_kills_descendant) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 5.879s
+
+OK

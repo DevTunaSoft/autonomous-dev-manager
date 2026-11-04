@@ -1,0 +1,12 @@
+test_explicit_model_does_not_probe (test_auto_queue.AutoQueueTests.test_explicit_model_does_not_probe) ... ok
+test_live_inventory_used_only_in_auto_mode (test_auto_queue.AutoQueueTests.test_live_inventory_used_only_in_auto_mode) ... ok
+test_no_eligible_model_fails_without_queue (test_auto_queue.AutoQueueTests.test_no_eligible_model_fails_without_queue) ... ok
+test_physical_ram_is_positive (test_auto_queue.AutoQueueTests.test_physical_ram_is_positive) ... ok
+test_selects_3b_on_16gb_and_persists_model (test_auto_queue.AutoQueueTests.test_selects_3b_on_16gb_and_persists_model) ... ok
+test_selects_7b_on_32gb (test_auto_queue.AutoQueueTests.test_selects_7b_on_32gb) ... ok
+test_untrusted_model_name_rejected (test_auto_queue.AutoQueueTests.test_untrusted_model_name_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.029s
+
+OK

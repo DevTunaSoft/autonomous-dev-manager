@@ -1,0 +1,10 @@
+test_legacy_checkpoint_without_hash_forces_rerun (test_regression_evidence_047.EvidenceResumeTests.test_legacy_checkpoint_without_hash_forces_rerun) ... ok
+test_missing_log_forces_rerun (test_regression_evidence_047.EvidenceResumeTests.test_missing_log_forces_rerun) ... ok
+test_modified_log_forces_rerun (test_regression_evidence_047.EvidenceResumeTests.test_modified_log_forces_rerun) ... ok
+test_python_interpreter_change_rejects_checkpoint (test_regression_evidence_047.EvidenceResumeTests.test_python_interpreter_change_rejects_checkpoint) ... ok
+test_untouched_evidence_is_reused (test_regression_evidence_047.EvidenceResumeTests.test_untouched_evidence_is_reused) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.369s
+
+OK

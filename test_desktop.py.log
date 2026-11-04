@@ -1,0 +1,12 @@
+test_windows_gui_build_plan (test_desktop.BuildPlanTests.test_windows_gui_build_plan) ... ok
+test_fresh_heartbeat (test_desktop.DesktopTests.test_fresh_heartbeat) ... ok
+test_future_heartbeat (test_desktop.DesktopTests.test_future_heartbeat) ... ok
+test_launch_uses_real_command (test_desktop.DesktopTests.test_launch_uses_real_command) ... ok
+test_missing_status (test_desktop.DesktopTests.test_missing_status) ... ok
+test_no_duplicate_when_running (test_desktop.DesktopTests.test_no_duplicate_when_running) ... ok
+test_stale_heartbeat (test_desktop.DesktopTests.test_stale_heartbeat) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.003s
+
+OK

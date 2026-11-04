@@ -1,0 +1,399 @@
+{
+  "kind": "isolated_regression",
+  "fingerprint": "54c197129b1cf8623b5320cfcaae091eb68d0ec82c378213cdb3fb1316f87898",
+  "modules": [
+    {
+      "module": "test_acceptance.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 0.719,
+      "output_tail": "test_does_not_overwrite_existing_output (test_acceptance.AcceptanceTests.test_does_not_overwrite_existing_output) ... ok\ntest_real_http_and_real_tests_with_fake_ai (test_acceptance.AcceptanceTests.test_real_http_and_real_tests_with_fake_ai) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.563s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_acceptance.py.log",
+      "log_sha256": "8b76bcbf9ac45540cb6f1b22f60ed7252a8ec012d2b37daeee49476f1396f3d6"
+    },
+    {
+      "module": "test_adaptive.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 8,
+      "seconds": 0.065,
+      "output_tail": "test_16gb_sequential (test_adaptive.AdaptiveTests.test_16gb_sequential) ... ok\ntest_32gb_parallel (test_adaptive.AdaptiveTests.test_32gb_parallel) ... ok\ntest_concurrency_limit (test_adaptive.AdaptiveTests.test_concurrency_limit) ... ok\ntest_invalid_request (test_adaptive.AdaptiveTests.test_invalid_request) ... ok\ntest_low_disk (test_adaptive.AdaptiveTests.test_low_disk) ... ok\ntest_model_unload_requires_remeasurement (test_adaptive.AdaptiveTests.test_model_unload_requires_remeasurement) ... ok\ntest_no_memory_cannot_proceed (test_adaptive.AdaptiveTests.test_no_memory_cannot_proceed) ... ok\ntest_unknown_resources_fail_closed (test_adaptive.AdaptiveTests.test_unknown_resources_fail_closed) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.000s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_adaptive.py.log",
+      "log_sha256": "f618b87d1a712438ad5da5669ff9dede1378d46a72eca6146b8f23cce85e9ab0"
+    },
+    {
+      "module": "test_adaptive_worker.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 0.516,
+      "output_tail": "test_deferred_job_runs_after_resources_recover (test_adaptive_worker.AdaptiveWorkerTests.test_deferred_job_runs_after_resources_recover) ... ok\ntest_denied_is_deferred_without_consuming_attempt (test_adaptive_worker.AdaptiveWorkerTests.test_denied_is_deferred_without_consuming_attempt) ... ok\ntest_no_admission_keeps_backward_compatibility (test_adaptive_worker.AdaptiveWorkerTests.test_no_admission_keeps_backward_compatibility) ... ok\ntest_probe_exception_does_not_launch (test_adaptive_worker.AdaptiveWorkerTests.test_probe_exception_does_not_launch) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.430s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_adaptive_worker.py.log",
+      "log_sha256": "3d3695326fe97a9766d524d863f2585e1bf1a55103a40d62e94cca6fa6b9ebc0"
+    },
+    {
+      "module": "test_agent.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 10,
+      "seconds": 0.968,
+      "output_tail": "test_ambiguous_interrupted_agent_is_not_replayed (test_agent.AgentProofTests.test_ambiguous_interrupted_agent_is_not_replayed) ... ok\ntest_failed_repair_cannot_pass (test_agent.AgentProofTests.test_failed_repair_cannot_pass) ... ok\ntest_interrupted_before_agent_can_resume (test_agent.AgentProofTests.test_interrupted_before_agent_can_resume) ... ok\ntest_local_only_model_guard (test_agent.AgentProofTests.test_local_only_model_guard) ... ok\ntest_modified_test_is_blocked_even_if_tests_pass (test_agent.AgentProofTests.test_modified_test_is_blocked_even_if_tests_pass) ... ok\ntest_no_agent_missing_is_clear (test_agent.AgentProofTests.test_no_agent_missing_is_clear) ... ok\ntest_real_test_failure_fake_agent_repair (test_agent.AgentProofTests.test_real_test_failure_fake_agent_repair) ... ok\ntest_symlink_project_rejected (test_agent.AgentProofTests.test_symlink_project_rejected) ... ok\ntest_workspace_requirement (test_agent.AgentProofTests.test_workspace_requirement) ... ok\ntest_wrong_model_checkpoint_rejected (test_agent.AgentProofTests.test_wrong_model_checkpoint_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.884s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_agent.py.log",
+      "log_sha256": "2a6b97685e5ac8f779f1386d84113f2eca8bb580eb479eee92c4465086e723c7"
+    },
+    {
+      "module": "test_ai_inspection.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.165,
+      "output_tail": "test_invalid_json_is_fail_closed (test_ai_inspection.InspectionTests.test_invalid_json_is_fail_closed) ... ok\ntest_pending_is_not_verified (test_ai_inspection.InspectionTests.test_pending_is_not_verified) ... ok\ntest_report_success_worker_failure_is_not_verified (test_ai_inspection.InspectionTests.test_report_success_worker_failure_is_not_verified) ... ok\ntest_unknown_job_refused (test_ai_inspection.InspectionTests.test_unknown_job_refused) ... ok\ntest_unresolved_journal_overrides_success (test_ai_inspection.InspectionTests.test_unresolved_journal_overrides_success) ... ok\ntest_worker_pass_and_success_report (test_ai_inspection.InspectionTests.test_worker_pass_and_success_report) ... ok\ntest_worker_pass_without_report_is_not_verified (test_ai_inspection.InspectionTests.test_worker_pass_without_report_is_not_verified) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.036s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_ai_inspection.py.log",
+      "log_sha256": "701a0690ef200c942cb59588bfdc4e3b88e79fb0d1928d6f7b97538c535f7796"
+    },
+    {
+      "module": "test_auto_queue.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.165,
+      "output_tail": "test_explicit_model_does_not_probe (test_auto_queue.AutoQueueTests.test_explicit_model_does_not_probe) ... ok\ntest_live_inventory_used_only_in_auto_mode (test_auto_queue.AutoQueueTests.test_live_inventory_used_only_in_auto_mode) ... ok\ntest_no_eligible_model_fails_without_queue (test_auto_queue.AutoQueueTests.test_no_eligible_model_fails_without_queue) ... ok\ntest_physical_ram_is_positive (test_auto_queue.AutoQueueTests.test_physical_ram_is_positive) ... ok\ntest_selects_3b_on_16gb_and_persists_model (test_auto_queue.AutoQueueTests.test_selects_3b_on_16gb_and_persists_model) ... ok\ntest_selects_7b_on_32gb (test_auto_queue.AutoQueueTests.test_selects_7b_on_32gb) ... ok\ntest_untrusted_model_name_rejected (test_auto_queue.AutoQueueTests.test_untrusted_model_name_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.025s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_auto_queue.py.log",
+      "log_sha256": "256142525ae6b2ff7d199fb3ff99c420d9e5ee59ace94963b86baa235a0b94aa"
+    },
+    {
+      "module": "test_core.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 6,
+      "seconds": 0.266,
+      "output_tail": "test_failure_and_bounded_retry (test_core.SupervisorTests.test_failure_and_bounded_retry) ... ok\ntest_invalid (test_core.SupervisorTests.test_invalid) ... ok\ntest_recovery_after_restart (test_core.SupervisorTests.test_recovery_after_restart) ... ok\ntest_resource_modes (test_core.SupervisorTests.test_resource_modes) ... ok\ntest_success_and_evidence (test_core.SupervisorTests.test_success_and_evidence) ... ok\ntest_timeout (test_core.SupervisorTests.test_timeout) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.192s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_core.py.log",
+      "log_sha256": "fe8a2350d3150ef3fe546f51944e603dd6e82d8cc34ab90722259a4d3b600333"
+    },
+    {
+      "module": "test_daemon.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 1.119,
+      "output_tail": "test_invalid_configuration (test_daemon.DaemonTests.test_invalid_configuration) ... ok\ntest_multiple_jobs_processed_without_new_prompt (test_daemon.DaemonTests.test_multiple_jobs_processed_without_new_prompt) ... ok\ntest_stop_without_jobs (test_daemon.DaemonTests.test_stop_without_jobs) ... ok\ntest_waits_for_new_job_without_reprompt (test_daemon.DaemonTests.test_waits_for_new_job_without_reprompt) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.999s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_daemon.py.log",
+      "log_sha256": "3676e9d1e5906c10738e771a4a9f4fc417927f9afd600df1d7765bba9011a955"
+    },
+    {
+      "module": "test_daemon_lifecycle.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 3,
+      "seconds": 0.167,
+      "output_tail": "test_heartbeat_and_graceful_stop (test_daemon_lifecycle.DaemonLifecycleTests.test_heartbeat_and_graceful_stop) ... ok\ntest_max_cycles_stops_and_records (test_daemon_lifecycle.DaemonLifecycleTests.test_max_cycles_stops_and_records) ... ok\ntest_status_unknown_before_start (test_daemon_lifecycle.DaemonLifecycleTests.test_status_unknown_before_start) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.063s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_daemon_lifecycle.py.log",
+      "log_sha256": "fa600e6e857f894d8225f5b83deebede3daa61d4c57f8f114d392dd609c47f7a"
+    },
+    {
+      "module": "test_desktop.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.115,
+      "output_tail": "test_windows_gui_build_plan (test_desktop.BuildPlanTests.test_windows_gui_build_plan) ... ok\ntest_fresh_heartbeat (test_desktop.DesktopTests.test_fresh_heartbeat) ... ok\ntest_future_heartbeat (test_desktop.DesktopTests.test_future_heartbeat) ... ok\ntest_launch_uses_real_command (test_desktop.DesktopTests.test_launch_uses_real_command) ... ok\ntest_missing_status (test_desktop.DesktopTests.test_missing_status) ... ok\ntest_no_duplicate_when_running (test_desktop.DesktopTests.test_no_duplicate_when_running) ... ok\ntest_stale_heartbeat (test_desktop.DesktopTests.test_stale_heartbeat) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.008s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_desktop.py.log",
+      "log_sha256": "c526a9c34eb6bd0397380daa14c8ea50168dfbebe24c9bfe9cd2255294b4bbc7"
+    },
+    {
+      "module": "test_desktop_entry_040.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.116,
+      "output_tail": "test_entry_routes_gui (test_desktop_entry_040.SingleExecutableTests.test_entry_routes_gui) ... ok\ntest_entry_routes_supervisor_arguments (test_desktop_entry_040.SingleExecutableTests.test_entry_routes_supervisor_arguments) ... ok\ntest_frozen_launch_uses_embedded_supervisor (test_desktop_entry_040.SingleExecutableTests.test_frozen_launch_uses_embedded_supervisor) ... ok\ntest_limit_validation (test_desktop_entry_040.SingleExecutableTests.test_limit_validation) ... ok\ntest_missing_db_does_not_create (test_desktop_entry_040.SingleExecutableTests.test_missing_db_does_not_create) ... ok\ntest_read_only_jobs (test_desktop_entry_040.SingleExecutableTests.test_read_only_jobs) ... ok\ntest_unknown_args_rejected (test_desktop_entry_040.SingleExecutableTests.test_unknown_args_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.007s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_desktop_entry_040.py.log",
+      "log_sha256": "8b3596976c8ce54150b516bf785ca4ff75e060f111e9e333f467e1a82f199361"
+    },
+    {
+      "module": "test_desktop_entry_exit.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 0.266,
+      "output_tail": "test_real_script_propagates_invalid_arguments (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_propagates_invalid_arguments) ... ok\ntest_real_script_smoke_produces_success_exit (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_smoke_produces_success_exit) ... ok\ntest_smoke_failure_returns_nonzero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_failure_returns_nonzero) ... ok\ntest_smoke_success_returns_zero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_success_returns_zero) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.131s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_desktop_entry_exit.py.log",
+      "log_sha256": "83f31c0519057886ae2a2bb6b27ee92d8ede8481c2923c82d11a2b6a64e0d0ec"
+    },
+    {
+      "module": "test_engine.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 9,
+      "seconds": 0.567,
+      "output_tail": "test_command_argument_validation (test_engine.EngineTests.test_command_argument_validation) ... ok\ntest_command_timeout (test_engine.EngineTests.test_command_timeout) ... ok\ntest_cwd_escape_blocked (test_engine.EngineTests.test_cwd_escape_blocked) ... ok\ntest_end_to_end_repair (test_engine.EngineTests.test_end_to_end_repair) ... ok\ntest_evidence_not_inside_project (test_engine.EngineTests.test_evidence_not_inside_project) ... ok\ntest_interrupted_resume (test_engine.EngineTests.test_interrupted_resume) ... ok\ntest_no_false_success_when_repair_fails (test_engine.EngineTests.test_no_false_success_when_repair_fails) ... ok\ntest_no_overwrite (test_engine.EngineTests.test_no_overwrite) ... ok\ntest_safe_path (test_engine.EngineTests.test_safe_path) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.462s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_engine.py.log",
+      "log_sha256": "604d4ae2d3c118355c81a00944a66b38b3c065c8fa4ff1ca63edc0d2461cff46"
+    },
+    {
+      "module": "test_independent_retest.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 0.416,
+      "output_tail": "test_second_test_failure_rolls_back (test_independent_retest.IndependentRetestTests.test_second_test_failure_rolls_back) ... ok\ntest_success_contains_two_passes (test_independent_retest.IndependentRetestTests.test_success_contains_two_passes) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.253s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_independent_retest.py.log",
+      "log_sha256": "7652aebc5b28373e48806e28ff932821222f7514d2b80dfbc7484f4ffa21ff3d"
+    },
+    {
+      "module": "test_live_acceptance.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 0.115,
+      "output_tail": "test_cli_requires_explicit_unsafe_execution_acknowledgement (test_live_acceptance.LiveAcceptanceTests.test_cli_requires_explicit_unsafe_execution_acknowledgement) ... usage: python3 -m unittest [-h] --output OUTPUT [--model MODEL]\n                           [--timeout TIMEOUT]\n                           [--acknowledge-unsandboxed-code]\npython3 -m unittest: error: Requires --acknowledge-unsandboxed-code; use a disposable VM\nok\ntest_fake_repair_cannot_claim_real_model (test_live_acceptance.LiveAcceptanceTests.test_fake_repair_cannot_claim_real_model) ... ok\ntest_refuses_existing_files (test_live_acceptance.LiveAcceptanceTests.test_refuses_existing_files) ... ok\ntest_refuses_missing_model_without_writing (test_live_acceptance.LiveAcceptanceTests.test_refuses_missing_model_without_writing) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.003s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_live_acceptance.py.log",
+      "log_sha256": "9586fb956190e9ddea7ab65c7e87bc668c4afb07314d2699bf5458a692b56cb4"
+    },
+    {
+      "module": "test_local_transport_security.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 0.667,
+      "output_tail": "test_model_probe_refuses_redirect (test_local_transport_security.LocalTransportSecurityTests.test_model_probe_refuses_redirect) ... ok\ntest_patch_request_refuses_redirect (test_local_transport_security.LocalTransportSecurityTests.test_patch_request_refuses_redirect) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.523s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_local_transport_security.py.log",
+      "log_sha256": "109dcd957c228f128aa2fb19cd6812eb324ea251fb3d5b57638d87e542dee627"
+    },
+    {
+      "module": "test_model_probe.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 10,
+      "seconds": 0.116,
+      "output_tail": "test_bad_answer (test_model_probe.ProbeTests.test_bad_answer) ... ok\ntest_bad_timeout (test_model_probe.ProbeTests.test_bad_timeout) ... ok\ntest_connection_error (test_model_probe.ProbeTests.test_connection_error) ... ok\ntest_duplicate_models (test_model_probe.ProbeTests.test_duplicate_models) ... ok\ntest_installed (test_model_probe.ProbeTests.test_installed) ... ok\ntest_missing (test_model_probe.ProbeTests.test_missing) ... ok\ntest_report_not_claiming_coding (test_model_probe.ProbeTests.test_report_not_claiming_coding) ... ok\ntest_success (test_model_probe.ProbeTests.test_success) ... ok\ntest_unfinished (test_model_probe.ProbeTests.test_unfinished) ... ok\ntest_unknown_model_rejected (test_model_probe.ProbeTests.test_unknown_model_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.001s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_model_probe.py.log",
+      "log_sha256": "2aafb1fae7c56067d88d640cd9a6d183fc2064206bfb2684d70575a9969b311a"
+    },
+    {
+      "module": "test_model_selection.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.166,
+      "output_tail": "test_16gb_chooses_small_coding_model (test_model_selection.ModelSelectionTests.test_16gb_chooses_small_coding_model) ... ok\ntest_32gb_chooses_larger_model (test_model_selection.ModelSelectionTests.test_32gb_chooses_larger_model) ... ok\ntest_does_not_assume_unknown_size (test_model_selection.ModelSelectionTests.test_does_not_assume_unknown_size) ... ok\ntest_does_not_choose_non_coding_model (test_model_selection.ModelSelectionTests.test_does_not_choose_non_coding_model) ... ok\ntest_explicit_preference_must_fit_and_exist (test_model_selection.ModelSelectionTests.test_explicit_preference_must_fit_and_exist) ... ok\ntest_invalid_ram (test_model_selection.ModelSelectionTests.test_invalid_ram) ... ok\ntest_malicious_names_ignored (test_model_selection.ModelSelectionTests.test_malicious_names_ignored) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.001s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_model_selection.py.log",
+      "log_sha256": "42ec401408470edd077411bb7a958a26c0bdb84726ceedb4c8e540fc89547228"
+    },
+    {
+      "module": "test_ollama_direct.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 6,
+      "seconds": 0.919,
+      "output_tail": "test_failed_patch_restores_source (test_ollama_direct.DirectTests.test_failed_patch_restores_source) ... ok\ntest_http_protocol_fake_local_server (test_ollama_direct.DirectTests.test_http_protocol_fake_local_server) ... ok\ntest_invalid_syntax_rejected_without_edit (test_ollama_direct.DirectTests.test_invalid_syntax_rejected_without_edit) ... ok\ntest_no_cloud_endpoint (test_ollama_direct.DirectTests.test_no_cloud_endpoint) ... ok\ntest_protected_edits_rejected (test_ollama_direct.DirectTests.test_protected_edits_rejected) ... ok\ntest_successful_repair_from_fake_generator (test_ollama_direct.DirectTests.test_successful_repair_from_fake_generator) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.773s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_ollama_direct.py.log",
+      "log_sha256": "6589854f2c9e5ebfe8ac56675d9e522a0cbaae057288a2aeeb15f70e9d1d89e4"
+    },
+    {
+      "module": "test_ollama_health.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 2.123,
+      "output_tail": "test_cli_returns_failure_without_server (test_ollama_health.HealthTests.test_cli_returns_failure_without_server) ... {\n  \"reachable\": false,\n  \"error\": \"Local Ollama is unavailable or rejected the health check: <urlopen error [Errno 111] Connection refused>\",\n  \"inference_verified\": false\n}\nok\ntest_invalid_metadata_rejected (test_ollama_health.HealthTests.test_invalid_metadata_rejected) ... ok\ntest_invalid_timeout (test_ollama_health.HealthTests.test_invalid_timeout) ... ok\ntest_list_installed_models (test_ollama_health.HealthTests.test_list_installed_models) ... ok\ntest_redirect_never_followed (test_ollama_health.HealthTests.test_redirect_never_followed) ... ok\ntest_reject_remote_and_non_loopback (test_ollama_health.HealthTests.test_reject_remote_and_non_loopback) ... ok\ntest_unavailable_server_reports_error (test_ollama_health.HealthTests.test_unavailable_server_reports_error) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 2.010s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_ollama_health.py.log",
+      "log_sha256": "03f628b1da5283b2e542bfc0c4d8ac7ad287870b65334796e949ec315c3cbf05"
+    },
+    {
+      "module": "test_packaged_smoke_041.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 5,
+      "seconds": 0.217,
+      "output_tail": "test_atomic_json (test_packaged_smoke_041.PackagedSmokeTests.test_atomic_json) ... ok\ntest_failure_is_nonzero (test_packaged_smoke_041.PackagedSmokeTests.test_failure_is_nonzero) ... ok\ntest_frozen_dispatch (test_packaged_smoke_041.PackagedSmokeTests.test_frozen_dispatch) ... ok\ntest_missing_parent_fails_closed (test_packaged_smoke_041.PackagedSmokeTests.test_missing_parent_fails_closed) ... ok\ntest_real_offline_smoke (test_packaged_smoke_041.PackagedSmokeTests.test_real_offline_smoke) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.052s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_packaged_smoke_041.py.log",
+      "log_sha256": "9808abadf1d9990bd6537a7e38ba33836e047ba42691e27c5342a62fe5c6450c"
+    },
+    {
+      "module": "test_pipeline.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 8,
+      "seconds": 0.818,
+      "output_tail": "test_missing_local_agent_is_not_success (test_pipeline.PipelineTests.test_missing_local_agent_is_not_success) ... ok\ntest_no_paid_models (test_pipeline.PipelineTests.test_no_paid_models) ... ok\ntest_overlapping_state_rejected (test_pipeline.PipelineTests.test_overlapping_state_rejected) ... ok\ntest_prepare_persists_and_is_idempotent (test_pipeline.PipelineTests.test_prepare_persists_and_is_idempotent) ... ok\ntest_protected_file_change_rejects_fake_evidence (test_pipeline.PipelineTests.test_protected_file_change_rejects_fake_evidence) ... ok\ntest_rejects_changed_spec (test_pipeline.PipelineTests.test_rejects_changed_spec) ... ok\ntest_worker_exit_alone_never_proves_success (test_pipeline.PipelineTests.test_worker_exit_alone_never_proves_success) ... ok\ntest_supervised_agent_process_end_to_end (test_pipeline.RealProcessIntegrationTests.test_supervised_agent_process_end_to_end) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.660s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_pipeline.py.log",
+      "log_sha256": "25e2b06f37d07baa5df57453fbf03df061ac6fd6c71e5b1b08939af3729b186b"
+    },
+    {
+      "module": "test_process_tree.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 3,
+      "seconds": 2.224,
+      "output_tail": "test_nonexistent_executable (test_process_tree.ProcessTreeTests.test_nonexistent_executable) ... ok\ntest_success_output (test_process_tree.ProcessTreeTests.test_success_output) ... ok\ntest_timeout_kills_descendant (test_process_tree.ProcessTreeTests.test_timeout_kills_descendant) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 2.127s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_process_tree.py.log",
+      "log_sha256": "3ace80baf98566fe8f45293858837e2a7f4320afd62b309ac14adb2f4fa19e44"
+    },
+    {
+      "module": "test_project_lock.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.216,
+      "output_tail": "test_abandoned_metadata_does_not_block_recovery (test_project_lock.ProjectLockTests.test_abandoned_metadata_does_not_block_recovery) ... ok\ntest_crashed_process_releases_ownership (test_project_lock.ProjectLockTests.test_crashed_process_releases_ownership) ... ok\ntest_cross_process_exclusion_and_recovery (test_project_lock.ProjectLockTests.test_cross_process_exclusion_and_recovery) ... ok\ntest_exception_releases_kernel_lock (test_project_lock.ProjectLockTests.test_exception_releases_kernel_lock) ... ok\ntest_metadata_and_persistent_lock_file (test_project_lock.ProjectLockTests.test_metadata_and_persistent_lock_file) ... ok\ntest_same_process_second_owner_refused (test_project_lock.ProjectLockTests.test_same_process_second_owner_refused) ... ok\ntest_symlink_refused (test_project_lock.ProjectLockTests.test_symlink_refused) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.134s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_project_lock.py.log",
+      "log_sha256": "1a33428c4490cd0a2d9ad581a27294acfa8e3ada0fa518716edc54aea3cfaed4"
+    },
+    {
+      "module": "test_provision.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 8,
+      "seconds": 0.116,
+      "output_tail": "test_changed_plan_rejected (test_provision.ProvisionTests.test_changed_plan_rejected) ... ok\ntest_consent_required (test_provision.ProvisionTests.test_consent_required) ... ok\ntest_dependency_order (test_provision.ProvisionTests.test_dependency_order) ... ok\ntest_duplicate_step_rejected (test_provision.ProvisionTests.test_duplicate_step_rejected) ... ok\ntest_failure_stops_before_model_pull (test_provision.ProvisionTests.test_failure_stops_before_model_pull) ... ok\ntest_non_windows_rejected (test_provision.ProvisionTests.test_non_windows_rejected) ... ok\ntest_resume_rechecks_when_not_verified (test_provision.ProvisionTests.test_resume_rechecks_when_not_verified) ... ok\ntest_resume_verifies_previous_steps (test_provision.ProvisionTests.test_resume_verifies_previous_steps) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.015s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_provision.py.log",
+      "log_sha256": "6ac6a7ca18f82cf92e64af6983a72517a7f2f54544658aaf7394c428495d29d8"
+    },
+    {
+      "module": "test_queued_ai.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 5,
+      "seconds": 0.367,
+      "output_tail": "test_daemon_executes_queued_ai_and_records_real_failure (test_queued_ai.QueuedAITests.test_daemon_executes_queued_ai_and_records_real_failure) ... ok\ntest_invalid_layout_rejected (test_queued_ai.QueuedAITests.test_invalid_layout_rejected) ... ok\ntest_invalid_model_rejected (test_queued_ai.QueuedAITests.test_invalid_model_rejected) ... ok\ntest_queue_is_durable_and_non_replaying (test_queued_ai.QueuedAITests.test_queue_is_durable_and_non_replaying) ... ok\ntest_two_jobs_have_separate_evidence (test_queued_ai.QueuedAITests.test_two_jobs_have_separate_evidence) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.228s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_queued_ai.py.log",
+      "log_sha256": "79422160e66a838ee5aeef4785bc0889dcbaa61a47dbc932304ace7e490f9bb6"
+    },
+    {
+      "module": "test_recovery.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.316,
+      "output_tail": "test_auto_recover_interrupted_agent_and_complete (test_recovery.RecoveryTests.test_auto_recover_interrupted_agent_and_complete) ... ok\ntest_damaged_snapshot_is_rejected (test_recovery.RecoveryTests.test_damaged_snapshot_is_rejected) ... ok\ntest_no_checkpoint_still_refuses_uncertain_state (test_recovery.RecoveryTests.test_no_checkpoint_still_refuses_uncertain_state) ... ok\ntest_preflight_refuses_external_endpoint (test_recovery.RecoveryTests.test_preflight_refuses_external_endpoint) ... ok\ntest_preflight_reports_unavailable_services_without_crashing (test_recovery.RecoveryTests.test_preflight_reports_unavailable_services_without_crashing) ... ok\ntest_reject_symlink_on_snapshot (test_recovery.RecoveryTests.test_reject_symlink_on_snapshot) ... ok\ntest_snapshot_reverts_added_changed_deleted (test_recovery.RecoveryTests.test_snapshot_reverts_added_changed_deleted) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.224s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_recovery.py.log",
+      "log_sha256": "281bcfd9aaf61492959530765f4d3dcfad22c949387f00598b9414347bfcc0d7"
+    },
+    {
+      "module": "test_regression.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 18,
+      "seconds": 8.391,
+      "output_tail": "test_invalid_total_budget (test_regression.RegressionBudgetTests.test_invalid_total_budget) ... ok\ntest_selected_module_only (test_regression.RegressionBudgetTests.test_selected_module_only) ... ok\ntest_total_budget_marks_unrun_not_pass (test_regression.RegressionBudgetTests.test_total_budget_marks_unrun_not_pass) ... ok\ntest_checkpoint_does_not_leave_temporary_files (test_regression.RegressionCheckpointTests.test_checkpoint_does_not_leave_temporary_files) ... ok\ntest_partial_progress_is_persisted_before_hanging_module (test_regression.RegressionCheckpointTests.test_partial_progress_is_persisted_before_hanging_module) ... ok\ntest_failing_test_keeps_full_diagnostic_log (test_regression.RegressionEvidenceTests.test_failing_test_keeps_full_diagnostic_log) ... ok\ntest_timeout_keeps_partial_output_for_diagnosis (test_regression.RegressionEvidenceTests.test_timeout_keeps_partial_output_for_diagnosis) ... ok\ntest_real_unittest_summary_is_accepted (test_regression.RegressionMissingSummaryTests.test_real_unittest_summary_is_accepted) ... ok\ntest_successful_exit_without_unittest_summary_is_rejected (test_regression.RegressionMissingSummaryTests.test_successful_exit_without_unittest_summary_is_rejected) ... ok\ntest_timeout_stops_descendant_process (test_regression.RegressionProcessTreeTests.test_timeout_stops_descendant_process) ... ok\ntest_resume_refuses_changed_source (test_regression.RegressionResumeTests.test_resume_refuses_changed_source) ... ok\ntest_resume_requires_checkpoint (test_regression.RegressionResumeTests.test_resume_requires_checkpoint) ... ok\ntest_resume_skips_only_passed_modules (test_regression.RegressionResumeTests.test_resume_skips_only_passed_modules) ... ok\ntest_failure_is_not_success (test_regression.RegressionRunnerTests.test_failure_is_not_success) ... ok\ntest_passing_module (test_regression.RegressionRunnerTests.test_passing_module) ... ok\ntest_reject_invalid_timeout (test_regression.RegressionRunnerTests.test_reject_invalid_timeout) ... ok\ntest_reject_missing_tests (test_regression.RegressionRunnerTests.test_reject_missing_tests) ... ok\ntest_timeout_is_reported (test_regression.RegressionRunnerTests.test_timeout_is_reported) ... ok\n\n----------------------------------------------------------------------\nRan 18 tests in 8.268s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_regression.py.log",
+      "log_sha256": "83ead9482fc16db4d5efba6064a0b78e3817f2c026652dcd085f284fb3bb5043"
+    },
+    {
+      "module": "test_regression_evidence_047.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 5,
+      "seconds": 0.668,
+      "output_tail": "test_legacy_checkpoint_without_hash_forces_rerun (test_regression_evidence_047.EvidenceResumeTests.test_legacy_checkpoint_without_hash_forces_rerun) ... ok\ntest_missing_log_forces_rerun (test_regression_evidence_047.EvidenceResumeTests.test_missing_log_forces_rerun) ... ok\ntest_modified_log_forces_rerun (test_regression_evidence_047.EvidenceResumeTests.test_modified_log_forces_rerun) ... ok\ntest_python_interpreter_change_rejects_checkpoint (test_regression_evidence_047.EvidenceResumeTests.test_python_interpreter_change_rejects_checkpoint) ... ok\ntest_untouched_evidence_is_reused (test_regression_evidence_047.EvidenceResumeTests.test_untouched_evidence_is_reused) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.556s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_regression_evidence_047.py.log",
+      "log_sha256": "6a16eefbc88c32a8b57d664eb226b8a8d1b4db63c4b8491e0dd8892919187b4b"
+    },
+    {
+      "module": "test_regression_guards.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 3,
+      "seconds": 0.268,
+      "output_tail": "test_empty_module_does_not_pass (test_regression_guards.RegressionGuards.test_empty_module_does_not_pass) ... ok\ntest_real_module_still_passes (test_regression_guards.RegressionGuards.test_real_module_still_passes) ... ok\ntest_unknown_selected_module_rejected (test_regression_guards.RegressionGuards.test_unknown_selected_module_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.134s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_regression_guards.py.log",
+      "log_sha256": "165dc97e8caab59f42762c4def5c24f2600e0f3603e510c741c4877ced020d70"
+    },
+    {
+      "module": "test_regression_log_isolation_048.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 0.519,
+      "output_tail": "test_sequential_runs_have_distinct_immutable_log_paths (test_regression_log_isolation_048.RegressionLogIsolationTests.test_sequential_runs_have_distinct_immutable_log_paths) ... ok\ntest_simultaneous_runs_keep_separate_logs (test_regression_log_isolation_048.RegressionLogIsolationTests.test_simultaneous_runs_keep_separate_logs) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.416s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_regression_log_isolation_048.py.log",
+      "log_sha256": "38611125477d69dccae603288f4b248f57cf37b1184c5172dab4908762da26b7"
+    },
+    {
+      "module": "test_release.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 8,
+      "seconds": 0.167,
+      "output_tail": "test_frozen_launcher_uses_exe_directly (test_release.FrozenStartupTests.test_frozen_launcher_uses_exe_directly) ... ok\ntest_complete_package_and_manifest (test_release.ReleaseTests.test_complete_package_and_manifest) ... ok\ntest_deterministic_package (test_release.ReleaseTests.test_deterministic_package) ... ok\ntest_exclude_sensitive_state_and_cache (test_release.ReleaseTests.test_exclude_sensitive_state_and_cache) ... ok\ntest_reject_destination_inside_project (test_release.ReleaseTests.test_reject_destination_inside_project) ... ok\ntest_symlink_rejected (test_release.ReleaseTests.test_symlink_rejected) ... ok\ntest_tamper_detected (test_release.ReleaseTests.test_tamper_detected) ... ok\ntest_windows_plan_and_approval (test_release.ReleaseTests.test_windows_plan_and_approval) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.045s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_release.py.log",
+      "log_sha256": "f329a88cf68b0754d3c9acb756be5d22c6991d19cf76f96e16c92c4a0f3ee66f"
+    },
+    {
+      "module": "test_repair_commit.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 0.468,
+      "output_tail": "test_commit_failure_never_publishes_success_and_restores_source (test_repair_commit.RepairCommitTests.test_commit_failure_never_publishes_success_and_restores_source) ... ok\ntest_success_clears_journal_before_publishing_verified (test_repair_commit.RepairCommitTests.test_success_clears_journal_before_publishing_verified) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.302s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_repair_commit.py.log",
+      "log_sha256": "6a82e182fac0d773b0d71597f1ec2341783a2d2acdcccd91dd4edbfc0af9a6d0"
+    },
+    {
+      "module": "test_repair_recovery.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 5,
+      "seconds": 0.116,
+      "output_tail": "test_finish_commits_successful_repair (test_repair_recovery.RepairRecoveryTests.test_finish_commits_successful_repair) ... ok\ntest_interrupted_replacement_restores_original (test_repair_recovery.RepairRecoveryTests.test_interrupted_replacement_restores_original) ... ok\ntest_project_mismatch_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_project_mismatch_blocks_recovery) ... ok\ntest_symlink_swap_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_symlink_swap_blocks_recovery) ... ok\ntest_unexpected_edit_blocks_recovery (test_repair_recovery.RepairRecoveryTests.test_unexpected_edit_blocks_recovery) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.012s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_repair_recovery.py.log",
+      "log_sha256": "17d022f6999c0533e64fd703185d06d1f091dee697ec7fac9924001a14265509"
+    },
+    {
+      "module": "test_setup.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 14,
+      "seconds": 0.119,
+      "output_tail": "test_approval_required (test_setup.SetupTests.test_approval_required) ... ok\ntest_balanced_machine (test_setup.SetupTests.test_balanced_machine) ... ok\ntest_constrained_machine (test_setup.SetupTests.test_constrained_machine) ... ok\ntest_execution_mock (test_setup.SetupTests.test_execution_mock) ... ok\ntest_linux_never_provisions (test_setup.SetupTests.test_linux_never_provisions) ... ok\ntest_missing_executable_blocks (test_setup.SetupTests.test_missing_executable_blocks) ... ok\ntest_performance_machine (test_setup.SetupTests.test_performance_machine) ... ok\ntest_slow_disk_low_space_falls_back (test_setup.SetupTests.test_slow_disk_low_space_falls_back) ... ok\ntest_timeout_reported (test_setup.SetupTests.test_timeout_reported) ... ok\ntest_unapproved_model_rejected (test_setup.SetupTests.test_unapproved_model_rejected) ... ok\ntest_unknown_commands_rejected (test_setup.SetupTests.test_unknown_commands_rejected) ... ok\ntest_unknown_model_rejected (test_setup.SetupTests.test_unknown_model_rejected) ... ok\ntest_windows_plan_no_tools (test_setup.SetupTests.test_windows_plan_no_tools) ... ok\ntest_windows_plan_with_winget (test_setup.SetupTests.test_windows_plan_with_winget) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.001s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_setup.py.log",
+      "log_sha256": "34ce23de01e1f247a8349286f838862d9709d87cfb8512e66a8f826c1deeeecf"
+    },
+    {
+      "module": "test_supervisor_singleton_045.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 0.118,
+      "output_tail": "test_orphaned_metadata_allows_crash_recovery (test_supervisor_singleton_045.SupervisorSingletonTests.test_orphaned_metadata_allows_crash_recovery) ... ok\ntest_second_supervisor_rejected_while_first_owns_state (test_supervisor_singleton_045.SupervisorSingletonTests.test_second_supervisor_rejected_while_first_owns_state) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.021s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_supervisor_singleton_045.py.log",
+      "log_sha256": "e5f0012ef970031bce98171340c721de0344637e2f144487ee3736f7cf77418a"
+    },
+    {
+      "module": "test_windows_build_verifier_044.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 3,
+      "seconds": 0.116,
+      "output_tail": "test_batch_calls_bounded_powershell_verifier (test_windows_build_verifier_044.WindowsBuildVerifierContractTests.test_batch_calls_bounded_powershell_verifier) ... ok\ntest_verifier_requires_real_exit_and_json (test_windows_build_verifier_044.WindowsBuildVerifierContractTests.test_verifier_requires_real_exit_and_json) ... ok\ntest_workflow_keeps_evidence_even_on_failure (test_windows_build_verifier_044.WindowsBuildVerifierContractTests.test_workflow_keeps_evidence_even_on_failure) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.000s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_windows_build_verifier_044.py.log",
+      "log_sha256": "d647b32022f4fc1e008019a59ce3881db9257412b402abf97904929408b921dc"
+    },
+    {
+      "module": "test_windows_startup.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 6,
+      "seconds": 0.116,
+      "output_tail": "test_existing_stop_request_is_not_discarded (test_windows_startup.StartupTests.test_existing_stop_request_is_not_discarded) ... ok\ntest_frozen_startup_uses_supervisor_flag (test_windows_startup.StartupTests.test_frozen_startup_uses_supervisor_flag) ... ok\ntest_missing_python_is_rejected (test_windows_startup.StartupTests.test_missing_python_is_rejected) ... ok\ntest_no_automatic_install (test_windows_startup.StartupTests.test_no_automatic_install) ... ok\ntest_source_startup_uses_module (test_windows_startup.StartupTests.test_source_startup_uses_module) ... ok\ntest_windows_command_is_argv_not_shell (test_windows_startup.StartupTests.test_windows_command_is_argv_not_shell) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.007s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_windows_startup.py.log",
+      "log_sha256": "adb500f9f18a2c773db2d664035d633c629ecffd4f590b9623f10cbfb00a9a23"
+    },
+    {
+      "module": "test_worker.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 11,
+      "seconds": 4.131,
+      "output_tail": "test_ambiguous_starting_is_blocked (test_worker.WorkerTests.test_ambiguous_starting_is_blocked) ... ok\ntest_concurrent_claim_unique (test_worker.WorkerTests.test_concurrent_claim_unique) ... ok\ntest_exhausted_after_interruption (test_worker.WorkerTests.test_exhausted_after_interruption) ... ok\ntest_interrupted_dead_worker_recovered (test_worker.WorkerTests.test_interrupted_dead_worker_recovered) ... ok\ntest_invalid_input (test_worker.WorkerTests.test_invalid_input) ... ok\ntest_large_output_truncated_in_db (test_worker.WorkerTests.test_large_output_truncated_in_db) ... ok\ntest_live_pid_blocks_duplicate_start (test_worker.WorkerTests.test_live_pid_blocks_duplicate_start) ... ok\ntest_real_run_and_spooled_logs (test_worker.WorkerTests.test_real_run_and_spooled_logs) ... ok\ntest_recent_running_job_is_not_reclaimed (test_worker.WorkerTests.test_recent_running_job_is_not_reclaimed) ... ok\ntest_timeout_and_retry_bound (test_worker.WorkerTests.test_timeout_and_retry_bound) ... ok\ntest_timeout_kills_descendant (test_worker.WorkerTests.test_timeout_kills_descendant) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 4.046s\n\nOK\n",
+      "log_path": "/home/claude/evidence-049/regression-run-7h51swie/test_worker.py.log",
+      "log_sha256": "58064bac8e771c9f7fffee9d862a49f2e5b137128a698e56c3d907e0e45df16a"
+    }
+  ],
+  "passed": true,
+  "total_tests": 238,
+  "running": null
+}

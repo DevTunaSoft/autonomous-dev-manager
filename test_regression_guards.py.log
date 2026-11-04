@@ -1,0 +1,8 @@
+test_empty_module_does_not_pass (test_regression_guards.RegressionGuards.test_empty_module_does_not_pass) ... ok
+test_real_module_still_passes (test_regression_guards.RegressionGuards.test_real_module_still_passes) ... ok
+test_unknown_selected_module_rejected (test_regression_guards.RegressionGuards.test_unknown_selected_module_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.592s
+
+OK

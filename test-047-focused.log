@@ -1,0 +1,13 @@
+======================================================================
+FAIL: test_timeout_keeps_partial_output_for_diagnosis (tests.test_regression.RegressionEvidenceTests.test_timeout_keeps_partial_output_for_diagnosis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/data/adm047/tests/test_regression.py", line 138, in test_timeout_keeps_partial_output_for_diagnosis
+    self.assertIn('before-hang-017', Path(module['log_path']).read_text())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'before-hang-017' not found in ''
+
+----------------------------------------------------------------------
+Ran 26 tests in 26.807s
+
+FAILED (failures=1)

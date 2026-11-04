@@ -1,0 +1,8 @@
+test_heartbeat_and_graceful_stop (test_daemon_lifecycle.DaemonLifecycleTests.test_heartbeat_and_graceful_stop) ... ok
+test_max_cycles_stops_and_records (test_daemon_lifecycle.DaemonLifecycleTests.test_max_cycles_stops_and_records) ... ok
+test_status_unknown_before_start (test_daemon_lifecycle.DaemonLifecycleTests.test_status_unknown_before_start) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.066s
+
+OK

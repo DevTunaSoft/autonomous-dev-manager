@@ -1,0 +1,49 @@
+{
+  "kind": "isolated_regression",
+  "fingerprint": "16cbecd76399497f142ddeb7cb2462f451f88a7bbd4b16af8a37e1de275bd73b",
+  "modules": [
+    {
+      "module": "test_acceptance.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 3.611,
+      "output_tail": "test_does_not_overwrite_existing_output (test_acceptance.AcceptanceTests.test_does_not_overwrite_existing_output) ... ok\ntest_real_http_and_real_tests_with_fake_ai (test_acceptance.AcceptanceTests.test_real_http_and_real_tests_with_fake_ai) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 2.744s\n\nOK\n",
+      "log_path": "/mnt/data/adm048/regression-run-6l_po0at/test_acceptance.py.log",
+      "log_sha256": "45db75c43b388997e7e1ac8b7036634dd51f800f5fde711af4934083fc9a8007"
+    },
+    {
+      "module": "test_adaptive.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 8,
+      "seconds": 0.783,
+      "output_tail": "test_16gb_sequential (test_adaptive.AdaptiveTests.test_16gb_sequential) ... ok\ntest_32gb_parallel (test_adaptive.AdaptiveTests.test_32gb_parallel) ... ok\ntest_concurrency_limit (test_adaptive.AdaptiveTests.test_concurrency_limit) ... ok\ntest_invalid_request (test_adaptive.AdaptiveTests.test_invalid_request) ... ok\ntest_low_disk (test_adaptive.AdaptiveTests.test_low_disk) ... ok\ntest_model_unload_requires_remeasurement (test_adaptive.AdaptiveTests.test_model_unload_requires_remeasurement) ... ok\ntest_no_memory_cannot_proceed (test_adaptive.AdaptiveTests.test_no_memory_cannot_proceed) ... ok\ntest_unknown_resources_fail_closed (test_adaptive.AdaptiveTests.test_unknown_resources_fail_closed) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.000s\n\nOK\n",
+      "log_path": "/mnt/data/adm048/regression-run-6l_po0at/test_adaptive.py.log",
+      "log_sha256": "f618b87d1a712438ad5da5669ff9dede1378d46a72eca6146b8f23cce85e9ab0"
+    },
+    {
+      "module": "test_adaptive_worker.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 2.707,
+      "output_tail": "test_deferred_job_runs_after_resources_recover (test_adaptive_worker.AdaptiveWorkerTests.test_deferred_job_runs_after_resources_recover) ... ok\ntest_denied_is_deferred_without_consuming_attempt (test_adaptive_worker.AdaptiveWorkerTests.test_denied_is_deferred_without_consuming_attempt) ... ok\ntest_no_admission_keeps_backward_compatibility (test_adaptive_worker.AdaptiveWorkerTests.test_no_admission_keeps_backward_compatibility) ... ok\ntest_probe_exception_does_not_launch (test_adaptive_worker.AdaptiveWorkerTests.test_probe_exception_does_not_launch) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 1.885s\n\nOK\n",
+      "log_path": "/mnt/data/adm048/regression-run-6l_po0at/test_adaptive_worker.py.log",
+      "log_sha256": "43044fdaccc6b09a6b76e95fe4790496d3845873ffa106ca5b6cccc5b62860e0"
+    },
+    {
+      "module": "test_agent.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 10,
+      "seconds": 26.86,
+      "output_tail": "test_ambiguous_interrupted_agent_is_not_replayed (test_agent.AgentProofTests.test_ambiguous_interrupted_agent_is_not_replayed) ... ok\ntest_failed_repair_cannot_pass (test_agent.AgentProofTests.test_failed_repair_cannot_pass) ... ok\ntest_interrupted_before_agent_can_resume (test_agent.AgentProofTests.test_interrupted_before_agent_can_resume) ... ok\ntest_local_only_model_guard (test_agent.AgentProofTests.test_local_only_model_guard) ... ok\ntest_modified_test_is_blocked_even_if_tests_pass (test_agent.AgentProofTests.test_modified_test_is_blocked_even_if_tests_pass) ... ok\ntest_no_agent_missing_is_clear (test_agent.AgentProofTests.test_no_agent_missing_is_clear) ... ok\ntest_real_test_failure_fake_agent_repair (test_agent.AgentProofTests.test_real_test_failure_fake_agent_repair) ... ok\ntest_symlink_project_rejected (test_agent.AgentProofTests.test_symlink_project_rejected) ... ok\ntest_workspace_requirement (test_agent.AgentProofTests.test_workspace_requirement) ... ok\ntest_wrong_model_checkpoint_rejected (test_agent.AgentProofTests.test_wrong_model_checkpoint_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 25.971s\n\nOK\n",
+      "log_path": "/mnt/data/adm048/regression-run-6l_po0at/test_agent.py.log",
+      "log_sha256": "9fee3fd040bcd951367f90028624be23115cffe3bab638f370167a090d229354"
+    }
+  ],
+  "passed": false,
+  "total_tests": 24,
+  "running": "test_ai_inspection.py"
+}

@@ -1,0 +1,8 @@
+test_batch_calls_bounded_powershell_verifier (test_windows_build_verifier_044.WindowsBuildVerifierContractTests.test_batch_calls_bounded_powershell_verifier) ... ok
+test_verifier_requires_real_exit_and_json (test_windows_build_verifier_044.WindowsBuildVerifierContractTests.test_verifier_requires_real_exit_and_json) ... ok
+test_workflow_keeps_evidence_even_on_failure (test_windows_build_verifier_044.WindowsBuildVerifierContractTests.test_workflow_keeps_evidence_even_on_failure) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK

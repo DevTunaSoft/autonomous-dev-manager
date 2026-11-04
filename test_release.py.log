@@ -1,0 +1,13 @@
+test_frozen_launcher_uses_exe_directly (test_release.FrozenStartupTests.test_frozen_launcher_uses_exe_directly) ... ok
+test_complete_package_and_manifest (test_release.ReleaseTests.test_complete_package_and_manifest) ... ok
+test_deterministic_package (test_release.ReleaseTests.test_deterministic_package) ... ok
+test_exclude_sensitive_state_and_cache (test_release.ReleaseTests.test_exclude_sensitive_state_and_cache) ... ok
+test_reject_destination_inside_project (test_release.ReleaseTests.test_reject_destination_inside_project) ... ok
+test_symlink_rejected (test_release.ReleaseTests.test_symlink_rejected) ... ok
+test_tamper_detected (test_release.ReleaseTests.test_tamper_detected) ... ok
+test_windows_plan_and_approval (test_release.ReleaseTests.test_windows_plan_and_approval) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.024s
+
+OK

@@ -1,0 +1,121 @@
+test_acceptance.py: started
+test_acceptance.py: passed
+test_adaptive.py: started
+test_adaptive.py: passed
+test_adaptive_worker.py: started
+test_adaptive_worker.py: passed
+test_agent.py: started
+test_agent.py: passed
+test_ai_inspection.py: started
+test_ai_inspection.py: passed
+test_auto_queue.py: started
+test_auto_queue.py: passed
+test_core.py: started
+test_core.py: passed
+test_daemon.py: started
+test_daemon.py: passed
+test_daemon_lifecycle.py: started
+test_daemon_lifecycle.py: passed
+test_desktop.py: started
+test_desktop.py: passed
+test_desktop_entry_040.py: started
+test_desktop_entry_040.py: passed
+test_desktop_entry_exit.py: started
+test_desktop_entry_exit.py: passed
+test_engine.py: started
+test_engine.py: passed
+test_independent_retest.py: started
+test_independent_retest.py: passed
+test_live_acceptance.py: started
+test_live_acceptance.py: passed
+test_local_transport_security.py: started
+test_local_transport_security.py: passed
+test_model_probe.py: started
+test_model_probe.py: passed
+test_model_selection.py: started
+test_model_selection.py: passed
+test_ollama_direct.py: started
+test_ollama_direct.py: passed
+test_ollama_health.py: started
+test_ollama_health.py: passed
+test_packaged_smoke_041.py: started
+test_packaged_smoke_041.py: passed
+test_pipeline.py: started
+test_pipeline.py: passed
+test_process_tree.py: started
+test_process_tree.py: passed
+test_project_lock.py: started
+test_project_lock.py: passed
+test_provision.py: started
+test_provision.py: passed
+test_queued_ai.py: started
+test_queued_ai.py: passed
+test_recovery.py: started
+test_recovery.py: passed
+test_regression.py: started
+test_regression.py: passed
+test_regression_evidence_047.py: started
+test_regression_evidence_047.py: passed
+test_regression_guards.py: started
+test_regression_guards.py: passed
+test_regression_log_isolation_048.py: started
+test_regression_log_isolation_048.py: passed
+test_regression_retention_049.py: started
+test_regression_retention_049.py: passed
+test_release.py: started
+test_release.py: passed
+test_repair_commit.py: started
+test_repair_commit.py: passed
+test_repair_recovery.py: started
+test_repair_recovery.py: passed
+test_setup.py: started
+test_setup.py: passed
+test_supervisor_singleton_045.py: started
+test_supervisor_singleton_045.py: passed
+test_windows_build_verifier_044.py: started
+test_windows_build_verifier_044.py: passed
+test_windows_startup.py: started
+test_windows_startup.py: passed
+test_worker.py: started
+test_worker.py: passed
+test_acceptance.py: passed (2 tests; 0.722s)
+test_adaptive.py: passed (8 tests; 0.118s)
+test_adaptive_worker.py: passed (4 tests; 0.567s)
+test_agent.py: passed (10 tests; 1.019s)
+test_ai_inspection.py: passed (7 tests; 0.166s)
+test_auto_queue.py: passed (7 tests; 0.166s)
+test_core.py: passed (6 tests; 0.316s)
+test_daemon.py: passed (4 tests; 1.119s)
+test_daemon_lifecycle.py: passed (3 tests; 0.166s)
+test_desktop.py: passed (7 tests; 0.116s)
+test_desktop_entry_040.py: passed (7 tests; 0.115s)
+test_desktop_entry_exit.py: passed (4 tests; 0.316s)
+test_engine.py: passed (9 tests; 0.517s)
+test_independent_retest.py: passed (2 tests; 0.417s)
+test_live_acceptance.py: passed (4 tests; 0.166s)
+test_local_transport_security.py: passed (2 tests; 0.668s)
+test_model_probe.py: passed (10 tests; 0.116s)
+test_model_selection.py: passed (7 tests; 0.166s)
+test_ollama_direct.py: passed (6 tests; 0.417s)
+test_ollama_health.py: passed (7 tests; 2.123s)
+test_packaged_smoke_041.py: passed (5 tests; 0.216s)
+test_pipeline.py: passed (8 tests; 0.567s)
+test_process_tree.py: passed (3 tests; 2.225s)
+test_project_lock.py: passed (7 tests; 0.217s)
+test_provision.py: passed (8 tests; 0.116s)
+test_queued_ai.py: passed (5 tests; 0.366s)
+test_recovery.py: passed (7 tests; 0.316s)
+test_regression.py: passed (18 tests; 8.496s)
+test_regression_evidence_047.py: passed (5 tests; 0.668s)
+test_regression_guards.py: passed (3 tests; 0.266s)
+test_regression_log_isolation_048.py: passed (2 tests; 0.568s)
+test_regression_retention_049.py: passed (4 tests; 0.267s)
+test_release.py: passed (8 tests; 0.167s)
+test_repair_commit.py: passed (2 tests; 0.568s)
+test_repair_recovery.py: passed (5 tests; 0.117s)
+test_setup.py: passed (14 tests; 0.116s)
+test_supervisor_singleton_045.py: passed (2 tests; 0.116s)
+test_windows_build_verifier_044.py: passed (3 tests; 0.067s)
+test_windows_startup.py: passed (6 tests; 0.116s)
+test_worker.py: passed (11 tests; 4.133s)
+OVERALL: PASS; 242 completed tests

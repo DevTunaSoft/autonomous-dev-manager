@@ -1,0 +1,12 @@
+test_entry_routes_gui (test_desktop_entry_040.SingleExecutableTests.test_entry_routes_gui) ... ok
+test_entry_routes_supervisor_arguments (test_desktop_entry_040.SingleExecutableTests.test_entry_routes_supervisor_arguments) ... ok
+test_frozen_launch_uses_embedded_supervisor (test_desktop_entry_040.SingleExecutableTests.test_frozen_launch_uses_embedded_supervisor) ... ok
+test_limit_validation (test_desktop_entry_040.SingleExecutableTests.test_limit_validation) ... ok
+test_missing_db_does_not_create (test_desktop_entry_040.SingleExecutableTests.test_missing_db_does_not_create) ... ok
+test_read_only_jobs (test_desktop_entry_040.SingleExecutableTests.test_read_only_jobs) ... ok
+test_unknown_args_rejected (test_desktop_entry_040.SingleExecutableTests.test_unknown_args_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.006s
+
+OK

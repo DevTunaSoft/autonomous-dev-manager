@@ -1,0 +1,12 @@
+test_abandoned_metadata_does_not_block_recovery (test_project_lock.ProjectLockTests.test_abandoned_metadata_does_not_block_recovery) ... ok
+test_crashed_process_releases_ownership (test_project_lock.ProjectLockTests.test_crashed_process_releases_ownership) ... ok
+test_cross_process_exclusion_and_recovery (test_project_lock.ProjectLockTests.test_cross_process_exclusion_and_recovery) ... ok
+test_exception_releases_kernel_lock (test_project_lock.ProjectLockTests.test_exception_releases_kernel_lock) ... ok
+test_metadata_and_persistent_lock_file (test_project_lock.ProjectLockTests.test_metadata_and_persistent_lock_file) ... ok
+test_same_process_second_owner_refused (test_project_lock.ProjectLockTests.test_same_process_second_owner_refused) ... ok
+test_symlink_refused (test_project_lock.ProjectLockTests.test_symlink_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.100s
+
+OK

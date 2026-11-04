@@ -1,0 +1,7 @@
+test_agent.py: started
+test_agent.py: passed
+test_regression.py: started
+test_regression.py: passed
+test_agent.py: passed (10 tests; 17.426s)
+test_regression.py: passed (18 tests; 16.536s)
+OVERALL: PASS; 28 completed tests

@@ -1,0 +1,19 @@
+test_regression.py: started
+test_regression.py: passed
+test_setup.py: started
+test_setup.py: passed
+test_worker.py: started
+test_worker.py: passed
+test_adaptive.py: passed (8 tests; 0.77s)
+test_adaptive_worker.py: passed (4 tests; 4.462s)
+test_agent.py: passed (10 tests; 18.683s)
+test_core.py: passed (6 tests; 4.249s)
+test_engine.py: passed (9 tests; 5.75s)
+test_model_probe.py: passed (10 tests; 0.88s)
+test_pipeline.py: passed (8 tests; 5.362s)
+test_provision.py: passed (8 tests; 0.926s)
+test_recovery.py: passed (7 tests; 4.089s)
+test_regression.py: passed (16 tests; 16.107s)
+test_setup.py: passed (14 tests; 0.869s)
+test_worker.py: passed (11 tests; 7.15s)
+OVERALL: PASS; 111 completed tests

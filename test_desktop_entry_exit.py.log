@@ -1,0 +1,9 @@
+test_real_script_propagates_invalid_arguments (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_propagates_invalid_arguments) ... ok
+test_real_script_smoke_produces_success_exit (test_desktop_entry_exit.DesktopEntrypointExitTests.test_real_script_smoke_produces_success_exit) ... ok
+test_smoke_failure_returns_nonzero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_failure_returns_nonzero) ... ok
+test_smoke_success_returns_zero (test_desktop_entry_exit.DesktopEntrypointExitTests.test_smoke_success_returns_zero) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 1.489s
+
+OK

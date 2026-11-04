@@ -1,0 +1,10 @@
+test_daemon_executes_queued_ai_and_records_real_failure (test_queued_ai.QueuedAITests.test_daemon_executes_queued_ai_and_records_real_failure) ... ok
+test_invalid_layout_rejected (test_queued_ai.QueuedAITests.test_invalid_layout_rejected) ... ok
+test_invalid_model_rejected (test_queued_ai.QueuedAITests.test_invalid_model_rejected) ... ok
+test_queue_is_durable_and_non_replaying (test_queued_ai.QueuedAITests.test_queue_is_durable_and_non_replaying) ... ok
+test_two_jobs_have_separate_evidence (test_queued_ai.QueuedAITests.test_two_jobs_have_separate_evidence) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.850s
+
+OK

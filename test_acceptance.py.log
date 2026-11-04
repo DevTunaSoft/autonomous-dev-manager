@@ -1,0 +1,7 @@
+test_does_not_overwrite_existing_output (test_acceptance.AcceptanceTests.test_does_not_overwrite_existing_output) ... ok
+test_real_http_and_real_tests_with_fake_ai (test_acceptance.AcceptanceTests.test_real_http_and_real_tests_with_fake_ai) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.552s
+
+OK

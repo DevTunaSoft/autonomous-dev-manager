@@ -1,0 +1,62 @@
+{
+  "kind": "isolated_regression",
+  "modules": [
+    {
+      "module": "test_adaptive.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 8,
+      "seconds": 1.121,
+      "output_tail": "test_16gb_sequential (test_adaptive.AdaptiveTests.test_16gb_sequential) ... ok\ntest_32gb_parallel (test_adaptive.AdaptiveTests.test_32gb_parallel) ... ok\ntest_concurrency_limit (test_adaptive.AdaptiveTests.test_concurrency_limit) ... ok\ntest_invalid_request (test_adaptive.AdaptiveTests.test_invalid_request) ... ok\ntest_low_disk (test_adaptive.AdaptiveTests.test_low_disk) ... ok\ntest_model_unload_requires_remeasurement (test_adaptive.AdaptiveTests.test_model_unload_requires_remeasurement) ... ok\ntest_no_memory_cannot_proceed (test_adaptive.AdaptiveTests.test_no_memory_cannot_proceed) ... ok\ntest_unknown_resources_fail_closed (test_adaptive.AdaptiveTests.test_unknown_resources_fail_closed) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.000s\n\nOK\n",
+      "log_path": "/mnt/data/adm017/test_adaptive.py.log"
+    },
+    {
+      "module": "test_adaptive_worker.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 2.987,
+      "output_tail": "test_deferred_job_runs_after_resources_recover (test_adaptive_worker.AdaptiveWorkerTests.test_deferred_job_runs_after_resources_recover) ... ok\ntest_denied_is_deferred_without_consuming_attempt (test_adaptive_worker.AdaptiveWorkerTests.test_denied_is_deferred_without_consuming_attempt) ... ok\ntest_no_admission_keeps_backward_compatibility (test_adaptive_worker.AdaptiveWorkerTests.test_no_admission_keeps_backward_compatibility) ... ok\ntest_probe_exception_does_not_launch (test_adaptive_worker.AdaptiveWorkerTests.test_probe_exception_does_not_launch) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 2.063s\n\nOK\n",
+      "log_path": "/mnt/data/adm017/test_adaptive_worker.py.log"
+    },
+    {
+      "module": "test_agent.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 10,
+      "seconds": 16.997,
+      "output_tail": "test_ambiguous_interrupted_agent_is_not_replayed (test_agent.AgentProofTests.test_ambiguous_interrupted_agent_is_not_replayed) ... ok\ntest_failed_repair_cannot_pass (test_agent.AgentProofTests.test_failed_repair_cannot_pass) ... ok\ntest_interrupted_before_agent_can_resume (test_agent.AgentProofTests.test_interrupted_before_agent_can_resume) ... ok\ntest_local_only_model_guard (test_agent.AgentProofTests.test_local_only_model_guard) ... ok\ntest_modified_test_is_blocked_even_if_tests_pass (test_agent.AgentProofTests.test_modified_test_is_blocked_even_if_tests_pass) ... ok\ntest_no_agent_missing_is_clear (test_agent.AgentProofTests.test_no_agent_missing_is_clear) ... ok\ntest_real_test_failure_fake_agent_repair (test_agent.AgentProofTests.test_real_test_failure_fake_agent_repair) ... ok\ntest_symlink_project_rejected (test_agent.AgentProofTests.test_symlink_project_rejected) ... ok\ntest_workspace_requirement (test_agent.AgentProofTests.test_workspace_requirement) ... ok\ntest_wrong_model_checkpoint_rejected (test_agent.AgentProofTests.test_wrong_model_checkpoint_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 16.094s\n\nOK\n",
+      "log_path": "/mnt/data/adm017/test_agent.py.log"
+    },
+    {
+      "module": "test_core.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 6,
+      "seconds": 4.254,
+      "output_tail": "test_failure_and_bounded_retry (test_core.SupervisorTests.test_failure_and_bounded_retry) ... ok\ntest_invalid (test_core.SupervisorTests.test_invalid) ... ok\ntest_recovery_after_restart (test_core.SupervisorTests.test_recovery_after_restart) ... ok\ntest_resource_modes (test_core.SupervisorTests.test_resource_modes) ... ok\ntest_success_and_evidence (test_core.SupervisorTests.test_success_and_evidence) ... ok\ntest_timeout (test_core.SupervisorTests.test_timeout) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 3.337s\n\nOK\n",
+      "log_path": "/mnt/data/adm017/test_core.py.log"
+    },
+    {
+      "module": "test_engine.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 9,
+      "seconds": 5.855,
+      "output_tail": "test_command_argument_validation (test_engine.EngineTests.test_command_argument_validation) ... ok\ntest_command_timeout (test_engine.EngineTests.test_command_timeout) ... ok\ntest_cwd_escape_blocked (test_engine.EngineTests.test_cwd_escape_blocked) ... ok\ntest_end_to_end_repair (test_engine.EngineTests.test_end_to_end_repair) ... ok\ntest_evidence_not_inside_project (test_engine.EngineTests.test_evidence_not_inside_project) ... ok\ntest_interrupted_resume (test_engine.EngineTests.test_interrupted_resume) ... ok\ntest_no_false_success_when_repair_fails (test_engine.EngineTests.test_no_false_success_when_repair_fails) ... ok\ntest_no_overwrite (test_engine.EngineTests.test_no_overwrite) ... ok\ntest_safe_path (test_engine.EngineTests.test_safe_path) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 4.998s\n\nOK\n",
+      "log_path": "/mnt/data/adm017/test_engine.py.log"
+    },
+    {
+      "module": "test_model_probe.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 10,
+      "seconds": 0.874,
+      "output_tail": "test_bad_answer (test_model_probe.ProbeTests.test_bad_answer) ... ok\ntest_bad_timeout (test_model_probe.ProbeTests.test_bad_timeout) ... ok\ntest_connection_error (test_model_probe.ProbeTests.test_connection_error) ... ok\ntest_duplicate_models (test_model_probe.ProbeTests.test_duplicate_models) ... ok\ntest_installed (test_model_probe.ProbeTests.test_installed) ... ok\ntest_missing (test_model_probe.ProbeTests.test_missing) ... ok\ntest_report_not_claiming_coding (test_model_probe.ProbeTests.test_report_not_claiming_coding) ... ok\ntest_success (test_model_probe.ProbeTests.test_success) ... ok\ntest_unfinished (test_model_probe.ProbeTests.test_unfinished) ... ok\ntest_unknown_model_rejected (test_model_probe.ProbeTests.test_unknown_model_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.001s\n\nOK\n",
+      "log_path": "/mnt/data/adm017/test_model_probe.py.log"
+    }
+  ],
+  "passed": false,
+  "total_tests": 47,
+  "running": "test_pipeline.py"
+}

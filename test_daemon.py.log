@@ -1,0 +1,9 @@
+test_invalid_configuration (test_daemon.DaemonTests.test_invalid_configuration) ... ok
+test_multiple_jobs_processed_without_new_prompt (test_daemon.DaemonTests.test_multiple_jobs_processed_without_new_prompt) ... ok
+test_stop_without_jobs (test_daemon.DaemonTests.test_stop_without_jobs) ... ok
+test_waits_for_new_job_without_reprompt (test_daemon.DaemonTests.test_waits_for_new_job_without_reprompt) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.423s
+
+OK

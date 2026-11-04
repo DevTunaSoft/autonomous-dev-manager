@@ -1,0 +1,12 @@
+test_cli_requires_explicit_unsafe_execution_acknowledgement (test_live_acceptance.LiveAcceptanceTests.test_cli_requires_explicit_unsafe_execution_acknowledgement) ... usage: python -m unittest [-h] --output OUTPUT [--model MODEL]
+                          [--timeout TIMEOUT] [--acknowledge-unsandboxed-code]
+python -m unittest: error: Requires --acknowledge-unsandboxed-code; use a disposable VM
+ok
+test_fake_repair_cannot_claim_real_model (test_live_acceptance.LiveAcceptanceTests.test_fake_repair_cannot_claim_real_model) ... ok
+test_refuses_existing_files (test_live_acceptance.LiveAcceptanceTests.test_refuses_existing_files) ... ok
+test_refuses_missing_model_without_writing (test_live_acceptance.LiveAcceptanceTests.test_refuses_missing_model_without_writing) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK

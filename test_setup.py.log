@@ -1,0 +1,19 @@
+test_approval_required (test_setup.SetupTests.test_approval_required) ... ok
+test_balanced_machine (test_setup.SetupTests.test_balanced_machine) ... ok
+test_constrained_machine (test_setup.SetupTests.test_constrained_machine) ... ok
+test_execution_mock (test_setup.SetupTests.test_execution_mock) ... ok
+test_linux_never_provisions (test_setup.SetupTests.test_linux_never_provisions) ... ok
+test_missing_executable_blocks (test_setup.SetupTests.test_missing_executable_blocks) ... ok
+test_performance_machine (test_setup.SetupTests.test_performance_machine) ... ok
+test_slow_disk_low_space_falls_back (test_setup.SetupTests.test_slow_disk_low_space_falls_back) ... ok
+test_timeout_reported (test_setup.SetupTests.test_timeout_reported) ... ok
+test_unapproved_model_rejected (test_setup.SetupTests.test_unapproved_model_rejected) ... ok
+test_unknown_commands_rejected (test_setup.SetupTests.test_unknown_commands_rejected) ... ok
+test_unknown_model_rejected (test_setup.SetupTests.test_unknown_model_rejected) ... ok
+test_windows_plan_no_tools (test_setup.SetupTests.test_windows_plan_no_tools) ... ok
+test_windows_plan_with_winget (test_setup.SetupTests.test_windows_plan_with_winget) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.002s
+
+OK

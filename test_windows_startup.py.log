@@ -1,0 +1,11 @@
+test_existing_stop_request_is_not_discarded (test_windows_startup.StartupTests.test_existing_stop_request_is_not_discarded) ... ok
+test_frozen_startup_uses_supervisor_flag (test_windows_startup.StartupTests.test_frozen_startup_uses_supervisor_flag) ... ok
+test_missing_python_is_rejected (test_windows_startup.StartupTests.test_missing_python_is_rejected) ... ok
+test_no_automatic_install (test_windows_startup.StartupTests.test_no_automatic_install) ... ok
+test_source_startup_uses_module (test_windows_startup.StartupTests.test_source_startup_uses_module) ... ok
+test_windows_command_is_argv_not_shell (test_windows_startup.StartupTests.test_windows_command_is_argv_not_shell) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.010s
+
+OK

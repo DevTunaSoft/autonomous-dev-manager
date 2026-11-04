@@ -1,0 +1,99 @@
+{
+  "kind": "isolated_regression",
+  "fingerprint": "4b3c8fa45e857b5a9d4f76006bd82f3d5a3deb45fde4dfef1e6f77f8cc6dadee",
+  "modules": [
+    {
+      "module": "test_acceptance.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 2,
+      "seconds": 4.332,
+      "output_tail": "test_does_not_overwrite_existing_output (test_acceptance.AcceptanceTests.test_does_not_overwrite_existing_output) ... ok\ntest_real_http_and_real_tests_with_fake_ai (test_acceptance.AcceptanceTests.test_real_http_and_real_tests_with_fake_ai) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 3.179s\n\nOK\n",
+      "log_path": "test_acceptance.py.log"
+    },
+    {
+      "module": "test_adaptive.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 8,
+      "seconds": 0.825,
+      "output_tail": "test_16gb_sequential (test_adaptive.AdaptiveTests.test_16gb_sequential) ... ok\ntest_32gb_parallel (test_adaptive.AdaptiveTests.test_32gb_parallel) ... ok\ntest_concurrency_limit (test_adaptive.AdaptiveTests.test_concurrency_limit) ... ok\ntest_invalid_request (test_adaptive.AdaptiveTests.test_invalid_request) ... ok\ntest_low_disk (test_adaptive.AdaptiveTests.test_low_disk) ... ok\ntest_model_unload_requires_remeasurement (test_adaptive.AdaptiveTests.test_model_unload_requires_remeasurement) ... ok\ntest_no_memory_cannot_proceed (test_adaptive.AdaptiveTests.test_no_memory_cannot_proceed) ... ok\ntest_unknown_resources_fail_closed (test_adaptive.AdaptiveTests.test_unknown_resources_fail_closed) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK\n",
+      "log_path": "test_adaptive.py.log"
+    },
+    {
+      "module": "test_adaptive_worker.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 3.839,
+      "output_tail": "test_deferred_job_runs_after_resources_recover (test_adaptive_worker.AdaptiveWorkerTests.test_deferred_job_runs_after_resources_recover) ... ok\ntest_denied_is_deferred_without_consuming_attempt (test_adaptive_worker.AdaptiveWorkerTests.test_denied_is_deferred_without_consuming_attempt) ... ok\ntest_no_admission_keeps_backward_compatibility (test_adaptive_worker.AdaptiveWorkerTests.test_no_admission_keeps_backward_compatibility) ... ok\ntest_probe_exception_does_not_launch (test_adaptive_worker.AdaptiveWorkerTests.test_probe_exception_does_not_launch) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 2.390s\n\nOK\n",
+      "log_path": "test_adaptive_worker.py.log"
+    },
+    {
+      "module": "test_agent.py",
+      "status": "timeout",
+      "exit_code": null,
+      "tests": 0,
+      "seconds": 8.018,
+      "output_tail": "test_ambiguous_interrupted_agent_is_not_replayed (test_agent.AgentProofTests.test_ambiguous_interrupted_agent_is_not_replayed) ... ok\ntest_failed_repair_cannot_pass (test_agent.AgentProofTests.test_failed_repair_cannot_pass) ... ",
+      "log_path": "test_agent.py.log"
+    },
+    {
+      "module": "test_ai_inspection.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 1.175,
+      "output_tail": "test_invalid_json_is_fail_closed (test_ai_inspection.InspectionTests.test_invalid_json_is_fail_closed) ... ok\ntest_pending_is_not_verified (test_ai_inspection.InspectionTests.test_pending_is_not_verified) ... ok\ntest_report_success_worker_failure_is_not_verified (test_ai_inspection.InspectionTests.test_report_success_worker_failure_is_not_verified) ... ok\ntest_unknown_job_refused (test_ai_inspection.InspectionTests.test_unknown_job_refused) ... ok\ntest_unresolved_journal_overrides_success (test_ai_inspection.InspectionTests.test_unresolved_journal_overrides_success) ... ok\ntest_worker_pass_and_success_report (test_ai_inspection.InspectionTests.test_worker_pass_and_success_report) ... ok\ntest_worker_pass_without_report_is_not_verified (test_ai_inspection.InspectionTests.test_worker_pass_without_report_is_not_verified) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.090s\n\nOK\n",
+      "log_path": "test_ai_inspection.py.log"
+    },
+    {
+      "module": "test_auto_queue.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 1.135,
+      "output_tail": "test_explicit_model_does_not_probe (test_auto_queue.AutoQueueTests.test_explicit_model_does_not_probe) ... ok\ntest_live_inventory_used_only_in_auto_mode (test_auto_queue.AutoQueueTests.test_live_inventory_used_only_in_auto_mode) ... ok\ntest_no_eligible_model_fails_without_queue (test_auto_queue.AutoQueueTests.test_no_eligible_model_fails_without_queue) ... ok\ntest_physical_ram_is_positive (test_auto_queue.AutoQueueTests.test_physical_ram_is_positive) ... ok\ntest_selects_3b_on_16gb_and_persists_model (test_auto_queue.AutoQueueTests.test_selects_3b_on_16gb_and_persists_model) ... ok\ntest_selects_7b_on_32gb (test_auto_queue.AutoQueueTests.test_selects_7b_on_32gb) ... ok\ntest_untrusted_model_name_rejected (test_auto_queue.AutoQueueTests.test_untrusted_model_name_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.041s\n\nOK\n",
+      "log_path": "test_auto_queue.py.log"
+    },
+    {
+      "module": "test_core.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 6,
+      "seconds": 5.974,
+      "output_tail": "test_failure_and_bounded_retry (test_core.SupervisorTests.test_failure_and_bounded_retry) ... ok\ntest_invalid (test_core.SupervisorTests.test_invalid) ... ok\ntest_recovery_after_restart (test_core.SupervisorTests.test_recovery_after_restart) ... ok\ntest_resource_modes (test_core.SupervisorTests.test_resource_modes) ... ok\ntest_success_and_evidence (test_core.SupervisorTests.test_success_and_evidence) ... ok\ntest_timeout (test_core.SupervisorTests.test_timeout) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 4.610s\n\nOK\n",
+      "log_path": "test_core.py.log"
+    },
+    {
+      "module": "test_daemon.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 4,
+      "seconds": 5.173,
+      "output_tail": "test_invalid_configuration (test_daemon.DaemonTests.test_invalid_configuration) ... ok\ntest_multiple_jobs_processed_without_new_prompt (test_daemon.DaemonTests.test_multiple_jobs_processed_without_new_prompt) ... ok\ntest_stop_without_jobs (test_daemon.DaemonTests.test_stop_without_jobs) ... ok\ntest_waits_for_new_job_without_reprompt (test_daemon.DaemonTests.test_waits_for_new_job_without_reprompt) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 4.289s\n\nOK\n",
+      "log_path": "test_daemon.py.log"
+    },
+    {
+      "module": "test_daemon_lifecycle.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 3,
+      "seconds": 0.942,
+      "output_tail": "test_heartbeat_and_graceful_stop (test_daemon_lifecycle.DaemonLifecycleTests.test_heartbeat_and_graceful_stop) ... ok\ntest_max_cycles_stops_and_records (test_daemon_lifecycle.DaemonLifecycleTests.test_max_cycles_stops_and_records) ... ok\ntest_status_unknown_before_start (test_daemon_lifecycle.DaemonLifecycleTests.test_status_unknown_before_start) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 0.070s\n\nOK\n",
+      "log_path": "test_daemon_lifecycle.py.log"
+    },
+    {
+      "module": "test_desktop.py",
+      "status": "passed",
+      "exit_code": 0,
+      "tests": 7,
+      "seconds": 0.827,
+      "output_tail": "test_windows_gui_build_plan (test_desktop.BuildPlanTests.test_windows_gui_build_plan) ... ok\ntest_fresh_heartbeat (test_desktop.DesktopTests.test_fresh_heartbeat) ... ok\ntest_future_heartbeat (test_desktop.DesktopTests.test_future_heartbeat) ... ok\ntest_launch_uses_real_command (test_desktop.DesktopTests.test_launch_uses_real_command) ... ok\ntest_missing_status (test_desktop.DesktopTests.test_missing_status) ... ok\ntest_no_duplicate_when_running (test_desktop.DesktopTests.test_no_duplicate_when_running) ... ok\ntest_stale_heartbeat (test_desktop.DesktopTests.test_stale_heartbeat) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.004s\n\nOK\n",
+      "log_path": "test_desktop.py.log"
+    }
+  ],
+  "passed": false,
+  "total_tests": 48,
+  "running": "test_engine.py"
+}

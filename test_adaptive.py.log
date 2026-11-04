@@ -1,0 +1,13 @@
+test_16gb_sequential (test_adaptive.AdaptiveTests.test_16gb_sequential) ... ok
+test_32gb_parallel (test_adaptive.AdaptiveTests.test_32gb_parallel) ... ok
+test_concurrency_limit (test_adaptive.AdaptiveTests.test_concurrency_limit) ... ok
+test_invalid_request (test_adaptive.AdaptiveTests.test_invalid_request) ... ok
+test_low_disk (test_adaptive.AdaptiveTests.test_low_disk) ... ok
+test_model_unload_requires_remeasurement (test_adaptive.AdaptiveTests.test_model_unload_requires_remeasurement) ... ok
+test_no_memory_cannot_proceed (test_adaptive.AdaptiveTests.test_no_memory_cannot_proceed) ... ok
+test_unknown_resources_fail_closed (test_adaptive.AdaptiveTests.test_unknown_resources_fail_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.000s
+
+OK

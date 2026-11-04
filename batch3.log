@@ -1,0 +1,27 @@
+test_core.py: started
+test_core.py: passed
+test_engine.py: started
+test_engine.py: passed
+test_model_probe.py: started
+test_model_probe.py: passed
+test_pipeline.py: started
+test_pipeline.py: passed
+test_provision.py: started
+test_provision.py: passed
+test_recovery.py: started
+test_recovery.py: passed
+test_regression.py: started
+test_regression.py: timeout
+test_adaptive.py: passed (8 tests; 0.77s)
+test_adaptive_worker.py: passed (4 tests; 4.462s)
+test_agent.py: passed (10 tests; 18.683s)
+test_core.py: passed (6 tests; 4.249s)
+test_engine.py: passed (9 tests; 5.75s)
+test_model_probe.py: passed (10 tests; 0.88s)
+test_pipeline.py: passed (8 tests; 5.362s)
+test_provision.py: passed (8 tests; 0.926s)
+test_recovery.py: passed (7 tests; 4.089s)
+test_regression.py: timeout (0 tests; 8.742s)
+test_setup.py: not_run_budget (0 tests; 0s)
+test_worker.py: not_run_budget (0 tests; 0s)
+OVERALL: FAIL; 70 completed tests

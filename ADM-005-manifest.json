@@ -1,0 +1,24 @@
+{
+  "release": "ADM-005",
+  "verification": "43 Python unit/integration tests passed on Linux; real Windows/OpenCode/Ollama unverified",
+  "files": {
+    "ADM-003-manifest.json": "e401d4ba0afc2b006d6ec52c41c5aebde216394fcd3a15ec90ff2258b40afc4d",
+    "README.md": "7d655a848e19edb7bc5e91bcdb89beb79c8f2365e84ec819817d6d1a3124f0b8",
+    "adm/__init__.py": "8e528fb7f41d2e98145cf47a6fe62da14f278376ea6de7223f34d5a972b79322",
+    "adm/__main__.py": "b91894925262fbe5545bcf17b568793e0f922fe12b7dc0365b8bffa5679ae599",
+    "adm/agent.py": "89a286a8075add4113e01cf80ff68cf548b0b13ff4c16c14cc56133dc3ba334e",
+    "adm/agent_cli.py": "cace62bed044b7065724437424bd0ed4d2a335d90bd730e4ee71f5afa529a68f",
+    "adm/cli.py": "c4e56a7205e8f68cf6d70711a133811931e4a3ed2c8363c8f99a37f857bffda9",
+    "adm/core.py": "1f1a639aa2fa8f8b056708b7cc6f5daf58f848af540f70510210d474f543137f",
+    "adm/engine.py": "fbde98f05f75b2a000b7ad45189674930ddd15b42bb51104313676f483335f24",
+    "adm/preflight.py": "d67157614211db83c7a1fc587a97be2127cfef06776dd33f5cb861b16dafbd68",
+    "adm/recovery.py": "68e7e72fa536854d68cdc7641813558144663c4f62163f571f51fba3234f78fc",
+    "adm/worker.py": "3a3749e7ed5db26175e2bbe01844fa512b7e05d12c58e28c6b4ed12b634c20c4",
+    "adm/worker_cli.py": "ac62cc1e169c4c72eb8b774c6c06b07b0a6edcffd6e295ecec8610a14451412b",
+    "tests/test_agent.py": "9a93e79cd4ef368fd0cc372b8fb42d30cc8e53c9abed9fa99408db2bcae02da8",
+    "tests/test_core.py": "67af65d975dfaf05e25ce77ebbe58d40608f6cdca0babb0997f97db0fb4a2ff5",
+    "tests/test_engine.py": "043f8b87622aa0254a222981cd64d9093aafc67b9de212649532b89c5b334e28",
+    "tests/test_recovery.py": "fc9abbfc4b6924d4b3011764af12d47c6e90ca7b985ae77e0c916abfe35b1f1d",
+    "tests/test_worker.py": "421e562b425843a3b658178a775fd281d2d05bb76791cec04ece9afd681fbd7c"
+  }
+}
