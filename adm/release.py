@@ -88,7 +88,9 @@ def windows_desktop_build_plan(root: str | Path, *, python_executable=None):
     if not (root / "adm" / "desktop_entry.py").is_file():
         raise ValueError("ADM desktop entrypoint not found")
     interpreter = python_executable or sys.executable
-    return [str(interpreter), "-m", "PyInstaller", "--noconfirm", "--clean", "--onefile", "--windowed", "--name", "ADM-Desktop", "--paths", str(root), str(root / "adm" / "desktop_entry.py")]
+    from .selftest import SMOKE_MODULES
+    hidden = [arg for name in SMOKE_MODULES for arg in ("--hidden-import", name)]
+    return [str(interpreter), "-m", "PyInstaller", "--noconfirm", "--clean", "--onefile", "--windowed", "--name", "ADM-Desktop", "--paths", str(root), *hidden, str(root / "adm" / "desktop_entry.py")]
 
 def build_windows_executable(root: str | Path, *, approve=False):
     if not approve:
