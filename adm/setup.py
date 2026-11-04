@@ -31,6 +31,20 @@ class Step:
     requires_approval: bool = True
 
 
+def find_executable(name: str) -> str | None:
+    """PATH lookup plus default install dirs. A process started before an install keeps a stale
+    PATH, so right after `winget install` plain which() cannot see the new program."""
+    found = shutil.which(name)
+    if found or os.name != 'nt':
+        return found
+    local = os.environ.get('LOCALAPPDATA', '')
+    extra = {'ollama': [Path(local) / 'Programs' / 'Ollama' / 'ollama.exe'] if local else []}
+    for candidate in extra.get(name, []):
+        if candidate.is_file():
+            return str(candidate)
+    return None
+
+
 def choose_model(info: dict) -> str:
     """Conservative candidate only; selection is not a capability benchmark."""
     return MODELS[mode(info)]
@@ -92,7 +106,7 @@ def execute_step(step: dict, *, approved: bool = False,
         raise ValueError('Unknown setup action')
     if runner is None:
         runner = subprocess.run
-    executable = shutil.which(argv[0])
+    executable = find_executable(argv[0])
     if executable is None:
         return {'key': key, 'status': 'blocked', 'reason': f'{argv[0]} is not available in PATH'}
     try:

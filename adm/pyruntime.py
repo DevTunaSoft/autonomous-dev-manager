@@ -85,5 +85,5 @@ def project_python(*, frozen: bool | None = None, candidates: list[str] | None =
         if _usable(path):
             return str(Path(path))
     raise PythonNotFound('Python 3.10 or newer was not found. ADM needs it to run your '
-                         'project\'s tests. Use "Set up local AI" to install it, or install '
-                         'Python from python.org, then try again.')
+                         'project\'s tests. Install Python from python.org (tick "Add python.exe to '
+                         'PATH"), then try again.')

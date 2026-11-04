@@ -99,7 +99,11 @@ def main():
             messagebox.showerror('Unable to start', str(exc))
         refresh()
     def stop():
-        request_stop(state)
+        # A stop file written while nothing is running would make the NEXT start exit at once.
+        if status_summary(state)['state'] in ('running', 'unresponsive'):
+            request_stop(state)
+        else:
+            messagebox.showinfo('Not running', 'The supervisor is not running.')
         refresh()
     tk.Button(buttons, text='Start supervisor', command=start, width=20).pack(side='left', padx=8)
     tk.Button(buttons, text='Stop supervisor', command=stop, width=20).pack(side='left', padx=8)

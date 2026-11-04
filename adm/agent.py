@@ -110,9 +110,15 @@ def agent_repair_proof(root, evidence_dir, *, model='ollama/qwen2.5-coder:3b',
         raise SafetyError('max_repairs must be between 1 and 5')
     root, evidence_dir = Path(root).resolve(), Path(evidence_dir).resolve()
     validate_project(root, evidence_dir)
-    agent = list(agent_executable) if agent_executable is not None else ['opencode']
-    if agent_executable is None and not shutil.which('opencode'):
-        raise SafetyError('OpenCode is not installed or not on PATH')
+    if agent_executable is not None:
+        agent = list(agent_executable)
+    else:
+        # Use the resolved path: on Windows `opencode` is usually a .cmd shim that
+        # CreateProcess cannot find by bare name when shell=False.
+        found = shutil.which('opencode')
+        if not found:
+            raise SafetyError('OpenCode is not installed or not on PATH')
+        agent = [found]
     report_path = evidence_dir / 'agent-proof-report.json'
     # Loading checkpoint only for same project/model; never reuse a verified result blindly.
     if report_path.exists():

@@ -7,6 +7,7 @@ import urllib.error
 import urllib.request
 from .core import resources, mode
 from .agent import safe_local_model
+from .ollama_direct import _LOCAL_OPENER
 
 
 def local_preflight(model='ollama/qwen2.5-coder:3b', endpoint='http://127.0.0.1:11434'):
@@ -33,7 +34,7 @@ def local_preflight(model='ollama/qwen2.5-coder:3b', endpoint='http://127.0.0.1:
     else:
         result['problems'].append('OpenCode is not installed')
     try:
-        with urllib.request.urlopen(endpoint + '/api/tags', timeout=2) as response:
+        with _LOCAL_OPENER.open(endpoint + '/api/tags', timeout=2) as response:
             data = json.load(response)
         names = [entry['name'] for entry in data.get('models', []) if isinstance(entry, dict) and isinstance(entry.get('name'), str)]
         result['ollama']['reachable'] = True

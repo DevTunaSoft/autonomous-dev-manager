@@ -171,6 +171,27 @@ class WorkerSupervisor:
             changes.append((job_id,new))
         return changes
 
+    def resolve_blocked(self, job_id, action):
+        """Operator decision for a 'blocked' job: 'retry' (only if its old PID is gone) or 'fail'."""
+        if action not in ('retry', 'fail'):
+            raise ValueError("action must be 'retry' or 'fail'")
+        row = self.db.execute("SELECT state,pid,attempts,max_attempts FROM jobs WHERE id=?", (job_id,)).fetchone()
+        if not row or row[0] != 'blocked':
+            raise ValueError('job is not blocked')
+        state, pid, attempts, maximum = row
+        if action == 'retry':
+            if pid_alive(pid):
+                raise ValueError('previous process is still alive; refusing to start a duplicate')
+            if attempts >= maximum:
+                raise ValueError('no attempts remaining; fail it or raise max_attempts')
+            new = 'pending'
+        else:
+            new = 'failed'
+        self.db.execute("UPDATE jobs SET state=?,owner=NULL,pid=NULL,updated=?,error=? WHERE id=? AND state='blocked'",
+                        (new, time.time(), f'Operator chose {action} for blocked job', job_id))
+        self.event(job_id, 'operator_resolved', action=action, current=new)
+        return new
+
     def run_once(self, timeout=20, heartbeat_interval=0.2, max_output=30000, admission=None):
         if timeout <= 0 or timeout > 3600 or heartbeat_interval <= 0:
             raise ValueError('invalid timeouts')

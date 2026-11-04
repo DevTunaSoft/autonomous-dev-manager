@@ -13,6 +13,9 @@ import time
 from .core import Supervisor, resources, mode
 
 
+MAX_CAPTURE_BYTES = 64 * 1024 * 1024   # a runaway test must not fill the disk or RAM
+
+
 class SafetyError(ValueError):
     pass
 
@@ -37,36 +40,53 @@ def run_checked(argv, cwd, root, timeout=90, output_limit=30000):
     # This is a trusted-runner proof, not a hostile-code sandbox.
     started = time.time()
     proc = None
+    import tempfile
     try:
         # Own a separate process group so a timeout stops child processes too.
         # This is process lifecycle management, NOT a security sandbox.
         options = ({'creationflags': subprocess.CREATE_NEW_PROCESS_GROUP}
                    if os.name == 'nt' else {'start_new_session': True})
-        proc = subprocess.Popen(argv, cwd=cwd, shell=False, stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE, text=True, errors='replace', **options)
-        try:
-            stdout, stderr = proc.communicate(timeout=timeout)
-            code, output = proc.returncode, stdout + '\n' + stderr
-        except subprocess.TimeoutExpired:
-            if os.name == 'nt':
-                # Windows taskkill /T terminates the entire descendant tree.
-                # Never use shell=True or interpolate command text.
-                try:
-                    subprocess.run(['taskkill', '/PID', str(proc.pid), '/T', '/F'],
-                                   capture_output=True, timeout=10, check=False)
-                except (OSError, subprocess.TimeoutExpired):
+        # Output goes to a temp file (stdout+stderr interleaved), never an unbounded pipe.
+        with tempfile.TemporaryFile() as sink:
+            proc = subprocess.Popen(argv, cwd=cwd, shell=False, stdin=subprocess.DEVNULL,
+                                    stdout=sink, stderr=subprocess.STDOUT, **options)
+            reason = None
+            deadline = time.monotonic() + timeout
+            while proc.poll() is None:
+                if time.monotonic() >= deadline:
+                    reason = f'Timed out after {timeout}s; process tree termination requested.\n'
+                    break
+                if os.fstat(sink.fileno()).st_size > MAX_CAPTURE_BYTES:
+                    reason = 'Output exceeded 64 MiB; process tree termination requested.\n'
+                    break
+                time.sleep(0.05)
+            if reason:
+                if os.name == 'nt':
+                    # Windows taskkill /T terminates the entire descendant tree.
+                    # Never use shell=True or interpolate command text.
+                    try:
+                        subprocess.run(['taskkill', '/PID', str(proc.pid), '/T', '/F'],
+                                       capture_output=True, timeout=10, check=False)
+                    except (OSError, subprocess.TimeoutExpired):
+                        proc.kill()
+                else:
+                    try:
+                        os.killpg(proc.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                if proc.poll() is None:
                     proc.kill()
-            else:
-                try:
-                    os.killpg(proc.pid, signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-            proc.kill() if proc.poll() is None else None
-            stdout, stderr = proc.communicate()
-            code, output = 124, f'Timed out after {timeout}s; process tree termination requested.\n' + stdout + '\n' + stderr
+                proc.wait()
+            size = os.fstat(sink.fileno()).st_size
+            sink.seek(max(0, size - output_limit))
+            tail = sink.read().decode('utf-8', 'replace')
+            code = 124 if reason else proc.returncode
+            # Keep the explanation even when the tail fills the whole budget.
+            budget = max(0, output_limit - len(reason or ''))
+            output = (reason or '') + (tail[-budget:] if budget else '')
     except OSError as ex:
         code, output = 127, f'Launch failed: {ex}'
-    return {'argv': argv, 'exit_code': code, 'output': output[-output_limit:],
+    return {'argv': argv, 'exit_code': code, 'output': output if len(output) <= output_limit else output[-output_limit:],
             'elapsed_seconds': round(time.time() - started, 3)}
 
 

@@ -36,6 +36,9 @@ def windows_task_command(state: str, *, python_executable: str | None = None) ->
             raise ValueError('Double quote in Windows command path')
         return '"' + part + '"'
     cmdline = ' '.join(quote(x) for x in argv)
+    if len(cmdline) > 261:
+        raise ValueError(f'Startup command is {len(cmdline)} characters; schtasks /TR allows at most 261. '
+                         'Install ADM in a shorter folder path.')
     return ['schtasks.exe', '/Create', '/F', '/SC', 'ONLOGON', '/TN', TASK_NAME,
             '/TR', cmdline, '/RL', 'LIMITED']
 

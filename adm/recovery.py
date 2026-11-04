@@ -23,10 +23,10 @@ def inventory(root: Path) -> dict[str, str]:
     total = 0
     for current, dirs, files in os.walk(root, followlinks=False):
         base = Path(current)
+        dirs[:] = [d for d in dirs if d not in EXCLUDE]   # excluded trees (venv, .git) are never inspected
         for name in [*dirs, *files]:
             if (base / name).is_symlink():
                 raise SafetyError('Symlink in workspace: refusing snapshot or restore')
-        dirs[:] = [d for d in dirs if d not in EXCLUDE]
         for name in files:
             item = base / name
             if not item.is_file():

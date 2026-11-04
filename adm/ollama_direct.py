@@ -17,6 +17,12 @@ from .repair_recovery import prepare_journal, recover_journal, finish_journal
 from .project_lock import exclusive_project
 
 DEFAULT_ENDPOINT = 'http://127.0.0.1:11434'
+# Ollama truncates prompts that exceed the context window WITHOUT telling the caller,
+# so the window is requested explicitly and oversized prompts are refused up front.
+NUM_CTX = 8192
+CHARS_PER_TOKEN = 3          # conservative for source code
+MAX_SOURCE_FILE_CHARS = 20000
+DEFAULT_INFERENCE_TIMEOUT = 300
 
 
 class _RejectRedirects(urllib.request.HTTPRedirectHandler):
@@ -41,7 +47,8 @@ def request_patch(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
     if not 1 <= timeout <= 600:
         raise SafetyError('Invalid inference timeout')
     payload = json.dumps({'model': model.removeprefix('ollama/'), 'stream': False,
-                          'format': 'json', 'prompt': prompt}).encode('utf-8')
+                          'format': 'json', 'prompt': prompt,
+                          'options': {'num_ctx': NUM_CTX, 'temperature': 0}}).encode('utf-8')
     request = urllib.request.Request(endpoint + '/api/generate', data=payload,
                                      headers={'Content-Type': 'application/json'}, method='POST')
     try:
@@ -110,7 +117,8 @@ def apply_patch(root: Path, patch: dict) -> list[str]:
 
 
 def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
-                  max_repairs=2, timeout=90, generator=request_patch):
+                  max_repairs=2, timeout=90, generator=request_patch,
+                  inference_timeout=DEFAULT_INFERENCE_TIMEOUT):
     """Evidence-backed repair. Generator injection permits fake-server tests, not live claims."""
     safe_local_model(model)
     if not 1 <= max_repairs <= 5:
@@ -141,12 +149,18 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
         report['status'] = 'inference_in_progress'
         atomic_json(report_path, report)
         try:
+            for name, data in originals.items():
+                if len(data) > MAX_SOURCE_FILE_CHARS:
+                    # Never show the model a truncated file and then accept a "complete replacement".
+                    raise SafetyError(f'{name} is too large for the model context window; split it into smaller files')
             prompt = make_prompt(requirements, failure, index) + ('\nReturn ONLY JSON of the form '
                      '{"files":[{"path":"existing.py","content":"complete replacement Python source"}]}. '
                      'No markdown, no test edits, no shell commands.\nCurrent application source:\n' +
-                     '\n'.join(f'FILE {name}:\n{data.decode("utf-8", errors="replace")[:20000]}'
+                     '\n'.join(f'FILE {name}:\n{data.decode("utf-8", errors="replace")}'
                                for name, data in originals.items()))
-            patch = generator(model, prompt, timeout=timeout)
+            if len(prompt) > NUM_CTX * CHARS_PER_TOKEN * 0.8:
+                raise SafetyError('Prompt would exceed the model context window; refusing silent truncation')
+            patch = generator(model, prompt, timeout=inference_timeout)
             prepare_journal(root, evidence, patch)
             changed = apply_patch(root, patch)
             report['status'] = 'testing_patch'
@@ -198,9 +212,10 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
 
 
 def direct_repair(root, evidence, *, model='ollama/qwen2.5-coder:3b',
-                  max_repairs=2, timeout=90, generator=request_patch):
+                  max_repairs=2, timeout=90, generator=request_patch,
+                  inference_timeout=DEFAULT_INFERENCE_TIMEOUT):
     """Hold exclusive project ownership across baseline, inference, edits and tests."""
     with exclusive_project(root):
         return _direct_repair_unlocked(root, evidence, model=model,
                                        max_repairs=max_repairs, timeout=timeout,
-                                       generator=generator)
+                                       generator=generator, inference_timeout=inference_timeout)
