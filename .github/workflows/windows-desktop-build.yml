@@ -55,3 +55,27 @@ jobs:
           path: dist/ADM-Desktop.exe
           if-no-files-found: error
           retention-days: 7
+
+  windows-full-regression:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Full regression on Windows
+        shell: pwsh
+        run: |
+          python -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json
+          $code = $LASTEXITCODE
+          python -c "import json;r=json.load(open('win-regression/regression.json'));[print('=== %s %s (%s tests)\n%s' % (m['module'],m['status'],m['tests'],m['output_tail'][-2500:])) for m in r['modules'] if m['status']!='passed']"
+          exit $code
+      - name: Upload Windows regression evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ADM-Windows-regression
+          path: win-regression/
+          if-no-files-found: warn
+          retention-days: 14
