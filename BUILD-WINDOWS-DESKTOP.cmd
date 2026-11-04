@@ -12,7 +12,7 @@ if errorlevel 1 (
   echo PyInstaller missing. Install it in a trusted Windows build environment using: python -m pip install pyinstaller
   exit /b 1
 )
-python -m PyInstaller --noconfirm --clean --onefile --windowed --name ADM-Desktop --paths "%CD%" adm\desktop_entry.py || exit /b 1
+python -m PyInstaller --noconfirm --clean --onefile --windowed --name ADM-Desktop --paths "%CD%" --hidden-import adm.desktop --hidden-import adm.daemon --hidden-import adm.worker --hidden-import adm.ollama_direct --hidden-import adm.model_selection adm\desktop_entry.py || exit /b 1
 if not exist "dist\ADM-Desktop.exe" (
   echo ERROR: PyInstaller did not produce the expected executable.
   exit /b 1
