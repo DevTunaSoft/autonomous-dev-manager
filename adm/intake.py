@@ -130,7 +130,16 @@ def _save(plan_dir: Path, plan: dict) -> None:
     # Unique temp name so two concurrent saves can't rename the same file out from under each other.
     tmp = plan_dir / f'plan.json.{os.getpid()}.{secrets.token_hex(4)}.tmp'
     tmp.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding='utf-8')
-    os.replace(tmp, plan_dir / 'plan.json')
+    final = plan_dir / 'plan.json'
+    for attempt in range(20):
+        try:
+            os.replace(tmp, final)
+            return
+        except PermissionError:
+            # Windows can deny an atomic rename-over briefly while another writer holds the target.
+            if attempt == 19:
+                raise
+            time.sleep(0.05)
 
 
 def create_plan(state, request_text: str, *, mode: str, folder, generator, model: str,
