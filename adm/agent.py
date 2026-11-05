@@ -64,7 +64,7 @@ def atomic_json(path: Path, value: dict) -> None:
     fd, tmp = tempfile.mkstemp(prefix='.adm-', suffix='.tmp', dir=path.parent)
     try:
         with os.fdopen(fd, 'w', encoding='utf-8') as handle:
-            json.dump(value, handle, indent=2)
+            json.dump(value, handle, indent=2, default=str)   # never crash on an odd value
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(tmp, path)
