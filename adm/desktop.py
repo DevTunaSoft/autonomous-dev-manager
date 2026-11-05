@@ -84,7 +84,7 @@ def main(*, auto_close_ms=None, ask=None):
     state = Path.home() / 'AppData' / 'Local' / 'ADM' / 'state' if os.name == 'nt' else Path.home() / '.adm-worker-state'
     window = tk.Tk()
     window.title('Autonomous Development Manager — Prototype')
-    window.geometry('760x700'); window.minsize(640, 560)
+    window.geometry('760x600'); window.minsize(640, 560)
     heading = tk.Label(window, text='Autonomous Development Manager', font=('Segoe UI', 17, 'bold'))
     heading.pack(pady=(18, 8))
     tk.Label(window, text='Trusted-job supervisor control panel (not yet a complete AI builder)').pack()
