@@ -8,8 +8,8 @@
 | **Date** | 2026-11-05 |
 | **Language / runtime** | Python 3.12 (the version the EXE bundles); code also runs on 3.13 |
 | **Platform** | Windows 11 desktop app; test suite is cross-platform |
-| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 12 fuzz harnesses |
-| **Test status** | `OVERALL: PASS; 435 completed tests` |
+| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 13 fuzz harnesses |
+| **Test status** | `OVERALL: PASS; 437 completed tests` |
 | **GUI** | Dark-theme dashboard, **plain Tkinter** (no third-party UI deps) |
 
 This handoff is written for an engineer reviewing the project cold and for the maintainers who will extend it. It is intentionally detailed: it documents the product constraints, the architecture, every module group with its key API, the on-disk data formats, the security/sandbox model, the build pipeline semantics, the packaging subsystem, the testing and adversarial-fuzzing strategy, the CI, and an explicit extension guide. Sections 1–4 are orientation; 5–14 are the system in depth; 15–18 are operations; 19–23 are status, caveats, and how to extend.
@@ -322,7 +322,7 @@ These are real defects found and fixed; they are the kind of thing a reviewer sh
 
 ## 15. Testing: inventory and how to run
 
-**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 435 completed tests`.
+**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 437 completed tests`.
 **One file:** `PYTHONPATH=. python tests/test_package_052.py`.
 **One fuzz round:** `python -I tools/fuzz_adversarial11.py`.
 
@@ -351,6 +351,7 @@ Each harness throws hostile/malformed input at a subsystem. **Graceful** = retur
 | **10** | `…10.py` | **packaging** (entry gen, exe names, hostile plans) + diagnostics self-check | **10 bugs:** backslash/null-byte titles → invalid `main.py`; malformed plan → AttributeError. Fixed via `repr()` injection + `plan_title`. |
 | **11** | `…11.py` | **dashboard** `collect_stats` + `_fmt_uptime` under corrupt state | **5 bugs:** non-list `checks` → len() crash; top-level JSON array → .get() crash; `_fmt_uptime(nan/inf)` → ValueError. Fixed via shape checks + float coercion. |
 | **12** | `…12.py` | **packaging** filesystem/concurrency: `main.py` as a directory, missing/file/empty roots, 12-thread entry race, empty-name guards | **0 bugs** — round 10's repr() injection + the `is_file()` guard already hold. Locked in as a CI regression. |
+| **13** | `…13.py` | **diagnostics collector**: `_safe` default contract, `_plan_counts`/`_recent_builds`/`collect`/`export_bundle` under corrupt plans/reports | **3 bugs:** `_safe` ignored its `default` (returned an error string where a dict/list/str was expected); `_plan_counts`/`_recent_builds` crashed on a top-level JSON array. Fixed via sentinel default + shape guards. |
 
 Rounds 10 and 11 each found real bugs on first contact with new code; round 12 found none (the packaging seam was already hardened by round 10), so further rounds against newer seams (packaging filesystem/concurrency, the build→report→stats→package contract, GUI event streaming) would likely still be productive.
 
