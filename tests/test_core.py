@@ -26,4 +26,12 @@ class SupervisorTests(unittest.TestCase):
  def test_resource_modes(self):
   self.assertIn(mode(resources()),('constrained','balanced','performance'))
   self.assertEqual(mode({'ram_available_bytes':None,'disk_free_bytes':0}),'constrained')
+ def test_corrupt_job_row_fails_cleanly_without_crashing(self):
+  # A corrupt argv column (bad JSON or a non-list/empty/non-str) must fail the
+  # one task cleanly, never crash the supervisor loop.
+  tid=self.sp.add('ok',[sys.executable,'-c','pass'],self.root)
+  for corrupt in ('not json','"str"','42','[123]','[]','null','{"a":1}'):
+   self.sp.db.execute("UPDATE tasks SET argv=?,state='pending' WHERE id=?",(corrupt,tid));self.sp.db.commit()
+   result=self.sp.run_next()  # must not raise
+   self.assertEqual(result['state'],'failed')
 if __name__=='__main__':unittest.main()

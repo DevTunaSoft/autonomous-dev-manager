@@ -48,7 +48,18 @@ class Supervisor:
         row=self.db.execute("SELECT id,argv,cwd,attempts,max_attempts FROM tasks WHERE state='pending' ORDER BY id LIMIT 1").fetchone()
         if not row:return None
         tid,raw,cwd,attempts,max_attempts=row
-        argv=json.loads(raw)
+        # A malformed stored command (corrupt DB row) must fail the one task cleanly,
+        # never crash the supervisor loop. Mirror worker.run_once's validation.
+        try:
+            argv=json.loads(raw)
+        except (ValueError,TypeError,RecursionError):
+            argv=None
+        if not isinstance(argv,(list,tuple)) or not argv or not all(isinstance(x,str) and x for x in argv):
+            self.db.execute("UPDATE tasks SET state='failed',updated=? WHERE id=?",(time.time(),tid))
+            self.event(tid,'rejected',{'reason':'malformed command; not executed'})
+            self.db.commit()
+            return {'id':tid,'state':'failed','exit_code':None,'output':'','error':'Malformed task command'}
+        argv=list(argv)
         self.db.execute("UPDATE tasks SET state='running',attempts=attempts+1,updated=? WHERE id=?",(time.time(),tid));self.db.commit()
         try:
             p=subprocess.run(argv,cwd=cwd,capture_output=True,text=True,timeout=timeout,shell=False,errors='replace')
