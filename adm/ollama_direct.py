@@ -156,7 +156,7 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
     initial = source_hashes(root)
     baseline = run_checked(test_command(), root, root, timeout=timeout)
     report = {'status': 'baseline_passed' if baseline['exit_code'] == 0 else 'baseline_failed',
-              'model': model, 'baseline': baseline, 'attempts': [], 'live_model_verified': False,
+              'model': model, 'baseline': baseline, 'attempts': [], 'live_model_verified': False, 'network_generator': False,
               'gate': 'tests_only',
               'escalation': {'configured': escalation_generator is not None,
                              'model': escalation_model, 'used': False},
@@ -226,7 +226,9 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                 atomic_json(report_path, report)
                 finish_journal(evidence)
                 report['status'] = 'verified_direct_repair'
-                report['live_model_verified'] = bool(getattr(use_generator, 'adm_live_generator', False))
+                # A network generator proves only that a server answered, not that the server is a real model
+                # (tests use fake servers). Only live_acceptance may promote this to live_model_verified.
+                report['network_generator'] = bool(getattr(use_generator, 'adm_live_generator', False))
                 atomic_json(report_path, report)
                 return report
             failure = result['output']

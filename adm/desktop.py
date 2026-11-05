@@ -66,11 +66,14 @@ def recent_jobs(state, limit=30):
     connection = sqlite3.connect(uri, uri=True, timeout=1)
     try:
         connection.execute('PRAGMA query_only=ON')
+        columns = {r[1] for r in connection.execute('PRAGMA table_info(jobs)')}
+        note_column = 'error' if 'error' in columns else "''"
         rows = connection.execute(
-            'SELECT id,label,state,attempts,exit_code FROM jobs ORDER BY id DESC LIMIT ?',
+            f'SELECT id,label,state,attempts,exit_code,{note_column} FROM jobs ORDER BY id DESC LIMIT ?',
             (limit,)).fetchall()
         return [{'id': row[0], 'label': row[1], 'state': row[2],
-                 'attempts': row[3], 'exit_code': row[4]} for row in rows]
+                 'attempts': row[3], 'exit_code': row[4],
+                 'note': (row[5] or '')[:200]} for row in rows]
     finally:
         connection.close()
 
@@ -109,10 +112,10 @@ def main(*, auto_close_ms=None, ask=None):
     tk.Label(window, text='Trusted jobs only. Generated code is NOT sandboxed. Windows validation pending.',
              wraplength=700).pack(pady=12)
     from tkinter import ttk
-    table = ttk.Treeview(window, columns=('id','label','state','attempts','exit'), show='headings', height=9)
-    for name, width in [('id',65),('label',250),('state',130),('attempts',90),('exit',80)]:
+    table = ttk.Treeview(window, columns=('id','label','state','attempts','exit','note'), show='headings', height=9)
+    for name, width in [('id',65),('label',250),('state',130),('attempts',90),('exit',80), ('note',300)]:
         table.heading(name, text=name.title())
-        table.column(name, width=width, stretch=(name == 'label'))
+        table.column(name, width=width, stretch=(name in ('label', 'note')))
     table.pack(fill='both', expand=True, padx=18, pady=8)
     model_status = tk.StringVar(value='Ollama: not checked')
     tk.Label(window, textvariable=model_status, wraplength=700).pack(pady=5)
@@ -193,7 +196,7 @@ def main(*, auto_close_ms=None, ask=None):
             table.delete(*table.get_children())
             for job in records:
                 table.insert('', 'end', values=(job['id'], job['label'], job['state'],
-                                                job['attempts'], job['exit_code']))
+                                                job['attempts'], job['exit_code'], job['note']))
         except (OSError, sqlite3.Error, ValueError) as exc:
             status.set('Unable to read queue: ' + str(exc))
     def tick():

@@ -24,7 +24,7 @@ class LiveAcceptanceTests(unittest.TestCase):
     def test_fake_repair_cannot_claim_real_model(self):
         with tempfile.TemporaryDirectory() as tmp:
             def fake_repair(root, evidence, **kwargs):
-                return {'status': 'verified_direct_repair', 'live_model_verified': True,
+                return {'status': 'verified_direct_repair', 'live_model_verified': True, 'network_generator': False,
                         'baseline': {'exit_code': 1}, 'attempts': [{'passed': True, 'test': {'exit_code': 0}}]}
             result = run_live_acceptance(Path(tmp) / 'out',
                 health=lambda: {'reachable': True, 'installed_models': ['qwen2.5-coder:3b']},

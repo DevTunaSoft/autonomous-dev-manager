@@ -29,6 +29,7 @@ def main():
     result = direct_repair(args.root, args.evidence, model=args.model, max_repairs=args.repairs, **kwargs)
     print(json.dumps({'status': result['status'], 'attempts': len(result['attempts']),
                       'live_model_verified': result['live_model_verified'],
+                      'network_generator': result.get('network_generator', False),
                       'escalation_used': result['escalation']['used']}, indent=2))
     if result['status'] not in ('verified_direct_repair', 'baseline_passed'):
         raise SystemExit(1)

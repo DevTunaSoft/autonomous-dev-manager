@@ -30,7 +30,7 @@ def run_live_acceptance(output_dir, *, model='ollama/qwen2.5-coder:3b', timeout=
     report = repair(root, evidence, model=model, timeout=timeout, max_repairs=2)
     # Explicitly distinguish real inference from a mocked adapter, and require tests.
     attempts = report.get('attempts', [])
-    verified = (repair is direct_repair and report.get('live_model_verified') is True
+    verified = (repair is direct_repair and report.get('network_generator') is True
                 and report.get('status') == 'verified_direct_repair'
                 and report.get('baseline', {}).get('exit_code') != 0
                 and any(a.get('passed') and a.get('test', {}).get('exit_code') == 0 for a in attempts)
