@@ -61,7 +61,10 @@ def assess(*, ram_gib: float | None = None, find_exe: Callable = find_executable
             ram_gib = physical_ram_gib()
         except SafetyError:
             ram_gib = 8.0                      # unknown: assume modest, recommend a small model
-    ollama_exe = find_exe('ollama')
+    try:
+        ollama_exe = find_exe('ollama')
+    except Exception:
+        ollama_exe = None                      # a broken discovery helper must not abort the assessment
     reachable, installed = False, []
     try:
         info = inspect(timeout=3)

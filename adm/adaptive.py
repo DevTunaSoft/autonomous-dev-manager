@@ -20,14 +20,21 @@ class Decision:
 
 def decide(snapshot: Mapping, *, job_ram_gib: float, job_disk_gib: float = 1,
            model_loaded_gib: float = 0, active_builds: int = 0) -> Decision:
-    """Conservative admission policy; fail closed when memory/disk unknown."""
-    if not all(math.isfinite(v) for v in (job_ram_gib, job_disk_gib, model_loaded_gib)) or job_ram_gib <= 0 or job_disk_gib < 0 or model_loaded_gib < 0 or active_builds < 0:
+    """Conservative admission policy; fail closed when memory/disk unknown or malformed."""
+    def _num(v):
+        return v if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) else None
+
+    params = (job_ram_gib, job_disk_gib, model_loaded_gib)
+    if (not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in params)
+            or not isinstance(active_builds, int) or isinstance(active_builds, bool)
+            or job_ram_gib <= 0 or job_disk_gib < 0 or model_loaded_gib < 0 or active_builds < 0):
         raise ValueError('Invalid resource request')
-    available = snapshot.get('ram_available_bytes')
-    disk = snapshot.get('disk_free_bytes')
-    cpus = snapshot.get('cpu_count') or 1
+    available = _num(snapshot.get('ram_available_bytes') if isinstance(snapshot, Mapping) else None)
+    disk = _num(snapshot.get('disk_free_bytes') if isinstance(snapshot, Mapping) else None)
+    cpus_raw = _num(snapshot.get('cpu_count') if isinstance(snapshot, Mapping) else None)
+    cpus = int(cpus_raw) if cpus_raw and cpus_raw >= 1 else 1
     if available is None or disk is None or available < 0 or disk < 0:
-        return Decision(False, 'Resource information unavailable', 0, False, 'constrained')
+        return Decision(False, 'Resource information unavailable or malformed', 0, False, 'constrained')
     ram_gib, disk_gib = available / GIB, disk / GIB
     if disk_gib < job_disk_gib + 2:
         return Decision(False, 'Insufficient disk safety reserve', 0, False, 'constrained')

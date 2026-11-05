@@ -58,22 +58,29 @@ def create_source_release(root: str | Path, destination: str | Path):
     return {"archive": str(destination), "file_count": len(files), "sha256": hashlib.sha256(destination.read_bytes()).hexdigest()}
 
 def verify_source_release(path: str | Path):
-    with zipfile.ZipFile(path) as archive:
-        if archive.testzip() is not None:
-            raise ValueError("Corrupt ZIP entry")
-        names = archive.namelist()
-        if len(names) != len(set(names)):
-            raise ValueError("Duplicate archive entries")
-        manifest = json.loads(archive.read("ADM/SOURCE-MANIFEST.json"))
-        expected = manifest["files"]
-        if set(names) != {"ADM/" + x for x in expected} | {"ADM/SOURCE-MANIFEST.json"}:
-            raise ValueError("Source manifest and ZIP contents differ")
-        for name, digest in expected.items():
-            if name.startswith("/") or ".." in Path(name).parts or "\\" in name:
-                raise ValueError("Unsafe manifest path")
-            if hashlib.sha256(archive.read("ADM/" + name)).hexdigest() != digest:
-                raise ValueError(f"Hash mismatch: {name}")
-    return len(expected)
+    try:
+        with zipfile.ZipFile(path) as archive:
+            if archive.testzip() is not None:
+                raise ValueError("Corrupt ZIP entry")
+            names = archive.namelist()
+            if len(names) != len(set(names)):
+                raise ValueError("Duplicate archive entries")
+            manifest = json.loads(archive.read("ADM/SOURCE-MANIFEST.json"))
+            if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+                raise ValueError("Source manifest is missing or malformed")
+            expected = manifest["files"]
+            if not all(isinstance(k, str) and isinstance(v, str) for k, v in expected.items()):
+                raise ValueError("Source manifest has invalid entries")
+            if set(names) != {"ADM/" + x for x in expected} | {"ADM/SOURCE-MANIFEST.json"}:
+                raise ValueError("Source manifest and ZIP contents differ")
+            for name, digest in expected.items():
+                if name.startswith("/") or ".." in Path(name).parts or "\\" in name:
+                    raise ValueError("Unsafe manifest path")
+                if hashlib.sha256(archive.read("ADM/" + name)).hexdigest() != digest:
+                    raise ValueError(f"Hash mismatch: {name}")
+        return len(expected)
+    except (KeyError, TypeError, RecursionError, zipfile.BadZipFile, OSError) as exc:
+        raise ValueError(f"Invalid source release: {exc}") from exc
 
 def windows_build_plan(root: str | Path, *, python_executable=None):
     root = Path(root).resolve()
