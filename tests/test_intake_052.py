@@ -159,6 +159,20 @@ class IntakeTests(unittest.TestCase):
             self.assertIn('Set up local AI', str(cm.exception))
         self.assertEqual(intake.choose_model(installed=['qwen2.5-coder:3b'], ram_gib=16), 'ollama/qwen2.5-coder:3b')
 
+    def test_plan_text_never_crashes_on_corrupt_or_partial_plans(self):
+        # A plan.json may be partially written or hand-edited. The GUI renderer
+        # must degrade gracefully, never raise KeyError/TypeError.
+        for p in ({}, {'content': None}, {'content': {}}, {'content': 'x'},
+                  {'content': {'title': 'T'}},
+                  {'content': {'title': 'T', 'summary': 'S', 'features': None,
+                               'tests': None, 'needs_internet': False, 'questions': None}}):
+            txt = intake.plan_text(p)                      # must not raise
+            self.assertIsInstance(txt, str)
+        full = {'content': {'title': 'Calc', 'summary': 'Adds', 'features': ['add'],
+                            'tests': ['adds two numbers'], 'needs_internet': False, 'questions': []},
+                'mode': 'new', 'status': 'approved', 'folder': '/tmp/x'}
+        self.assertIn('Calc', intake.plan_text(full))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -241,23 +241,37 @@ def require_approved(path) -> dict:
 
 
 def plan_text(plan: dict) -> str:
-    c = plan['content']
-    lines = [c['title'], '', c['summary'], '']
-    if c['features']:
-        lines += ['What it will do:'] + [f'  - {x}' for x in c['features']] + ['']
-    if c['tests']:
-        lines += ['How ADM will check it works (these become the tests):'] + [f'  {i}. {x}' for i, x in enumerate(c['tests'], 1)] + ['']
-    if c['needs_internet']:
+    # Render defensively: a plan.json on disk may be partial or corrupt (a manual
+    # edit, an interrupted write). Never crash the GUI on a missing/mistyped field.
+    c = plan.get('content') if isinstance(plan, dict) else None
+    if not isinstance(c, dict):
+        c = {}
+
+    def _items(value):
+        return [x for x in value if isinstance(x, str)] if isinstance(value, (list, tuple)) else []
+
+    title = c.get('title') if isinstance(c.get('title'), str) else '(untitled plan)'
+    summary = c.get('summary') if isinstance(c.get('summary'), str) else ''
+    lines = [title, '', summary, '']
+    features, tests, questions = _items(c.get('features')), _items(c.get('tests')), _items(c.get('questions'))
+    if features:
+        lines += ['What it will do:'] + [f'  - {x}' for x in features] + ['']
+    if tests:
+        lines += ['How ADM will check it works (these become the tests):'] + [f'  {i}. {x}' for i, x in enumerate(tests, 1)] + ['']
+    if c.get('needs_internet'):
         lines += ['Note: this idea seems to need the internet. ADM runs generated code with NO internet, so '
                   'those parts cannot be tested here.', '']
-    if c['questions']:
+    if questions:
         lines += ['ADM needs answers before it can plan this. Add them to your request and press Make plan again:'] + \
-                 [f'  ? {x}' for x in c['questions']] + ['']
-    if plan['status'] == 'approved':
-        where = 'Approved. Project folder:' if plan['mode'] == 'new' else 'Approved. Your existing folder:'
+                 [f'  ? {x}' for x in questions] + ['']
+    mode = plan.get('mode') if isinstance(plan, dict) else None
+    status = plan.get('status') if isinstance(plan, dict) else None
+    folder = plan.get('folder', '') if isinstance(plan, dict) else ''
+    if status == 'approved':
+        where = 'Approved. Project folder:' if mode == 'new' else 'Approved. Your existing folder:'
     else:
-        where = 'A new folder will be created at' if plan['mode'] == 'new' else 'Your existing folder:'
-    lines.append(f"{where} {plan['folder']}")
+        where = 'A new folder will be created at' if mode == 'new' else 'Your existing folder:'
+    lines.append(f"{where} {folder}")
     return '\n'.join(lines)
 
 
