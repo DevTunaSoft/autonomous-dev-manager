@@ -127,7 +127,8 @@ def _body(plan: dict) -> dict:
 
 
 def _save(plan_dir: Path, plan: dict) -> None:
-    tmp = plan_dir / 'plan.json.tmp'
+    # Unique temp name so two concurrent saves can't rename the same file out from under each other.
+    tmp = plan_dir / f'plan.json.{os.getpid()}.{secrets.token_hex(4)}.tmp'
     tmp.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding='utf-8')
     os.replace(tmp, plan_dir / 'plan.json')
 
@@ -190,12 +191,17 @@ def approve(path) -> dict:
         raise SafetyError('This plan cannot be approved' + (' until its questions are answered'
                           if plan['status'] == 'needs_answers' else f" (it is {plan['status']})"))
     if plan['mode'] == 'new':
-        folder = Path(plan['folder'])
-        base, n = folder, 1
-        while folder.exists():                      # never reuse or overwrite an earlier project
-            n += 1
-            folder = base.with_name(f'{base.name}-{n}')
-        folder.mkdir(parents=True)
+        base = Path(plan['folder'])
+        folder, n = base, 1
+        while True:                                 # atomic create; retry on a race or an existing name
+            try:
+                folder.mkdir(parents=True, exist_ok=False)
+                break
+            except FileExistsError:
+                n += 1
+                folder = base.with_name(f'{base.name}-{n}')
+                if n > 10000:
+                    raise SafetyError('Could not create a new project folder')
         plan['folder'] = str(folder)
     else:
         plan['folder'] = str(check_existing_folder(plan['folder']))

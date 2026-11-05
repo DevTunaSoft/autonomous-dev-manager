@@ -75,6 +75,8 @@ def assess(*, ram_gib: float | None = None, find_exe: Callable = find_executable
         python = {'found': True, 'path': python_finder()}
     except PythonNotFound as exc:
         python = {'found': False, 'path': None, 'message': str(exc)}
+    except Exception as exc:                        # a broken finder must not abort the assessment
+        python = {'found': False, 'path': None, 'message': f'Python check failed: {type(exc).__name__}'}
     usable = None
     if installed:
         try:
@@ -150,7 +152,10 @@ def pull_with_progress(exe: str, model: str, on_line: Callable[[str], None], *, 
                 text = raw.decode('utf-8', 'replace').strip()
                 if text:
                     tail = (tail + [text])[-20:]
-                    on_line(text)
+                    try:
+                        on_line(text)
+                    except Exception:
+                        pass                        # a progress-callback error must not abort the download
             if time.monotonic() - started > timeout:
                 proc.kill()
                 return {'key': 'pull_model', 'status': 'failed', 'reason': 'Download timed out'}

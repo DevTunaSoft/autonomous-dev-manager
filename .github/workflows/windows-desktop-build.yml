@@ -110,7 +110,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -I tools/fuzz_adversarial6.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I tools/fuzz_adversarial7.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -I tools/fuzz_adversarial6.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I tools/fuzz_adversarial7.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Upload Windows regression evidence
         if: always()
