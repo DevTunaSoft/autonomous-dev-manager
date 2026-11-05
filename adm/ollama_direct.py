@@ -129,7 +129,8 @@ def _save_text(path: Path, text: str) -> None:
 def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                   max_repairs=2, timeout=90, generator=request_patch,
                   inference_timeout=DEFAULT_INFERENCE_TIMEOUT,
-                  escalation_model=None, escalation_generator=None, escalate_after=2):
+                  escalation_model=None, escalation_generator=None, escalate_after=2,
+                  runner=run_checked):
     """Evidence-backed repair. Generator injection permits fake-server tests, not live claims.
 
     The test runner is the only gate. The model sees a bounded excerpt of each failure
@@ -154,10 +155,10 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
         raise SafetyError('Evidence directory already contains a trial; choose a new directory')
     protected = protected_hashes(root)
     initial = source_hashes(root)
-    baseline = run_checked(test_command(), root, root, timeout=timeout)
+    baseline = runner(test_command(), root, root, timeout=timeout)
     report = {'status': 'baseline_passed' if baseline['exit_code'] == 0 else 'baseline_failed',
               'model': model, 'baseline': baseline, 'attempts': [], 'live_model_verified': False, 'network_generator': False,
-              'gate': 'tests_only',
+              'gate': 'tests_only', 'isolation': getattr(runner, 'adm_isolation', 'none'),
               'escalation': {'configured': escalation_generator is not None,
                              'model': escalation_model, 'used': False},
               'warning': 'Trusted disposable projects only; no OS sandbox'}
@@ -197,13 +198,13 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
             changed = apply_patch(root, patch)
             report['status'] = 'testing_patch'
             atomic_json(report_path, report)
-            result = run_checked(test_command(), root, root, timeout=timeout)
+            result = runner(test_command(), root, root, timeout=timeout)
             safe = protected_hashes(root) == protected
             # A second independent invocation guards against a one-off/flaky green test.
             # Never mark success based on only one passing process.
             verification = None
             if result['exit_code'] == 0 and safe and source_hashes(root) != initial:
-                verification = run_checked(test_command(), root, root, timeout=timeout)
+                verification = runner(test_command(), root, root, timeout=timeout)
             safe = safe and protected_hashes(root) == protected
             successful = (verification is not None and verification['exit_code'] == 0
                           and safe and source_hashes(root) != initial)
@@ -267,7 +268,8 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
 def direct_repair(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                   max_repairs=2, timeout=90, generator=request_patch,
                   inference_timeout=DEFAULT_INFERENCE_TIMEOUT,
-                  escalation_model=None, escalation_generator=None, escalate_after=2):
+                  escalation_model=None, escalation_generator=None, escalate_after=2,
+                  runner=run_checked):
     """Hold exclusive project ownership across baseline, inference, edits and tests."""
     with exclusive_project(root):
         return _direct_repair_unlocked(root, evidence, model=model,
@@ -275,4 +277,4 @@ def direct_repair(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                                        generator=generator, inference_timeout=inference_timeout,
                                        escalation_model=escalation_model,
                                        escalation_generator=escalation_generator,
-                                       escalate_after=escalate_after)
+                                       escalate_after=escalate_after, runner=runner)

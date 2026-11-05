@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install pinned packaging tool
-        run: python -m pip install --disable-pip-version-check pyinstaller==6.11.1
+        run: python -m pip install --disable-pip-version-check pyinstaller==6.11.1 pywin32
       - name: Verify sources compile
         run: python -m compileall -q adm tests
       - name: Windows startup and packaged-entry tests

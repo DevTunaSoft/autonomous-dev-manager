@@ -136,3 +136,27 @@ def run_confined(argv: list[str], project: str | Path, password: str, *, timeout
         output = ''
     return {'exit_code': None if timed_out else int(code.value), 'timed_out': timed_out,
             'output': output[-30000:], 'seconds': round(time.time() - started, 2), 'sandbox': 'account+firewall+job'}
+
+
+def make_runner(password: str, *, memory_mb: int = 1024):
+    """A drop-in for engine.run_checked that executes inside the sandbox.
+
+    Same arguments and result shape, plus 'sandbox'. The working directory must be the project
+    root itself: the account is granted write access to that one folder and nothing else.
+    """
+    from .engine import SafetyError, inside
+
+    def runner(argv, cwd, root, timeout=90, output_limit=30000):
+        cwd, root = Path(cwd).resolve(), Path(root).resolve()
+        if cwd != root or not inside(cwd, root):
+            raise SafetyError('Sandboxed runs must use the project folder itself as the working directory')
+        if timeout <= 0 or timeout > 600:
+            raise SafetyError('Timeout outside allowed range')
+        r = run_confined(list(argv), root, password, timeout=int(timeout), memory_mb=memory_mb)
+        output = r['output']
+        if r['timed_out']:
+            output = f"Timed out after {timeout}s; sandbox process tree terminated.\n" + output
+        return {'argv': list(argv), 'exit_code': 124 if r['timed_out'] else r['exit_code'],
+                'output': output[-output_limit:], 'elapsed_seconds': r['seconds'], 'sandbox': r['sandbox']}
+    runner.adm_isolation = 'sandbox'
+    return runner

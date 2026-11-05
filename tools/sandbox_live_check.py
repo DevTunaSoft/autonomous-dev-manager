@@ -10,6 +10,31 @@ def emit(name, ok, detail):
 def py(code):
     return [sys.executable, '-c', code]
 
+def e2e_repair():
+    from adm.engine import make_broken_demo
+    from adm.ollama_direct import direct_repair
+    pw = sandbox.provision()
+    base = Path(tempfile.mkdtemp(prefix='admrepair_'))
+    root = make_broken_demo(base / 'project')
+    def fake(model, prompt, timeout):
+        return {'files': [{'path': 'calculator.py', 'content': 'def add(a,b):\n    return a+b\n'}]}
+    report = direct_repair(root, base / 'evidence', generator=fake, runner=sandbox.make_runner(pw))
+    emit('repair_loop_through_sandbox',
+         report['status'] == 'verified_direct_repair' and report['isolation'] == 'sandbox'
+         and report['baseline']['exit_code'] != 0 and report['baseline'].get('sandbox') == 'account+firewall+job',
+         {k: report[k] for k in ('status', 'isolation')} | {'baseline_exit': report['baseline']['exit_code'],
+                                                         'baseline_tail': report['baseline']['output'][-200:]})
+
+def shared_folder_check(pw):
+    # C:\\Users\\Public is writable by ordinary users. This is informational: it tells us
+    # whether the account can escape the project folder through shared locations.
+    shared = Path(r'C:\Users\Public') / 'adm_shared_probe'
+    shared.mkdir(exist_ok=True)
+    proj = Path(tempfile.mkdtemp(prefix='admproj_'))
+    t = str(shared / 'leak.txt').replace('\\', '/')
+    r = sandbox.run_confined(py(f"print('RAN');open('{t}','w').write('x');print('LEAKED')"), proj, pw)
+    emit('shared_public_folder_write_refused', 'RAN' in r['output'] and 'LEAKED' not in r['output'], r['output'])
+
 def main():
     pw = sandbox.provision()
     emit('provision', True, 'account + firewall rule created')
@@ -45,6 +70,8 @@ def main():
     (project / 'child.py').write_text("import subprocess,sys\nr=subprocess.run([sys.executable,'-c','print(7)'],capture_output=True,text=True)\nprint('CHILD',r.returncode,r.stdout.strip())\n")
     r = sandbox.run_confined([sys.executable, 'child.py'], project, pw)
     emit('child_process_with_pipes', 'CHILD 0 7' in r['output'], r)
+    shared_folder_check(pw)
+    e2e_repair()
 
 if __name__ == '__main__':
     if os.name != 'nt':

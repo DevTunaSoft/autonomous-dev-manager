@@ -17,8 +17,17 @@ def main():
                         help='a larger model on this PC to switch to after --escalate-after failed tries')
     parser.add_argument('--escalate-endpoint', default='')
     parser.add_argument('--escalate-after', type=int, default=2)
+    parser.add_argument('--sandbox', action='store_true',
+                        help='run the project tests as a locked-down Windows account (needs administrator once); '
+                             'if the sandbox cannot start, nothing runs')
     args = parser.parse_args()
     kwargs = {}
+    if args.sandbox:
+        from . import sandbox
+        try:
+            kwargs['runner'] = sandbox.make_runner(sandbox.provision())
+        except sandbox.SandboxError as exc:
+            raise SystemExit(f'Sandbox could not start, so nothing was run: {exc}')
     if args.model.startswith('local/'):
         kwargs['generator'] = make_generator(args.model, endpoint=args.endpoint)
     if args.escalate_model:
@@ -30,6 +39,7 @@ def main():
     print(json.dumps({'status': result['status'], 'attempts': len(result['attempts']),
                       'live_model_verified': result['live_model_verified'],
                       'network_generator': result.get('network_generator', False),
+                      'isolation': result.get('isolation', 'none'),
                       'escalation_used': result['escalation']['used']}, indent=2))
     if result['status'] not in ('verified_direct_repair', 'baseline_passed'):
         raise SystemExit(1)

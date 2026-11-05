@@ -27,6 +27,12 @@ def smoke_report():
             checks['import:' + name] = 'passed'
         except Exception as exc:
             checks['import:' + name] = f'failed: {type(exc).__name__}: {exc}'
+    if os.name == 'nt':
+        try:
+            import win32job, win32con  # the sandbox needs these inside the packaged EXE
+            checks['import:pywin32 (sandbox)'] = 'passed'
+        except Exception as exc:
+            checks['import:pywin32 (sandbox)'] = f'failed: {type(exc).__name__}: {exc}'
     try:
         from adm.worker import WorkerSupervisor
         with tempfile.TemporaryDirectory(prefix='adm-smoke-') as temp:
