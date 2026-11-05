@@ -24,44 +24,43 @@ def log_path(state) -> Path:
     return log_dir(state) / 'adm.log'
 
 
-def get_logger(state, component: str = 'app'):
-    import logging
-    import logging.handlers
-    log_dir(state).mkdir(parents=True, exist_ok=True)   # raises on a bad path BEFORE we touch handlers
-    target = str(log_path(state))
-    logger = logging.getLogger('adm')
-    if getattr(logger, '_adm_path', None) != target:    # (re)bind if the state path changed
-        for old in list(logger.handlers):
-            logger.removeHandler(old)
-            try:
-                old.close()
-            except Exception:
-                pass
-        handler = logging.handlers.RotatingFileHandler(
-            target, maxBytes=512 * 1024, backupCount=2, encoding='utf-8')
-        handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
-        logger.addHandler(handler)
-        logger.setLevel(logging.INFO)
-        logger._adm_path = target                        # type: ignore[attr-defined]
-    return logger
+MAX_LOG_BYTES = 512 * 1024
+
+
+def _rotate_if_big(path: Path) -> None:
+    try:
+        if path.is_file() and path.stat().st_size > MAX_LOG_BYTES:
+            backup = path.with_name(path.name + '.1')
+            if backup.exists():
+                backup.unlink()
+            path.rename(backup)
+    except OSError:
+        pass
 
 
 def log_line(state, message: str, *, level: str = 'info', component: str = 'app') -> None:
+    """Append one line to adm.log. Opens and closes the file each time so nothing holds a handle
+    (a persistent handle would lock the file on Windows). Never raises."""
     try:
-        logger = get_logger(state, component)
-        getattr(logger, level, logger.info)(f'[{component}] {message}')
+        log_dir(state).mkdir(parents=True, exist_ok=True)
+        path = log_path(state)
+        _rotate_if_big(path)
+        stamp = time.strftime('%Y-%m-%d %H:%M:%S')
+        with open(path, 'a', encoding='utf-8') as stream:
+            stream.write(f'{stamp} {level.upper()} [{component}] {message}\n')
     except Exception:
         pass                                   # logging must never crash the app
 
 
 def install_excepthook(state, component: str = 'app') -> None:
     """Log any uncaught exception before the default handler runs."""
-    logger = get_logger(state, component)
+    import traceback
     previous = sys.excepthook
 
     def hook(exc_type, exc, tb):
         try:
-            logger.error('UNCAUGHT in %s', component, exc_info=(exc_type, exc, tb))
+            text = ''.join(traceback.format_exception(exc_type, exc, tb))
+            log_line(state, 'UNCAUGHT:\n' + text, level='error', component=component)
         finally:
             previous(exc_type, exc, tb)
     sys.excepthook = hook
