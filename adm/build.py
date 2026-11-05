@@ -183,12 +183,18 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
                                'A pass means the generated code satisfies those tests, which approximate '
                                'your intent; ADM does not prove the tests capture exactly what you meant.')}
 
-    # Decide how to treat the target folder: a fresh scaffold, or an amend of an ADM project.
-    # "Empty" means literally no files, so ADM never writes alongside a person's own work.
+    # Decide how to treat the target folder: a fresh scaffold, resume of this plan's own new build,
+    # or an amend of an ADM project. "Empty" means literally no files, so ADM never writes alongside
+    # a person's own work.
     if not root.is_dir():
         raise SafetyError('The approved project folder does not exist')
     empty = not any(root.iterdir())
-    if empty:
+    # A non-empty 'new' folder with our scaffold is an interrupted prior build of this same plan
+    # (approve created the folder empty), so reset it and build fresh rather than treating it as an amend.
+    resumed_new = (not empty and plan.get('mode') == 'new' and is_adm_project(root))
+    if empty or resumed_new:
+        if resumed_new:
+            _reset_scaffold(root)
         answer = test_generator(model, test_prompt(plan), timeout=inference_timeout)
         test_content = validate_tests(answer)
         report['stage'] = 'scaffolding'
@@ -245,12 +251,40 @@ def evidence_root(state) -> Path:
 
 
 def _safe_evidence(state, plan) -> Path:
-    """An evidence directory GUARANTEED to be outside the project folder (validate_project requires it)."""
+    """A STABLE per-plan evidence directory, guaranteed to be outside the project folder.
+
+    Stable (not timestamped) so a retry after a crash finds the previous attempt's recovery journal.
+    """
     root = Path(plan['folder']).resolve()
-    ev = (evidence_root(state) / f"{plan['id']}-{int(time.time())}").resolve()
+    ev = (evidence_root(state) / plan['id']).resolve()
     if ev == root or root in ev.parents or ev in root.parents:
         raise SafetyError('Evidence directory must be outside the project folder')
     return ev
+
+
+def _recover_interrupted(root: Path, ev: Path) -> None:
+    """Roll back a half-applied patch from a crashed build, then clear stale evidence for a clean retry."""
+    import shutil
+    if not ev.exists():
+        return
+    try:
+        if (ev / 'repair-journal.json').exists():
+            from .repair_recovery import recover_journal
+            recover_journal(root, ev)
+    except SafetyError:
+        pass
+    shutil.rmtree(ev, ignore_errors=True)
+
+
+def _reset_scaffold(root: Path) -> None:
+    """Remove this plan's own scaffold so an interrupted new build starts fresh (never touches user files)."""
+    import shutil
+    for name in CONFLICTS:
+        p = root / name
+        if p.is_file():
+            p.unlink()
+    for d in root.glob('__pycache__'):
+        shutil.rmtree(d, ignore_errors=True)
 
 
 def save_report(state, report: dict) -> Path:
@@ -273,6 +307,7 @@ def run_build(state, plan_path, *, test_generator, code_generator, model, runner
     except SafetyError:
         pass                               # project_python() will report clearly if no Python is available
     ev = _safe_evidence(state, plan)
+    _recover_interrupted(Path(plan['folder']), ev)     # clean up after any crashed prior build
     report = build_from_plan(plan_path, ev, test_generator=test_generator,
                              code_generator=code_generator, model=model, runner=runner,
                              timeout=timeout, max_repairs=max_repairs, require_sandbox=require_sandbox)

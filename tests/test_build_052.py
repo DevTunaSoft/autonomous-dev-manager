@@ -215,6 +215,25 @@ class BuildStageTests(unittest.TestCase):
                                        model='ollama/x', runner=None, require_sandbox=False)
         self.assertEqual(report['status'], 'already_passing')
 
+    def test_crashed_new_build_resumes_cleanly_without_corruption(self):
+        from adm.repair_recovery import prepare_journal
+        plan = self.approved_plan()
+        root = Path(plan['folder'])
+        # Simulate a build that crashed mid-attempt: scaffold present, app.py left as attempted code,
+        # and a recovery journal orphaned in the evidence dir.
+        build.scaffold(root, plan, GOOD_TESTS)
+        ev = build.evidence_root(self.state) / plan['id']
+        ev.mkdir(parents=True)
+        prepare_journal(root, ev, {'files': [{'path': 'app.py', 'content': 'def tip_total(b, t):\n    return -1\n'}]})
+        (root / 'app.py').write_text('def tip_total(b, t):\n    return -1\n')   # half-applied, not the stub
+        report = build.run_build(self.state, plan['path'], test_generator=test_gen(), code_generator=code_gen(),
+                                 model='ollama/x', runner=sandbox_runner(), require_sandbox=True)
+        self.assertEqual(report['status'], 'built')
+        app = (root / 'app.py').read_text()
+        self.assertIn('return bill + bill * tip_percent / 100', app)   # clean rebuild from GOOD_CODE
+        self.assertNotIn('return -1', app)                            # the crashed code is gone
+        self.assertFalse((ev / 'repair-journal.json').exists())        # journal resolved
+
     def test_build_refuses_a_folder_with_non_adm_files(self):
         folder = self.base / 'theirs'
         folder.mkdir()
