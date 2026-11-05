@@ -166,7 +166,7 @@ def load_plan(path) -> dict:
     path = Path(path)
     try:
         plan = json.loads(path.read_text(encoding='utf-8'))
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, RecursionError) as exc:
         raise SafetyError('The plan file cannot be read') from exc
     if not isinstance(plan, dict):
         raise SafetyError('The plan file is not a valid plan')

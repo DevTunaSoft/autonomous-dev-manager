@@ -30,7 +30,7 @@ def collect_stats(state) -> dict:
             try:
                 if json.loads(pj.read_text(encoding='utf-8')).get('status') == 'approved':
                     approved += 1
-            except (OSError, ValueError):
+            except (OSError, ValueError, RecursionError):
                 pass
     out['projects'] = approved
     builds = state / 'builds'
@@ -41,7 +41,7 @@ def collect_stats(state) -> dict:
         for r in reports:
             try:
                 data = json.loads(r.read_text(encoding='utf-8'))
-            except (OSError, ValueError):
+            except (OSError, ValueError, RecursionError):
                 continue
             if data.get('status') in ('built', 'already_passing'):
                 built += 1
@@ -335,7 +335,7 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
             for pj in sorted(plans.glob('*/plan.json'), reverse=True)[:6]:
                 try:
                     p = json.loads(pj.read_text(encoding='utf-8'))
-                except (OSError, ValueError):
+                except (OSError, ValueError, RecursionError):
                     continue
                 rows.append((p.get('content', {}).get('title', '(untitled)'),
                              p.get('status', '?'), p.get('folder', '')))

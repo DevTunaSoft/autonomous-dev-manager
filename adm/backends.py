@@ -58,7 +58,7 @@ def parse_patch_text(text: str) -> dict:
     """Shared validation of the model's JSON answer."""
     try:
         answer = json.loads(text)
-    except (ValueError, TypeError) as exc:
+    except (ValueError, TypeError, RecursionError) as exc:
         raise SafetyError('Model did not return valid patch JSON') from exc
     if not isinstance(answer, dict) or set(answer) != {'files'} or not isinstance(answer['files'], list):
         raise SafetyError('Invalid patch envelope')
@@ -186,7 +186,7 @@ def extract_json(text):
         for variant in (cand, _no_trailing_commas(cand)):
             try:
                 return json.loads(variant)
-            except (ValueError, TypeError):
+            except (ValueError, TypeError, RecursionError):
                 continue
     raise SafetyError('The AI did not return readable JSON')
 

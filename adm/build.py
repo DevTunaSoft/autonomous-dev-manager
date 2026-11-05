@@ -71,7 +71,7 @@ def validate_tests(answer) -> str:
         raise SafetyError('The test file is empty or too large')
     try:
         tree = ast.parse(content)
-    except (SyntaxError, ValueError) as exc:        # ValueError: e.g. null bytes in source
+    except (SyntaxError, ValueError, RecursionError) as exc:   # ValueError: null bytes; RecursionError: deep nesting
         raise SafetyError(f'The generated tests are not valid Python: {exc}') from exc
     imports_app = any(
         (isinstance(n, ast.Import) and any(a.name == 'app' for a in n.names)) or
@@ -113,7 +113,7 @@ def is_adm_project(folder) -> bool:
 def _test_method_names(content: str) -> set:
     try:
         tree = ast.parse(content)
-    except (SyntaxError, ValueError):
+    except (SyntaxError, ValueError, RecursionError):
         return set()
     return {n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name.startswith('test')}
 

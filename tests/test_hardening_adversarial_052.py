@@ -22,6 +22,19 @@ class ExtractJsonTests(unittest.TestCase):
             with self.assertRaises(SafetyError):
                 backends.extract_json(bad)
 
+    def test_deeply_nested_input_cannot_crash_the_parser(self):
+        # On some Python versions json raises RecursionError; it must become a clean reject, not a crash.
+        original = backends.json.loads
+
+        def boom(*a, **k):
+            raise RecursionError('maximum recursion depth exceeded')
+        backends.json.loads = boom
+        try:
+            with self.assertRaises(SafetyError):
+                backends.extract_json('[1, 2, 3]')
+        finally:
+            backends.json.loads = original
+
 
 class ApplyPatchGuardTests(unittest.TestCase):
     def test_non_envelope_inputs_are_rejected_cleanly(self):

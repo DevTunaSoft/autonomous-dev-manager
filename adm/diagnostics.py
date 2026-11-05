@@ -110,7 +110,7 @@ def _plan_counts(state):
         for pj in plans.glob('*/plan.json'):
             try:
                 status = json.loads(pj.read_text(encoding='utf-8')).get('status', '?')
-            except (OSError, ValueError):
+            except (OSError, ValueError, RecursionError):
                 status = 'unreadable'
             counts[status] = counts.get(status, 0) + 1
     return counts
@@ -123,7 +123,7 @@ def _recent_builds(state):
         for b in sorted(builds.glob('*.json'), reverse=True)[:10]:
             try:
                 data = json.loads(b.read_text(encoding='utf-8'))
-            except (OSError, ValueError):
+            except (OSError, ValueError, RecursionError):
                 continue
             out.append({k: data.get(k) for k in ('plan_id', 'status', 'mode', 'isolation', 'message', 'model')})
     return out

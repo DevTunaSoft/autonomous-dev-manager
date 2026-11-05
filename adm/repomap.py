@@ -34,7 +34,7 @@ def _summarise(path: Path, root: Path) -> dict:
     info['chars'] = len(text)
     try:
         tree = ast.parse(text)
-    except SyntaxError as exc:
+    except (SyntaxError, ValueError, RecursionError) as exc:
         info['error'] = f'does not parse (line {exc.lineno}): {exc.msg}'
         return info
     for node in tree.body:
@@ -91,7 +91,7 @@ def _test_imports(root: Path, modules: set[str]) -> set[str]:
             continue
         try:
             tree = ast.parse(path.read_text(encoding='utf-8', errors='replace'))
-        except SyntaxError:
+        except (SyntaxError, ValueError, RecursionError):
             continue
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
