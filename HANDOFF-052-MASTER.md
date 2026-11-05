@@ -8,7 +8,7 @@
 | **Date** | 2026-11-05 |
 | **Language / runtime** | Python 3.12 (the version the EXE bundles); code also runs on 3.13 |
 | **Platform** | Windows 11 desktop app; test suite is cross-platform |
-| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 18 fuzz harnesses |
+| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 20 fuzz harnesses |
 | **Test status** | `OVERALL: PASS; 442 completed tests` |
 | **GUI** | Dark-theme dashboard, **plain Tkinter** (no third-party UI deps) |
 
@@ -357,6 +357,8 @@ Each harness throws hostile/malformed input at a subsystem. **Graceful** = retur
 | **16** | `…16.py` | **autonomous recovery**: `repair_recovery` journal + `recovery` snapshot/restore (symlinks, oversize, tamper) | **8 bugs:** `prepare_journal` indexed an unvalidated patch. Fixed by reusing `context.patch_files()`. (`recover_journal` and `recovery` already robust.) |
 | **17** | `…17.py` | **AI backends**: `extract_json`, `safe_model`, generator factories, `probe_local_servers` | **3 bugs:** `probe_local_servers` raised `http.client.InvalidURL` (an HTTPException, outside its except) on a malformed port. Fixed: validate port 1..65535 + catch HTTPException. (Rest robust.) |
 | **18** | `…18.py` | **lifecycle/interaction**: 40 seeded trials of `direct_repair` under adversarial model patches | **0 bugs** — honesty invariants hold: no false `verified`, frozen test intact, no file escapes, no unhandled crash. End-to-end proof of the round-14 gate. |
+| **19** | `…19.py` | **release.py**: `verify_source_release`/`create_source_release`/`source_files` against malformed archives, bad manifests, traversal, symlinks | **0 bugs** — the round-6 archive hardening holds (zip-bomb, traversal, hash, dup guards). |
+| **20** | `…20.py` | **concurrency**: 6 `WorkerSupervisor` instances racing on one queue of 24 jobs (marker-verified) | **0 bugs** — single-owner `claim()` holds: every job runs exactly once, all terminal, WAL DB intact. Stable across repeated runs. |
 
 Rounds 10 and 11 each found real bugs on first contact with new code; round 12 found none (the packaging seam was already hardened by round 10), so further rounds against newer seams (packaging filesystem/concurrency, the build→report→stats→package contract, GUI event streaming) would likely still be productive.
 
@@ -595,8 +597,10 @@ Every defect below was found by an adversarial harness, root-caused, fixed perma
 | 16 | 8 | `prepare_journal` indexed an unvalidated model patch | reuse `context.patch_files()` shape gate (shared by all 3 patch consumers) | `test_repair_recovery` |
 | 17 | 3 | `probe_local_servers` didn't validate port values; `InvalidURL` escaped its except | validate port 1..65535; add `http.client.HTTPException` | `test_repomap_backends_051` |
 | 18 | 0 | — (lifecycle invariants held under adversarial patches) | — | harness only (independent re-test inside) |
+| 19 | 0 | — (release archive/verify robustness held) | — | harness only |
+| 20 | 0 | — (worker single-owner claim held under real concurrency) | — | harness only (marker-verified, 5x stable) |
 
-**Totals this pass:** 61 defects fixed across rounds 10, 11, 13, 14, 15, 16, 17 (rounds 12 and 18 found none; round 18 is a lifecycle-invariant proof). All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
+**Totals this pass:** 61 defects fixed across rounds 10, 11, 13, 14, 15, 16, 17. Rounds 12, 18, 19, 20 found none: 18 proves the repair-loop honesty invariants, 19 confirms archive hardening, 20 confirms the worker single-owner claim under real concurrency. The last four rounds finding zero indicates the frequently-used untrusted-input and concurrency paths are now well-hardened. All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
 
 **Remaining risks / not verified here:** real local-model generation quality (fake model used in this environment); the actual PyInstaller EXE build and the Windows sandbox confinement (Windows CI only, not this Linux workspace); GUI pixel rendering (logic is tested headless, screenshots run in a separate CI job).
 
