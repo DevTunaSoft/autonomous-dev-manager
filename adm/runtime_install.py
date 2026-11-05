@@ -47,8 +47,22 @@ def fixup_pth(py_dir) -> Path | None:
     return None
 
 
-def ensure_shared_python(source_dir, *, programdata=None) -> Path:
-    """Copy an embeddable Python into the shared folder if it is not there yet; return python.exe."""
+def _grant_read_exec(path, user) -> None:
+    """Give the low-privilege sandbox account read+execute on the shared runtime. Best effort."""
+    import subprocess
+    try:
+        subprocess.run(['icacls', str(path), '/grant', f'{user}:(OI)(CI)RX', '/T', '/C', '/Q'],
+                       capture_output=True, timeout=180)
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def ensure_shared_python(source_dir, *, programdata=None, grant_user=None) -> Path:
+    """Copy an embeddable Python into the shared folder if it is not there yet; return python.exe.
+
+    On install, grant the sandbox account read+execute so it can run the interpreter (the shared
+    folder's inherited permissions are not enough for a cross-account launch).
+    """
     source_dir = Path(source_dir)
     if not (source_dir / 'python.exe').is_file():
         raise SafetyError('No bundled Python runtime was found to install')
@@ -63,6 +77,14 @@ def ensure_shared_python(source_dir, *, programdata=None) -> Path:
     shutil.copytree(source_dir, tmp)
     fixup_pth(tmp)
     os.replace(tmp, dest)       # move the finished runtime into place in one step
+    if grant_user is None:
+        try:
+            from .sandbox import USER
+            grant_user = USER
+        except Exception:
+            grant_user = None
+    if grant_user and os.name == 'nt':
+        _grant_read_exec(dest, grant_user)
     return dest_exe
 
 
