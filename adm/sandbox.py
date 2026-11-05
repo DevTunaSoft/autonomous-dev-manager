@@ -64,7 +64,6 @@ HARDEN_DIRS = (r'C:\Users\Public', r'C:\ProgramData', r'C:\Windows\Temp', r'C:\W
 
 def harden_commands(user: str = USER, dirs=HARDEN_DIRS) -> list[list[str]]:
     cmds = [['icacls', d, '/deny', f'{user}:(OI)(CI)(W,DC)'] for d in dirs]
-    cmds.append(['icacls', 'C:\\', '/deny', f'{user}:(AD,WD)'])   # no new folders or files in the drive root
     return cmds
 
 

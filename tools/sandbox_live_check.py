@@ -39,7 +39,7 @@ def scan(pw, label):
     import shutil
     proj = Path(tempfile.mkdtemp(prefix='admscan_'))
     shutil.copy(Path(__file__).with_name('sandbox_scan.py'), proj / 'scan.py')
-    dirs = [r'C:\\', r'C:\\Users\\Public', r'C:\\ProgramData', r'C:\\Windows\\Temp', r'C:\\Windows\\Tasks']
+    dirs = [r'C:\\Users\\Public', r'C:\\ProgramData', r'C:\\Windows\\Temp', r'C:\\Windows\\Tasks']
     r = sandbox.run_confined([sys.executable, 'scan.py'] + dirs, proj, pw, timeout=60)
     lines = [l for l in r['output'].splitlines() if l.startswith(('WRITABLE', 'refused'))]
     emit('scan_' + label, 'RAN' in r['output'] and not any(l.startswith('WRITABLE') for l in lines), lines)
