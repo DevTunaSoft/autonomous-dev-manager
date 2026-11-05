@@ -17,7 +17,7 @@ import time
 # --hidden-import (enforced by tests/test_build_hidden_imports_049.py).
 SMOKE_MODULES = ('adm.desktop', 'adm.daemon', 'adm.worker', 'adm.ollama_direct', 'adm.model_selection',
                  'adm.ollama_cli', 'adm.agent_cli', 'adm.pyruntime',
-                 'adm.context', 'adm.repomap', 'adm.backends', 'adm.sandbox', 'adm.intake', 'adm.intake_gui')
+                 'adm.context', 'adm.repomap', 'adm.backends', 'adm.sandbox', 'adm.intake', 'adm.intake_gui', 'adm.theme')
 
 
 def smoke_report():

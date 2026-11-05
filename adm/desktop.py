@@ -1,7 +1,8 @@
-"""Small dependency-free desktop control panel for the trusted-job supervisor.
+"""Small dependency-free desktop control panel for ADM.
 
 Tkinter is supplied by many Python installations but must be verified on target
-Windows. This is a control panel, not an untrusted-code sandbox or AI builder.
+Windows. This panel lets a person start a request and watch the background worker;
+it is not itself an untrusted-code sandbox.
 """
 from __future__ import annotations
 import sqlite3
@@ -80,72 +81,45 @@ def recent_jobs(state, limit=30):
 
 def main(*, auto_close_ms=None, ask=None):
     import tkinter as tk
-    from tkinter import messagebox
+    from tkinter import ttk, messagebox
+    from . import theme
     state = Path.home() / 'AppData' / 'Local' / 'ADM' / 'state' if os.name == 'nt' else Path.home() / '.adm-worker-state'
     window = tk.Tk()
-    window.title('Autonomous Development Manager — Prototype')
-    window.geometry('760x600'); window.minsize(640, 560)
-    heading = tk.Label(window, text='Autonomous Development Manager', font=('Segoe UI', 17, 'bold'))
-    heading.pack(pady=(18, 8))
-    tk.Label(window, text='Trusted-job supervisor control panel (not yet a complete AI builder)').pack()
-    status = tk.StringVar(value='Checking supervisor...')
-    tk.Label(window, textvariable=status, font=('Segoe UI', 12)).pack(pady=20)
-    buttons = tk.Frame(window)
-    buttons.pack()
-    def start():
-        try:
-            result = launch_supervisor(state)
-            if not result['started']:
-                messagebox.showinfo('Already running', result['reason'])
-        except Exception as exc:
-            messagebox.showerror('Unable to start', str(exc))
-        refresh()
-    def stop():
-        # A stop file written while nothing is running would make the NEXT start exit at once.
-        if status_summary(state)['state'] in ('running', 'unresponsive'):
-            request_stop(state)
-        else:
-            messagebox.showinfo('Not running', 'The supervisor is not running.')
-        refresh()
-    tk.Button(buttons, text='Start supervisor', command=start, width=20).pack(side='left', padx=8)
-    tk.Button(buttons, text='Stop supervisor', command=stop, width=20).pack(side='left', padx=8)
-    tk.Label(window, text='Trusted jobs only. Generated code is NOT sandboxed. Windows validation pending.',
-             wraplength=700).pack(pady=12)
-    from tkinter import ttk
-    table = ttk.Treeview(window, columns=('id','label','state','attempts','exit','note'), show='headings', height=4)
-    for name, width in [('id',65),('label',250),('state',130),('attempts',90),('exit',80), ('note',300)]:
-        table.heading(name, text=name.title())
-        table.column(name, width=width, stretch=(name in ('label', 'note')))
-    table.pack(fill='both', expand=True, padx=18, pady=8)
-    model_status = tk.StringVar(value='Ollama: not checked')
-    tk.Label(window, textvariable=model_status, wraplength=700).pack(pady=5)
-    def check_models():
-        # Network check runs off the UI thread; Tk updates only on main thread.
-        import threading
-        def check():
-            try:
-                from .ollama_health import inspect_ollama
-                result = inspect_ollama(timeout=3)
-                message = 'Ollama reachable; installed models: ' + ', '.join(result['installed_models'][:5])
-                if not result['installed_models']:
-                    message = 'Ollama reachable; no models installed'
-            except Exception as exc:
-                message = 'Ollama unavailable: ' + str(exc)
-            try:
-                window.after(0, lambda: model_status.set(message))
-            except RuntimeError:
-                pass
-        threading.Thread(target=check, daemon=True).start()
-    tk.Button(window, text='Check local Ollama', command=check_models).pack(pady=5)
-    setup_status = tk.StringVar(value='Local AI setup: not checked')
-    tk.Label(window, textvariable=setup_status, wraplength=700, justify='left').pack(pady=2)
+    window.title('Autonomous Development Manager')
+    window.geometry('780x640')
+    window.minsize(680, 600)
+    theme.apply(window)
+
+    theme.header(window, 'Autonomous Development Manager',
+                 'Local, free AI that plans, builds and tests small apps for you').pack(fill='x')
+    body = ttk.Frame(window, style='TFrame')
+    body.pack(fill='both', expand=True, padx=24, pady=18)
+
+    # --- Primary action -------------------------------------------------
+    ttk.Label(body, text='Start here', style='Section.TLabel').pack(anchor='w')
+    cta = ttk.Frame(body, style='TFrame')
+    cta.pack(fill='x', pady=(6, 2))
+
+    def new_request():
+        from .intake_gui import open_request_window
+        open_request_window(window, state)
+    ttk.Button(cta, text='＋   New request', style='Primary.TButton', command=new_request).pack(side='left')
+    ttk.Label(cta, text='Describe an app in plain words. ADM writes a plan for you to approve.',
+              style='Muted.TLabel').pack(side='left', padx=12)
+
+    # --- Local AI -------------------------------------------------------
+    ttk.Label(body, text='Local AI', style='Section.TLabel').pack(anchor='w', pady=(16, 0))
+    ai_row = ttk.Frame(body, style='TFrame')
+    ai_row.pack(fill='x', pady=(6, 2))
+    setup_status = tk.StringVar(value='Local AI: not checked yet')
     busy = {'setup': False}
+
     def say(text):
-        # Called from worker threads; Tk is only touched on the main thread.
         try:
             window.after(0, lambda: setup_status.set(text))
         except RuntimeError:
             pass
+
     def setup_flow(*, prompt_only_if_missing):
         if busy['setup']:
             return
@@ -157,7 +131,7 @@ def main(*, auto_close_ms=None, ask=None):
                 a = firstrun.assess()
             except Exception as exc:
                 busy['setup'] = False
-                say('Local AI setup: could not check (' + str(exc) + ')')
+                say('Local AI: could not check (' + str(exc) + ')')
                 return
             def decide():
                 title, message = firstrun.prompt_text(a)
@@ -179,7 +153,7 @@ def main(*, auto_close_ms=None, ask=None):
                     except Exception as exc:
                         result = {'status': 'failed', 'message': str(exc)}
                     busy['setup'] = False
-                    say('Local AI setup: ' + result['message'])
+                    say('Local AI: ' + result['message'])
                     window.after(0, lambda: messagebox.showinfo('Local AI setup', result['message']))
                 threading.Thread(target=install, daemon=True).start()
             try:
@@ -187,14 +161,54 @@ def main(*, auto_close_ms=None, ask=None):
             except RuntimeError:
                 pass
         threading.Thread(target=work, daemon=True).start()
-    def new_request():
-        from .intake_gui import open_request_window
-        open_request_window(window, state)
-    tk.Button(window, text='New request...', command=new_request, width=20).pack(pady=5)
-    tk.Button(window, text='Set up local AI...', command=lambda: setup_flow(prompt_only_if_missing=False)).pack(pady=5)
+
+    ttk.Button(ai_row, text='Set up local AI…', style='Secondary.TButton',
+               command=lambda: setup_flow(prompt_only_if_missing=False)).pack(side='left')
+    ttk.Label(ai_row, textvariable=setup_status, style='Muted.TLabel', wraplength=520,
+              justify='left').pack(side='left', padx=12)
+
+    # --- Background worker ---------------------------------------------
+    ttk.Label(body, text='Background worker', style='Section.TLabel').pack(anchor='w', pady=(16, 0))
+    status = tk.StringVar(value='Checking…')
+    ttk.Label(body, textvariable=status, style='TLabel').pack(anchor='w', pady=(4, 6))
+
+    def start():
+        try:
+            result = launch_supervisor(state)
+            if not result['started']:
+                messagebox.showinfo('Already running', result['reason'])
+        except Exception as exc:
+            messagebox.showerror('Unable to start', str(exc))
+        refresh()
+
+    def stop():
+        if status_summary(state)['state'] in ('running', 'unresponsive'):
+            request_stop(state)
+        else:
+            messagebox.showinfo('Not running', 'The background worker is not running.')
+        refresh()
+
+    worker_row = ttk.Frame(body, style='TFrame')
+    worker_row.pack(fill='x')
+    ttk.Button(worker_row, text='Start', style='Secondary.TButton', command=start).pack(side='left')
+    ttk.Button(worker_row, text='Stop', style='Secondary.TButton', command=stop).pack(side='left', padx=8)
+
+    table = ttk.Treeview(body, columns=('id', 'label', 'state', 'attempts', 'exit', 'note'),
+                         show='headings', height=4)
+    for name, title, width in [('id', 'ID', 55), ('label', 'Job', 220), ('state', 'State', 120),
+                               ('attempts', 'Tries', 60), ('exit', 'Exit', 55), ('note', 'Why / note', 280)]:
+        table.heading(name, text=title)
+        table.column(name, width=width, stretch=(name in ('label', 'note')),
+                     anchor='w' if name in ('label', 'note', 'state') else 'center')
+    table.pack(fill='both', expand=True, pady=(10, 6))
+
+    ttk.Label(body, text='Early build: ADM can plan a project today. Writing and running code is being '
+              'added next, and when it runs it runs in a locked-down sandbox with no internet.',
+              style='Muted.TLabel', wraplength=720, justify='left').pack(anchor='w', pady=(2, 0))
+
     def refresh():
         data = status_summary(state)
-        status.set(f"Status: {data['state']}   |   Supervisor cycles: {data['cycles']}")
+        status.set(f"Status: {data['state']}    ·    cycles: {data['cycles']}")
         try:
             records = recent_jobs(state)
             table.delete(*table.get_children())
@@ -203,6 +217,7 @@ def main(*, auto_close_ms=None, ask=None):
                                                 job['attempts'], job['exit_code'], job['note']))
         except (OSError, sqlite3.Error, ValueError) as exc:
             status.set('Unable to read queue: ' + str(exc))
+
     def tick():
         refresh()
         window.after(2000, tick)
@@ -211,6 +226,7 @@ def main(*, auto_close_ms=None, ask=None):
     if auto_close_ms:
         window.after(auto_close_ms, window.destroy)
     window.mainloop()
+
 
 if __name__ == '__main__':
     main()
