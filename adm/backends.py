@@ -8,6 +8,7 @@ Model id forms:
 Prompts contain the user's source code, so a remote call is never made implicitly.
 """
 from __future__ import annotations
+import http.client
 import json
 import urllib.error
 import urllib.request
@@ -232,12 +233,19 @@ def probe_local_servers(ports: dict | None = None, timeout: float = 1.5) -> list
     """Find OpenAI-compatible servers already running on this PC (loopback only)."""
     found = []
     for label, port in (ports or KNOWN_LOCAL_SERVERS).items():
-        url = f'http://{LOOPBACK}:{port}/v1/models'
+        try:
+            port_num = int(port)
+        except (TypeError, ValueError):
+            continue                       # a malformed ports map entry is skipped, not fatal
+        if not 1 <= port_num <= 65535:
+            continue
+        url = f'http://{LOOPBACK}:{port_num}/v1/models'
         try:
             with _OPENER.open(urllib.request.Request(url), timeout=timeout) as response:
                 data = json.loads(response.read(MAX_RESPONSE))
             models = [m.get('id') for m in data.get('data', []) if isinstance(m, dict) and m.get('id')]
-            found.append({'server': label, 'endpoint': f'http://{LOOPBACK}:{port}', 'models': models[:50]})
-        except (OSError, ValueError, TimeoutError, AttributeError, TypeError, RecursionError):
+            found.append({'server': label, 'endpoint': f'http://{LOOPBACK}:{port_num}', 'models': models[:50]})
+        except (OSError, ValueError, TimeoutError, AttributeError, TypeError, RecursionError,
+                http.client.HTTPException):
             continue
     return found

@@ -135,6 +135,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -I tools/fuzz_adversarial16.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I tools/fuzz_adversarial17.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Upload Windows regression evidence
         if: always()
         uses: actions/upload-artifact@v4

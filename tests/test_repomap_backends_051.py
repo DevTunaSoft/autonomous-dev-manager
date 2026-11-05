@@ -202,5 +202,14 @@ class EscalationTests(unittest.TestCase):
         self.assertEqual(report['status'], 'verified_direct_repair')
 
 
+class ProbeRobustnessTests(unittest.TestCase):
+    def test_probe_skips_malformed_ports_without_crashing(self):
+        # A malformed ports map (non-numeric or out-of-range port) must be
+        # skipped, never raise http.client.InvalidURL or similar.
+        for ports in ({'bad': 'notint'}, {'x': None}, {'y': 99999}, {'z': -1}, {'w': 'name'}):
+            self.assertEqual(probe_local_servers(ports, timeout=0.05), [])
+        self.assertIsInstance(probe_local_servers({}, timeout=0.05), list)
+
+
 if __name__ == '__main__':
     unittest.main()
