@@ -86,8 +86,8 @@ def main(*, auto_close_ms=None, ask=None):
     state = Path.home() / 'AppData' / 'Local' / 'ADM' / 'state' if os.name == 'nt' else Path.home() / '.adm-worker-state'
     window = tk.Tk()
     window.title('Autonomous Development Manager')
-    window.geometry('820x720')
-    window.minsize(700, 660)
+    window.geometry('800x650')
+    window.minsize(700, 620)
     theme.apply(window)
 
     theme.header(window, 'Autonomous Development Manager',
@@ -200,7 +200,7 @@ def main(*, auto_close_ms=None, ask=None):
         table.heading(name, text=title)
         table.column(name, width=width, stretch=(name in ('label', 'note')),
                      anchor='w' if name in ('label', 'note', 'state') else 'center')
-    table.pack(fill='both', expand=True, pady=(10, 6))
+    table.pack(fill='x', expand=False, pady=(10, 10))
 
     ttk.Label(body, text='Early build: ADM can plan a project today. Writing and running code is being '
               'added next, and when it runs it runs in a locked-down sandbox with no internet.',
