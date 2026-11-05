@@ -87,6 +87,37 @@ def shared_python_in_sandbox(pw):
     emit('shared_python_in_sandbox', r['exit_code'] == 0,
          {'exit_code': r['exit_code'], 'timed_out': r['timed_out'], 'out': r['output'][-200:]})
 
+def fault_injection_build(pw):
+    """Hostile model output through the REAL sandboxed build: never corrupt the gate, never fake success."""
+    from adm import intake, build
+    base = Path(tempfile.mkdtemp(prefix='admfault_'))
+    state, home = base / 'state', base / 'home'; home.mkdir()
+    answer = {'title': 'Adder', 'summary': 'adds two numbers', 'features': ['Add two numbers'],
+              'tests': ['When you add 2 and 3 you get 5'], 'needs_internet': False, 'questions': []}
+    plan = intake.approve(intake.create_plan(state, 'a tiny adder', mode='new', folder='',
+                          generator=lambda m, p, t: answer, model='ollama/fake', home=home)['path'])
+    good_tests = ('import unittest\nfrom app import add\n\nclass T(unittest.TestCase):\n'
+                  '    def test_add(self):\n        self.assertEqual(add(2, 3), 5)\n')
+    def tgen(m, p, timeout=300): return {'files': [{'path': 'test_app.py', 'content': good_tests}]}
+    n = [0]
+    def evil(m, p, timeout=300):
+        n[0] += 1
+        variants = [
+            {'files': [{'path': 'test_app.py', 'content': '# hijack %d' % n[0]}]},    # tamper the frozen tests
+            {'files': [{'path': '../escape%d.py' % n[0], 'content': 'x = 1'}]},        # path traversal
+            {'files': [{'path': 'app.py', 'content': 'def ( oops %d' % n[0]}]},        # syntax error
+        ]
+        return variants[(n[0] - 1) % len(variants)]
+    report = build.run_build(state, plan['path'], test_generator=tgen, code_generator=evil,
+                             model='ollama/fake', runner=sandbox.make_runner(pw), require_sandbox=True, max_repairs=3)
+    folder = Path(plan['folder'])
+    tests_intact = (folder / 'test_app.py').read_text() == good_tests
+    no_escape = not (folder.parent / ('escape%d.py' % 1)).exists() and not list(folder.parent.glob('escape*.py'))
+    ok = (report['status'] == 'could_not_build' and report['isolation'] == 'sandbox'
+          and tests_intact and no_escape)
+    emit('fault_injection_build', ok, {'status': report['status'], 'frozen_tests_intact': tests_intact,
+                                       'no_escaped_files': no_escape, 'attempts': len(report['repair']['attempts'])})
+
 def main():
     pw = sandbox.provision()
     emit('provision', True, 'account + firewall rule created')
@@ -127,6 +158,7 @@ def main():
     e2e_repair()
     build_through_sandbox(sandbox.provision())
     shared_python_in_sandbox(sandbox.provision())
+    fault_injection_build(sandbox.provision())
 
 if __name__ == '__main__':
     if os.name != 'nt':
