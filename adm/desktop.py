@@ -86,14 +86,14 @@ def main(*, auto_close_ms=None, ask=None):
     state = Path.home() / 'AppData' / 'Local' / 'ADM' / 'state' if os.name == 'nt' else Path.home() / '.adm-worker-state'
     window = tk.Tk()
     window.title('Autonomous Development Manager')
-    window.geometry('780x640')
-    window.minsize(680, 600)
+    window.geometry('820x720')
+    window.minsize(700, 660)
     theme.apply(window)
 
     theme.header(window, 'Autonomous Development Manager',
                  'Local, free AI that plans, builds and tests small apps for you').pack(fill='x')
     body = ttk.Frame(window, style='TFrame')
-    body.pack(fill='both', expand=True, padx=24, pady=18)
+    body.pack(fill='both', expand=True, padx=24, pady=(16, 14))
 
     # --- Primary action -------------------------------------------------
     ttk.Label(body, text='Start here', style='Section.TLabel').pack(anchor='w')
@@ -194,7 +194,7 @@ def main(*, auto_close_ms=None, ask=None):
     ttk.Button(worker_row, text='Stop', style='Secondary.TButton', command=stop).pack(side='left', padx=8)
 
     table = ttk.Treeview(body, columns=('id', 'label', 'state', 'attempts', 'exit', 'note'),
-                         show='headings', height=4)
+                         show='headings', height=3)
     for name, title, width in [('id', 'ID', 55), ('label', 'Job', 220), ('state', 'State', 120),
                                ('attempts', 'Tries', 60), ('exit', 'Exit', 55), ('note', 'Why / note', 280)]:
         table.heading(name, text=title)

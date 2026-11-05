@@ -91,7 +91,7 @@ def header(parent, title: str, subtitle: str):
     from tkinter import ttk
     band = ttk.Frame(parent, style='Header.TFrame')
     inner = ttk.Frame(band, style='Header.TFrame')
-    inner.pack(fill='x', padx=24, pady=(16, 16))
+    inner.pack(fill='x', padx=24, pady=(14, 14))
     ttk.Label(inner, text=title, style='HeaderTitle.TLabel').pack(anchor='w')
     ttk.Label(inner, text=subtitle, style='HeaderSub.TLabel').pack(anchor='w', pady=(2, 0))
     return band
