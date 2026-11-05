@@ -29,6 +29,9 @@ def probe_job_object_limits():
             _fields_=[(n,ctypes.c_uint64) for n in ("r","w","o","ro","wo","oo")]
         class EXT(ctypes.Structure):
             _fields_=[("Basic",BASIC),("Io",IOC),("ProcessMemoryLimit",ctypes.c_size_t),("JobMemoryLimit",ctypes.c_size_t),("Peak1",ctypes.c_size_t),("Peak2",ctypes.c_size_t)]
+        k.CreateJobObjectW.restype = w.HANDLE
+        k.SetInformationJobObject.argtypes = [w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD]
+        k.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
         job = k.CreateJobObjectW(None, None)
         e = EXT(); e.Basic.LimitFlags = 0x2000 | 0x100  # KILL_ON_JOB_CLOSE | JOB_MEMORY
         e.JobMemoryLimit = 200*1024*1024
@@ -80,7 +83,7 @@ def probe_restricted_token_pipes():
     emit('restricted_token_child_with_pipes', 'CHILD 0 7' in out, out)
 
 def probe_dedicated_user_and_firewall():
-    user, pw = 'admsandbox', 'Adm!' + os.urandom(6).hex() + 'Zz9'
+    user, pw = 'admsandbox', 'Ab1!' + os.urandom(4).hex()
     def ps(cmd):
         return subprocess.run(['powershell', '-NoProfile', '-Command', cmd], capture_output=True, text=True, timeout=120)
     r = subprocess.run(['net', 'user', user, pw, '/add'], capture_output=True, text=True)
