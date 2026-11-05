@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import tempfile
 from .engine import SafetyError
+from .context import patch_files
 
 
 def _digest(data):
@@ -38,7 +39,7 @@ def prepare_journal(root, evidence, patch):
     if journal.exists():
         raise SafetyError('Unresolved repair journal; recovery required')
     entries = []
-    for item in patch['files']:
+    for item in patch_files(patch):          # validate the (untrusted) patch shape first
         name = item['path']
         target = root / name
         if (Path(name).name != name or not name.endswith('.py') or name.startswith('test_')

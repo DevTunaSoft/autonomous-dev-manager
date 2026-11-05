@@ -57,5 +57,15 @@ class RepairRecoveryTests(unittest.TestCase):
         self.assertFalse(recover_journal(self.root, self.evidence))
         self.assertEqual((self.root / 'app.py').read_text(), 'new = 2\n')
 
+    def test_prepare_journal_rejects_malformed_patch_without_crashing(self):
+        # The patch is untrusted model output; a malformed shape must raise
+        # SafetyError, never KeyError/TypeError.
+        for p in ({}, {'files': 'x'}, {'files': None}, {'files': [123]},
+                  {'files': [{'path': 'app.py'}]}, {'files': [{'content': 'y'}]},
+                  {'files': [{'path': 1, 'content': 'y'}]},
+                  {'files': [{'path': 'app.py', 'content': 2}]}):
+            with self.assertRaises(SafetyError):
+                prepare_journal(self.root, self.evidence, p)
+
 if __name__ == '__main__':
     unittest.main()
