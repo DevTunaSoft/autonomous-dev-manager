@@ -95,6 +95,15 @@ jobs:
           $code = $LASTEXITCODE
           python -c "import json;r=json.load(open('win-regression/regression.json'));[print('=== %s %s (%s tests)\n%s' % (m['module'],m['status'],m['tests'],m['output_tail'][-2500:])) for m in r['modules'] if m['status']!='passed']"
           exit $code
+      - name: Adversarial fuzz harnesses
+        shell: pwsh
+        run: |
+          python -I tools/fuzz_adversarial.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I tools/fuzz_adversarial2.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I tools/fuzz_adversarial3.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Upload Windows regression evidence
         if: always()
         uses: actions/upload-artifact@v4

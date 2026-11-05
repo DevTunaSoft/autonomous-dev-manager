@@ -56,6 +56,34 @@ class CmdlineHardeningTests(unittest.TestCase):
         self.assertIn('unittest', line)
 
 
+class PlanFileHardeningTests(unittest.TestCase):
+    def test_non_dict_plan_file_is_rejected(self):
+        import tempfile
+        from pathlib import Path
+        from adm import intake
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / 'plan.json'
+            for bad in ('[]', 'null', '"x"', '[1,2,3]', '42'):
+                p.write_text(bad)
+                with self.assertRaises(SafetyError):
+                    intake.load_plan(str(p))
+                with self.assertRaises(SafetyError):
+                    intake.require_approved(str(p))
+
+
+class ExtendedLengthPathTests(unittest.TestCase):
+    def test_backslash_qmark_prefix_cannot_bypass_hardened_check(self):
+        for v in (r'\\?\C:\Users\Public\x', r'\\?\C:\ProgramData', r'\\.\C:\Windows\Temp\x'):
+            with self.assertRaises(SafetyError):
+                sandbox.refuse_hardened_location(v)
+
+    def test_backslash_qmark_prefix_cannot_bypass_system_folder_check(self):
+        from adm import intake
+        for v in (r'\\?\C:\Windows', r'\\?\C:\Windows\System32', r'\\?\C:\\'):
+            with self.assertRaises(SafetyError):
+                intake.check_existing_folder(v)
+
+
 class RetryTests(unittest.TestCase):
     def _server(self, replies):
         box = {'n': 0}

@@ -97,6 +97,11 @@ def harden_commands(user: str = USER, dirs=HARDEN_DIRS) -> list[list[str]]:
 def refuse_hardened_location(project: str | Path, dirs=HARDEN_DIRS) -> None:
     import ntpath
     p = ntpath.normcase(ntpath.normpath(str(project))).rstrip('\\')
+    for prefix in ('\\\\?\\', '\\\\.\\'):            # extended-length prefixes must not bypass the guard
+        if p.startswith(prefix):
+            p = p[len(prefix):]
+            if p.startswith('unc\\'):
+                p = '\\\\' + p[4:]
     for d in dirs:
         if p == d.lower() or p.startswith(d.lower() + '\\'):
             raise SandboxError(f'Projects cannot live under {d}; the sandbox account is denied writes there')

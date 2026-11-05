@@ -117,7 +117,7 @@ def apply_patch(root: Path, patch: dict) -> list[str]:
         seen.add(name)
         try:
             compile(content, name, 'exec')
-        except SyntaxError as exc:
+        except (SyntaxError, ValueError) as exc:        # ValueError: e.g. null bytes in source
             raise SafetyError(f'Generated code is not valid Python: {exc}') from exc
         updates.append((path, content))
     # Atomic replacement per file. A failed partial replacement is recovered from the

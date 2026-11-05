@@ -47,6 +47,11 @@ def check_existing_folder(folder) -> Path:
     import ntpath
     raw = str(folder)
     low = ntpath.normcase(ntpath.normpath(raw))
+    for prefix in ('\\\\?\\', '\\\\.\\'):           # extended-length prefixes must not bypass the guards
+        if low.startswith(prefix):
+            low = low[len(prefix):]
+            if low.startswith('unc\\'):
+                low = '\\\\' + low[4:]
     if re.fullmatch(r'[a-z]:\\?', low) or low in ('/', ''):
         raise SafetyError('A whole drive cannot be a project folder')
     for bad in _WINDOWS_SYSTEM:
@@ -163,6 +168,8 @@ def load_plan(path) -> dict:
         plan = json.loads(path.read_text(encoding='utf-8'))
     except (OSError, ValueError) as exc:
         raise SafetyError('The plan file cannot be read') from exc
+    if not isinstance(plan, dict):
+        raise SafetyError('The plan file is not a valid plan')
     plan['path'] = str(path)
     return plan
 
