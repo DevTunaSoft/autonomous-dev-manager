@@ -39,7 +39,13 @@ def read_status(state):
     path = Path(state).resolve() / 'daemon-status.json'
     if not path.is_file():
         return {'state': 'unknown', 'detail': 'No daemon status recorded'}
-    return json.loads(path.read_text(encoding='utf-8'))
+    try:
+        data = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, ValueError, RecursionError):
+        return {'state': 'unknown', 'detail': 'Status file unreadable'}
+    if not isinstance(data, dict):
+        return {'state': 'unknown', 'detail': 'Status file malformed'}
+    return data
 
 
 def serve(state, *, poll_interval=1.0, job_timeout=DEFAULT_JOB_TIMEOUT, stop_event=None,

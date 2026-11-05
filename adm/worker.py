@@ -199,6 +199,18 @@ class WorkerSupervisor:
         if not row:
             return None
         job_id,raw,cwd,attempts,maximum=row
+        # Validate the stored command before doing anything with it: a malformed row (bad JSON or a
+        # non-list) must fail the one job cleanly, never crash the worker loop.
+        try:
+            argv=json.loads(raw)
+        except (ValueError,TypeError,RecursionError):
+            argv=None
+        if not isinstance(argv,(list,tuple)) or not argv or not all(isinstance(x,str) and x for x in argv):
+            self.db.execute("UPDATE jobs SET state='failed',error=?,updated=? WHERE id=? AND owner=?",
+                            ('Malformed job command; not executed',time.time(),job_id,self.owner))
+            self.event(job_id,'rejected',reason='malformed command')
+            return {'id':job_id,'state':'failed','exit_code':None,'output':'','error':'Malformed job command'}
+        argv=list(argv)
         # A fresh admission decision immediately before spawning.
         if admission is not None:
             try:
@@ -219,7 +231,7 @@ class WorkerSupervisor:
         log_path=self.directory / f'job-{job_id}-attempt-{attempts+1}.log'
         try:
             with log_path.open('wb') as log:
-                proc=subprocess.Popen(json.loads(raw),cwd=cwd,stdin=subprocess.DEVNULL,
+                proc=subprocess.Popen(argv,cwd=cwd,stdin=subprocess.DEVNULL,
                                       stdout=log,stderr=subprocess.STDOUT,shell=False,
                                       creationflags=(subprocess.CREATE_NEW_PROCESS_GROUP if os.name=='nt' else 0),
                                       start_new_session=(os.name!='nt'))

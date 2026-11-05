@@ -178,7 +178,8 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
     `runner` runs the tests; in production pass a sandbox runner. With require_sandbox=True
     (the default) a non-sandbox runner is refused, so generated code is never run unprotected.
     """
-    from .ollama_direct import direct_repair
+    from .ollama_direct import _direct_repair_unlocked
+    from .project_lock import exclusive_project
     plan = intake.require_approved(plan_path)                      # gate: approved plans only
     root = Path(plan['folder'])
     if runner is not None and require_sandbox and getattr(runner, 'adm_isolation', None) != 'sandbox':
@@ -193,45 +194,49 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
                                'your intent; ADM does not prove the tests capture exactly what you meant.')}
 
     # Decide how to treat the target folder: a fresh scaffold, resume of this plan's own new build,
-    # or an amend of an ADM project. "Empty" means literally no files, so ADM never writes alongside
-    # a person's own work.
+    # or an amend of an ADM project. "Empty" ignores ADM's own lock file, so ADM never writes alongside
+    # a person's own work. The whole operation holds the project lock so two builds cannot race on the
+    # same folder — a second concurrent build is refused cleanly instead of corrupting the scaffold.
     if not root.is_dir():
         raise SafetyError('The approved project folder does not exist')
-    empty = not any(root.iterdir())
-    # A non-empty 'new' folder with our scaffold is an interrupted prior build of this same plan
-    # (approve created the folder empty), so reset it and build fresh rather than treating it as an amend.
-    resumed_new = (not empty and plan.get('mode') == 'new' and is_adm_project(root))
-    if empty or resumed_new:
-        if resumed_new:
-            _reset_scaffold(root)
-        _say(on_event, 'writing_tests')
-        answer = test_generator(model, test_prompt(plan), timeout=inference_timeout)
-        test_content = validate_tests(answer)
-        report['stage'] = 'scaffolding'
-        _say(on_event, 'scaffolding')
-        scaffold(root, plan, test_content)
-        amend = False
-    elif is_adm_project(root):
-        report['mode'] = 'amend'
-        _say(on_event, 'writing_tests', amend=True)
-        old_tests = (root / 'test_app.py').read_text(encoding='utf-8')
-        old_names = _test_method_names(old_tests)
-        answer = test_generator(model, amend_test_prompt(plan, old_tests), timeout=inference_timeout)
-        test_content = validate_tests(answer)
-        if not old_names <= _test_method_names(test_content):
-            raise SafetyError('The updated tests dropped or renamed existing checks; refusing to weaken your project.')
-        report['stage'] = 'amending'
-        amend_project(root, plan, test_content)
-        amend = True
-    else:
-        raise SafetyError('This folder has files that ADM did not create. ADM can build into an empty folder '
-                          'or add to a project it made; it will not change your own files. Choose another folder.')
+    with exclusive_project(root):
+        _recover_interrupted(root, Path(evidence))            # clean up any crashed prior build, under the lock
+        contents = [p for p in root.iterdir() if p.name not in ('.adm-repair.lock', '__pycache__')]
+        empty = not contents
+        # A non-empty 'new' folder with our scaffold is an interrupted prior build of THIS plan
+        # (approve created the folder empty), so reset and build fresh rather than treat it as an amend.
+        resumed_new = (not empty and plan.get('mode') == 'new' and is_adm_project(root))
+        if empty or resumed_new:
+            if resumed_new:
+                _reset_scaffold(root)
+            _say(on_event, 'writing_tests')
+            answer = test_generator(model, test_prompt(plan), timeout=inference_timeout)
+            test_content = validate_tests(answer)
+            report['stage'] = 'scaffolding'
+            _say(on_event, 'scaffolding')
+            scaffold(root, plan, test_content)
+            amend = False
+        elif is_adm_project(root):
+            report['mode'] = 'amend'
+            _say(on_event, 'writing_tests', amend=True)
+            old_tests = (root / 'test_app.py').read_text(encoding='utf-8')
+            old_names = _test_method_names(old_tests)
+            answer = test_generator(model, amend_test_prompt(plan, old_tests), timeout=inference_timeout)
+            test_content = validate_tests(answer)
+            if not old_names <= _test_method_names(test_content):
+                raise SafetyError('The updated tests dropped or renamed existing checks; refusing to weaken your project.')
+            report['stage'] = 'amending'
+            amend_project(root, plan, test_content)
+            amend = True
+        else:
+            raise SafetyError('This folder has files that ADM did not create. ADM can build into an empty folder '
+                              'or add to a project it made; it will not change your own files. Choose another folder.')
 
-    report['stage'] = 'writing_and_testing_code'
-    _say(on_event, 'writing_code')
-    repair = direct_repair(root, Path(evidence), model=model, generator=code_generator,
-                           runner=runner, timeout=timeout, max_repairs=max_repairs,
-                           inference_timeout=inference_timeout, on_event=on_event)
+        report['stage'] = 'writing_and_testing_code'
+        _say(on_event, 'writing_code')
+        repair = _direct_repair_unlocked(root, Path(evidence), model=model, generator=code_generator,
+                                         runner=runner, timeout=timeout, max_repairs=max_repairs,
+                                         inference_timeout=inference_timeout, on_event=on_event)
     report['repair'] = repair
     report['isolation'] = repair.get('isolation', 'none')
 
@@ -319,8 +324,7 @@ def run_build(state, plan_path, *, test_generator, code_generator, model, runner
         runtime_install.ensure_runtime()   # install the bundled Python (frozen app only); no-op in source
     except SafetyError:
         pass                               # project_python() will report clearly if no Python is available
-    ev = _safe_evidence(state, plan)
-    _recover_interrupted(Path(plan['folder']), ev)     # clean up after any crashed prior build
+    ev = _safe_evidence(state, plan)                   # recovery now happens inside build_from_plan, under the lock
     report = build_from_plan(plan_path, ev, test_generator=test_generator,
                              code_generator=code_generator, model=model, runner=runner,
                              timeout=timeout, max_repairs=max_repairs, require_sandbox=require_sandbox,

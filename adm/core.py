@@ -40,7 +40,7 @@ class Supervisor:
     def add(self,name,argv,cwd,max_attempts=2):
         p=Path(cwd).resolve()
         if not p.is_dir():raise ValueError('Working directory does not exist')
-        if not argv or not all(isinstance(x,str) and x for x in argv):raise ValueError('argv must be nonempty string array')
+        if not isinstance(argv,(list,tuple)) or not 1<=len(argv)<=1000 or not all(isinstance(x,str) and x for x in argv):raise ValueError('argv must be a nonempty list of 1..1000 argument strings')
         if max_attempts < 1 or max_attempts > 20:raise ValueError('max_attempts must be 1..20')
         cur=self.db.execute('INSERT INTO tasks(name,argv,cwd,updated,max_attempts) VALUES(?,?,?,?,?)',(name,json.dumps(argv),str(p),time.time(),max_attempts))
         self.event(cur.lastrowid,'created',{'argv':argv});self.db.commit();return cur.lastrowid

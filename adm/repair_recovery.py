@@ -60,19 +60,29 @@ def recover_journal(root, evidence):
     journal = evidence / 'repair-journal.json'
     if not journal.exists():
         return False
-    doc = json.loads(journal.read_text(encoding='utf-8'))
-    if doc.get('version') != 1 or doc.get('root') != str(root) or not isinstance(doc.get('entries'), list):
+    try:
+        doc = json.loads(journal.read_text(encoding='utf-8'))
+    except (OSError, ValueError, RecursionError) as exc:
+        raise SafetyError('Repair journal is unreadable') from exc
+    if not isinstance(doc, dict) or doc.get('version') != 1 or doc.get('root') != str(root) \
+            or not isinstance(doc.get('entries'), list):
         raise SafetyError('Invalid repair journal or project mismatch')
     originals = []
     seen = set()
     for entry in doc['entries']:
+        if not isinstance(entry, dict) or not all(isinstance(entry.get(k), str) for k in
+                ('path', 'original_b64', 'original_sha256', 'replacement_sha256')):
+            raise SafetyError('Malformed repair journal entry')
         name = entry['path']
         path = root / name
         if (name in seen or Path(name).name != name or not name.endswith('.py')
                 or name.startswith('test_') or not path.is_file() or path.is_symlink()):
             raise SafetyError('Unsafe or missing recovery target')
         seen.add(name)
-        old = base64.b64decode(entry['original_b64'], validate=True)
+        try:
+            old = base64.b64decode(entry['original_b64'], validate=True)
+        except Exception as exc:
+            raise SafetyError('Repair journal has invalid encoded data') from exc
         current = path.read_bytes()
         if _digest(old) != entry['original_sha256'] or _digest(current) not in (
                 entry['original_sha256'], entry['replacement_sha256']):

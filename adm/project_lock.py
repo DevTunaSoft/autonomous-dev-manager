@@ -52,9 +52,15 @@ def exclusive_project(root):
     lock = root / '.adm-repair.lock'
     if lock.is_symlink():
         raise SafetyError('Refusing symlink lock file')
+    if lock.exists() and not lock.is_file():
+        raise SafetyError('Lock path exists but is not a regular file')
     # Do not unlink this file: removing/recreating it can split ownership
     # across different inodes. Kernel lock is released on process death.
-    with open(lock, 'a+b') as stream:
+    try:
+        stream = open(lock, 'a+b')
+    except OSError as exc:
+        raise SafetyError('Could not open the project lock file') from exc
+    with stream:
         if lock.is_symlink():
             raise SafetyError('Refusing symlink lock file')
         _acquire(stream)
