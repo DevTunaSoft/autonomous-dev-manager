@@ -237,6 +237,6 @@ def probe_local_servers(ports: dict | None = None, timeout: float = 1.5) -> list
                 data = json.loads(response.read(MAX_RESPONSE))
             models = [m.get('id') for m in data.get('data', []) if isinstance(m, dict) and m.get('id')]
             found.append({'server': label, 'endpoint': f'http://{LOOPBACK}:{port}', 'models': models[:50]})
-        except (OSError, ValueError, TimeoutError, AttributeError):
+        except (OSError, ValueError, TimeoutError, AttributeError, TypeError, RecursionError):
             continue
     return found

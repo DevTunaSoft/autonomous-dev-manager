@@ -41,7 +41,7 @@ def inspect_ollama(*, endpoint=DEFAULT_ENDPOINT, timeout=5):
             if not isinstance(name, str) or not name or len(name) > 256:
                 raise ValueError('invalid model name')
             names.append(name)
-    except (ValueError, KeyError, TypeError) as exc:
+    except (ValueError, KeyError, TypeError, RecursionError) as exc:
         raise SafetyError('Ollama health response has invalid model metadata') from exc
     return {'reachable': True, 'endpoint': endpoint, 'installed_models': sorted(set(names)),
             'model_count': len(set(names)), 'inference_verified': False}
