@@ -55,6 +55,29 @@ def _run(cmd, check=True):
     return r
 
 
+# Shared locations an ordinary Windows account can usually write to. The account is explicitly
+# denied write access to each. This is a deny-list, so it REDUCES exposure; it cannot enumerate
+# every folder on every PC (Windows has no "deny everything except" rule). See docs in the handoff.
+HARDEN_DIRS = (r'C:\Users\Public', r'C:\ProgramData', r'C:\Windows\Temp', r'C:\Windows\Tasks',
+               r'C:\Windows\tracing', r'C:\Windows\System32\spool\drivers\color')
+
+
+def harden_commands(user: str = USER, dirs=HARDEN_DIRS) -> list[list[str]]:
+    cmds = [['icacls', d, '/deny', f'{user}:(OI)(CI)(W,DC)'] for d in dirs]
+    cmds.append(['icacls', 'C:\\', '/deny', f'{user}:(AD,WD)'])   # no new folders or files in the drive root
+    return cmds
+
+
+def refuse_hardened_location(project: str | Path, dirs=HARDEN_DIRS) -> None:
+    import ntpath
+    p = ntpath.normcase(ntpath.normpath(str(project))).rstrip('\\')
+    for d in dirs:
+        if p == d.lower() or p.startswith(d.lower() + '\\'):
+            raise SandboxError(f'Projects cannot live under {d}; the sandbox account is denied writes there')
+    if len(p) <= 3:
+        raise SandboxError('A project cannot be a drive root')
+
+
 def provision(user: str = USER) -> str:
     """Create the account and its outbound firewall block; return a fresh password."""
     if not available():
@@ -69,6 +92,8 @@ def provision(user: str = USER) -> str:
         capture_output=True, text=True, timeout=60).stdout.strip()
     if not sid.startswith('S-1-5-'):
         raise SandboxError('Could not resolve the sandbox account SID (are you an administrator?)')
+    for cmd in harden_commands(user):
+        _run(cmd, check=False)      # a directory missing on this PC is fine; denial applies where it exists
     ps = (f"Get-NetFirewallRule -DisplayName '{RULE}' -ErrorAction SilentlyContinue | Remove-NetFirewallRule; "
           f"New-NetFirewallRule -DisplayName '{RULE}' -Direction Outbound -Action Block "
           f"-LocalUser 'D:(A;;CC;;;{sid})' | Out-Null; 'RULE_OK'")
@@ -86,6 +111,7 @@ def run_confined(argv: list[str], project: str | Path, password: str, *, timeout
     import ctypes, ctypes.wintypes as w
     import win32job
     project = Path(project).resolve()
+    refuse_hardened_location(project)
     if not project.is_dir():
         raise SandboxError('Project folder does not exist')
     _run(acl_grant_command(str(project), user))

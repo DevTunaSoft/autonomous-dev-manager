@@ -39,9 +39,10 @@ def scan(pw, label):
     import shutil
     proj = Path(tempfile.mkdtemp(prefix='admscan_'))
     shutil.copy(Path(__file__).with_name('sandbox_scan.py'), proj / 'scan.py')
-    r = sandbox.run_confined([sys.executable, 'scan.py'], proj, pw, timeout=240)
-    lines = [l for l in r['output'].splitlines() if l.startswith('WRITABLE')]
-    emit('scan_' + label, 'RAN' in r['output'], {'count': len(lines), 'timed_out': r['timed_out'], 'dirs': lines[:40]})
+    dirs = [r'C:\\', r'C:\\Users\\Public', r'C:\\ProgramData', r'C:\\Windows\\Temp', r'C:\\Windows\\Tasks']
+    r = sandbox.run_confined([sys.executable, 'scan.py'] + dirs, proj, pw, timeout=60)
+    lines = [l for l in r['output'].splitlines() if l.startswith(('WRITABLE', 'refused'))]
+    emit('scan_' + label, 'RAN' in r['output'] and not any(l.startswith('WRITABLE') for l in lines), lines)
 
 def main():
     pw = sandbox.provision()
@@ -79,7 +80,7 @@ def main():
     r = sandbox.run_confined([sys.executable, 'child.py'], project, pw)
     emit('child_process_with_pipes', 'CHILD 0 7' in r['output'], r)
     shared_folder_check(pw)
-    scan(pw, 'default_groups')
+    scan(pw, 'hardened_shared_locations')
     e2e_repair()
 
 if __name__ == '__main__':
