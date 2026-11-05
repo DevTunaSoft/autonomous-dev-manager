@@ -66,10 +66,18 @@ def install_excepthook(state, component: str = 'app') -> None:
     sys.excepthook = hook
 
 
-def _safe(fn, default=None):
+_UNSET = object()
+
+
+def _safe(fn, default=_UNSET):
+    """Run fn and swallow failures. If the caller passed a default, return it on
+    error (so a field keeps its expected type, e.g. {} / [] / ''); otherwise
+    return a short diagnostic string for display."""
     try:
         return fn()
     except Exception as exc:
+        if default is not _UNSET:
+            return default
         return f'unavailable: {type(exc).__name__}: {exc}'
 
 
@@ -168,7 +176,8 @@ def _plan_counts(state):
     if plans.is_dir():
         for pj in plans.glob('*/plan.json'):
             try:
-                status = json.loads(pj.read_text(encoding='utf-8')).get('status', '?')
+                data = json.loads(pj.read_text(encoding='utf-8'))
+                status = data.get('status', '?') if isinstance(data, dict) else 'unreadable'
             except (OSError, ValueError, RecursionError):
                 status = 'unreadable'
             counts[status] = counts.get(status, 0) + 1
@@ -183,6 +192,8 @@ def _recent_builds(state):
             try:
                 data = json.loads(b.read_text(encoding='utf-8'))
             except (OSError, ValueError, RecursionError):
+                continue
+            if not isinstance(data, dict):
                 continue
             out.append({k: data.get(k) for k in ('plan_id', 'status', 'mode', 'isolation', 'message', 'model')})
     return out

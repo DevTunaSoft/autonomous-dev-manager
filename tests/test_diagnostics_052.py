@@ -71,6 +71,33 @@ class DiagnosticsTests(unittest.TestCase):
             self.assertNotIn('evidence/b1/app.py', names)          # generated source is never included
             json.loads(z.read('diagnostics.json'))                 # valid JSON
 
+    def test_safe_honours_caller_default_on_error(self):
+        # _safe must return the caller's default (keeping the expected type) on
+        # failure, and only fall back to a diagnostic string when none is given.
+        self.assertEqual(diagnostics._safe(lambda: 1 / 0, {}), {})
+        self.assertEqual(diagnostics._safe(lambda: 1 / 0, []), [])
+        self.assertEqual(diagnostics._safe(lambda: 1 / 0, ''), '')
+        self.assertEqual(diagnostics._safe(lambda: 7, {}), 7)        # success passes through
+        r = diagnostics._safe(lambda: 1 / 0)                         # no default -> string
+        self.assertIsInstance(r, str)
+        self.assertTrue(r.startswith('unavailable'))
+
+    def test_collect_keeps_types_when_reports_and_plans_are_corrupt(self):
+        # A plan.json or build report may be a JSON array or garbage. collect()
+        # must still return a dict for plans, lists for builds/self_check, str log.
+        (self.state / 'plans' / 'bad').mkdir(parents=True, exist_ok=True)
+        (self.state / 'plans' / 'bad' / 'plan.json').write_text('["array","not","object"]')
+        (self.state / 'builds').mkdir(parents=True, exist_ok=True)
+        (self.state / 'builds' / '001.json').write_text('[1,2,3]')
+        (self.state / 'builds' / '002.json').write_text('garbage{')
+        self.assertIsInstance(diagnostics._plan_counts(self.state), dict)   # must not raise
+        self.assertIsInstance(diagnostics._recent_builds(self.state), list)
+        info = diagnostics.collect(self.state)
+        self.assertIsInstance(info['plans_by_status'], dict)
+        self.assertIsInstance(info['recent_builds'], list)
+        self.assertIsInstance(info['self_check'], list)
+        self.assertIsInstance(info['log_tail'], str)
+
 
 if __name__ == '__main__':
     unittest.main()
