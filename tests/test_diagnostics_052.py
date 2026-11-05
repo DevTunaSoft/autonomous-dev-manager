@@ -34,6 +34,23 @@ class DiagnosticsTests(unittest.TestCase):
         self.assertEqual(info['plans_by_status'].get('unreadable'), 1)
         self.assertEqual(info['recent_builds'][0]['status'], 'built')
 
+    def test_self_check_returns_structured_results_and_never_raises(self):
+        checks = diagnostics.self_check(self.state)
+        self.assertIsInstance(checks, list)
+        self.assertTrue(checks)
+        for c in checks:
+            self.assertIn('name', c)
+            self.assertIn('ok', c)
+            self.assertIsInstance(c['ok'], bool)
+        names = {c['name'] for c in checks}
+        self.assertIn('Python for your projects', names)
+        self.assertIn('Disk space', names)
+        # even with a nonsense state path, it must not raise
+        diagnostics.self_check('\x00bad')
+
+    def test_collect_includes_self_check(self):
+        self.assertIn('self_check', diagnostics.collect(self.state))
+
     def test_export_bundle_is_a_valid_zip_without_source(self):
         diagnostics.log_line(self.state, 'start')
         (self.state / 'builds').mkdir(parents=True)

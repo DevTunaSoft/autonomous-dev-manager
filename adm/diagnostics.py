@@ -73,6 +73,64 @@ def _safe(fn, default=None):
         return f'unavailable: {type(exc).__name__}: {exc}'
 
 
+def self_check(state) -> list:
+    """Run ADM's own health checks and return a list of {name, ok, detail}. Never raises."""
+    checks = []
+
+    def add(name, ok, detail):
+        checks.append({'name': name, 'ok': bool(ok), 'detail': str(detail)[:300]})
+
+    try:
+        from .pyruntime import project_python
+        add('Python for your projects', True, project_python())
+    except Exception as exc:
+        add('Python for your projects', False, f'{type(exc).__name__}: {exc}')
+    try:
+        from .ollama_health import inspect_ollama
+        models = inspect_ollama(timeout=3).get('installed_models', [])
+        add('Local AI (Ollama)', bool(models),
+            'Models: ' + (', '.join(models[:5]) if models else 'reachable, but no model installed'))
+    except Exception as exc:
+        add('Local AI (Ollama)', False, f'Not reachable ({type(exc).__name__}). Use "Set up…".')
+    try:
+        from .runtime_install import shared_python_dir
+        p = shared_python_dir() / 'python.exe'
+        add('Bundled Python runtime', p.is_file(),
+            str(p) if p.is_file() else 'Not installed yet (installs on first build)')
+    except Exception as exc:
+        add('Bundled Python runtime', False, str(exc))
+    try:
+        from . import sandbox
+        if not sandbox.available():
+            add('Sandbox for generated code', False, 'Only available on Windows')
+        else:
+            admin = sandbox.is_admin()
+            add('Sandbox for generated code', admin,
+                'Administrator: yes' if admin else 'Needs administrator once (run ADM as administrator to build)')
+    except Exception as exc:
+        add('Sandbox for generated code', False, str(exc))
+    try:
+        import shutil
+        free = shutil.disk_usage(Path(state)).free / 1024 ** 3
+        add('Disk space', free > 2, f'{free:.1f} GB free')
+    except Exception as exc:
+        add('Disk space', False, str(exc))
+    try:
+        Path(state).mkdir(parents=True, exist_ok=True)
+        probe = Path(state) / '.adm-write-test'
+        probe.write_text('x', encoding='utf-8')
+        probe.unlink()
+        add('Write access to ADM folder', True, str(state))
+    except Exception as exc:
+        add('Write access to ADM folder', False, str(exc))
+    try:
+        import tkinter  # noqa: F401
+        add('Window toolkit', True, 'Available')
+    except Exception as exc:
+        add('Window toolkit', False, str(exc))
+    return checks
+
+
 def collect(state) -> dict:
     state = Path(state)
     info = {
@@ -88,6 +146,7 @@ def collect(state) -> dict:
     info['plans_by_status'] = _safe(lambda: _plan_counts(state), {})
     info['recent_builds'] = _safe(lambda: _recent_builds(state), [])
     info['worker'] = _safe(lambda: __import__('adm.desktop', fromlist=['status_summary']).status_summary(state))
+    info['self_check'] = _safe(lambda: self_check(state), [])
     info['log_tail'] = _safe(lambda: _log_tail(state), '')
     return info
 

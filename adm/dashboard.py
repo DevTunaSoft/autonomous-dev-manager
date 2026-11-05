@@ -136,6 +136,23 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
         except Exception as exc:
             messagebox.showerror('Diagnostics', f'Could not save diagnostics: {type(exc).__name__}: {exc}')
 
+    def run_self_check():
+        from tkinter import messagebox
+        log('Running self-diagnostics…')
+        def work():
+            checks = diagnostics.self_check(state)
+            def show():
+                for c in checks:
+                    log(('✓ ' if c['ok'] else '✕ ') + c['name'] + ' — ' + c['detail'])
+                lines = [('OK   ' if c['ok'] else 'FAIL ') + c['name'] + ': ' + c['detail'] for c in checks]
+                failed = [c for c in checks if not c['ok']]
+                title = 'Diagnostics: all good' if not failed else f'Diagnostics: {len(failed)} need attention'
+                messagebox.showinfo(title, '\n'.join(lines))
+            ui(show)
+        threading.Thread(target=work, daemon=True).start()
+
+    ttk.Button(sidebar, text='🩺  Run diagnostics', style='Secondary.TButton',
+               command=run_self_check).pack(side='bottom', fill='x', padx=12, pady=(0, 4))
     ttk.Button(sidebar, text='⬇  Export diagnostics', style='Secondary.TButton',
                command=export_diagnostics).pack(side='bottom', fill='x', padx=12, pady=(0, 12))
     ai_box = tk.Frame(sidebar, bg=t.PANEL, highlightthickness=1, highlightbackground=t.BORDER)
