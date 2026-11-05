@@ -80,6 +80,12 @@ def recent_jobs(state, limit=30):
 
 
 def main(*, auto_close_ms=None, ask=None):
+    """The ADM main window is the dark dashboard; this delegates to it."""
+    from .dashboard import main as dashboard_main
+    return dashboard_main(auto_close_ms=auto_close_ms, ask=ask)
+
+
+def _legacy_control_panel(*, auto_close_ms=None, ask=None):
     import tkinter as tk
     from tkinter import ttk, messagebox
     from . import theme

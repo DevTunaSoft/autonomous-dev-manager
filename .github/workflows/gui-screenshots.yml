@@ -10,12 +10,9 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pillow
-      - name: Main window
+      - name: Dashboard (empty)
         shell: pwsh
-        run: python tools/screenshot_gui.py main 4
-      - name: Request window with plan
+        run: python tools/screenshot_gui.py empty 4
+      - name: Dashboard with a plan
         shell: pwsh
-        run: python tools/screenshot_gui.py plan 4
-      - name: Request window after approval
-        shell: pwsh
-        run: python tools/screenshot_gui.py approved 5
+        run: python tools/screenshot_gui.py dashboard 6
