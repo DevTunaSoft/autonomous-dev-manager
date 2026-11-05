@@ -19,12 +19,13 @@ class SandboxPureTests(unittest.TestCase):
         self.assertTrue(cmd[-1].endswith('(OI)(CI)M'))
 
     def test_cmdline_rejects_quotes_and_empty(self):
-        for bad in ([], ['a"b'], ['x\x00']):
+        for bad in ([], ['a"b'], ['x\x00'], ['%PATH%'], ['a\nb']):
             with self.assertRaises(SandboxError):
                 sandbox.cmdline_for(bad, r'C:\o.txt')
 
     def test_cmdline_redirects_output(self):
         line = sandbox.cmdline_for(['python.exe', '-c', 'print(1)'], r'C:\o\out.txt')
+        self.assertTrue(line.startswith('cmd.exe /c "\"python.exe\" '))
         self.assertIn('> "C:\\o\\out.txt" 2>&1', line)
 
     @unittest.skipIf(sandbox.available(), 'non-Windows behavior')

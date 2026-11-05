@@ -42,10 +42,10 @@ def acl_grant_command(folder: str, user: str = USER) -> list[str]:
 
 def cmdline_for(argv: list[str], stdout_path: str) -> str:
     """Single command line that redirects output to a file the sandbox account can write."""
-    if not argv or any(not isinstance(a, str) or '"' in a or '\x00' in a for a in argv):
-        raise SandboxError('Arguments must be non-empty strings without quotes')
+    if not argv or any(not isinstance(a, str) or any(c in a for c in '"%\x00\r\n') for a in argv):
+        raise SandboxError('Arguments must be non-empty single-line strings without quotes or percent signs')
     quoted = ' '.join(f'"{a}"' for a in argv)
-    return f'cmd.exe /c ""{quoted}" > "{stdout_path}" 2>&1"'
+    return f'cmd.exe /c "{quoted} > "{stdout_path}" 2>&1"'
 
 
 def _run(cmd, check=True):
