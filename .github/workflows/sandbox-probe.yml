@@ -10,11 +10,16 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pywin32
-      - name: Run probes
+      - name: Run feasibility probes
         shell: pwsh
         run: python tools/sandbox_probe.py | Tee-Object -FilePath probe-results.jsonl
+      - name: Run live check of adm.sandbox
+        shell: pwsh
+        run: python tools/sandbox_live_check.py | Tee-Object -FilePath live-check-results.jsonl
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ADM-sandbox-probe-results
-          path: probe-results.jsonl
+          path: |
+            probe-results.jsonl
+            live-check-results.jsonl
