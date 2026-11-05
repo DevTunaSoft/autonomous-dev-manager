@@ -97,6 +97,56 @@ def _write(path: Path, text: str) -> None:
         stream.write(text)
 
 
+def is_adm_project(folder) -> bool:
+    """True only for a folder ADM itself built (so amending it is safe)."""
+    folder = Path(folder)
+    if not ((folder / 'requirements.json').is_file() and (folder / 'app.py').is_file()
+            and (folder / 'test_app.py').is_file()):
+        return False
+    try:
+        data = json.loads((folder / 'requirements.json').read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return False
+    return isinstance(data, dict) and data.get('source_file') == 'app.py' and 'checks_in_plain_words' in data
+
+
+def _test_method_names(content: str) -> set:
+    try:
+        tree = ast.parse(content)
+    except SyntaxError:
+        return set()
+    return {n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name.startswith('test')}
+
+
+def amend_test_prompt(plan: dict, old_tests: str) -> str:
+    c = plan['content']
+    checks = '\n'.join(f'{i}. {t}' for i, t in enumerate(c['tests'], 1))
+    return (
+        "You are adding to an existing Python program's tests. Reply with JSON only: "
+        "{\"files\": [{\"path\": \"test_app.py\", \"content\": \"...\"}]} and nothing else.\n"
+        "Rules:\n"
+        "- Return the COMPLETE new test_app.py.\n"
+        "- KEEP every existing test method exactly as it is — same names, same assertions. Do not rename, "
+        "remove, weaken or skip any of them.\n"
+        "- ADD one new test method per new check below, each with a real assertion.\n"
+        "- The program is the module app (import with 'from app import ...' or 'import app'). Standard library only.\n\n"
+        f"EXISTING test_app.py (keep all of these tests):\n{old_tests[:20000]}\n\n"
+        f"NEW CHECKS TO ADD:\n{checks}\n")
+
+
+def amend_project(root: Path, plan: dict, new_tests: str) -> None:
+    """Overwrite only test_app.py and extend requirements.json; the app source is left for the repair loop."""
+    root = Path(root)
+    req = json.loads((root / 'requirements.json').read_text(encoding='utf-8'))
+    req.setdefault('checks_in_plain_words', [])
+    req['checks_in_plain_words'] = list(req['checks_in_plain_words']) + list(plan['content']['tests'])
+    existing = req.setdefault('requirements', [])
+    base = len(existing)
+    existing += [{'id': f'FEAT-{base + i:03d}', 'description': f} for i, f in enumerate(plan['content']['features'], 1)]
+    _write(root / 'requirements.json', json.dumps(req, indent=2, ensure_ascii=False))
+    _write(root / 'test_app.py', new_tests)
+
+
 def scaffold(root: Path, plan: dict, test_content: str) -> None:
     """Write requirements.json, the frozen tests and an empty app.py stub. Never overwrite user files."""
     root = Path(root)
@@ -128,15 +178,36 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
         raise SafetyError('No sandbox runner was provided; generated code will not be run')
 
     report = {'plan_id': plan['id'], 'folder': str(root), 'model': model, 'created': time.time(),
-              'stage': 'generating_tests', 'status': 'in_progress',
+              'stage': 'generating_tests', 'status': 'in_progress', 'mode': 'new',
               'honest_scope': ('Tests were written by the AI from the plain-language checks you approved. '
                                'A pass means the generated code satisfies those tests, which approximate '
                                'your intent; ADM does not prove the tests capture exactly what you meant.')}
-    answer = test_generator(model, test_prompt(plan), timeout=inference_timeout)
-    test_content = validate_tests(answer)
 
-    report['stage'] = 'scaffolding'
-    scaffold(root, plan, test_content)
+    # Decide how to treat the target folder: a fresh scaffold, or an amend of an ADM project.
+    # "Empty" means literally no files, so ADM never writes alongside a person's own work.
+    if not root.is_dir():
+        raise SafetyError('The approved project folder does not exist')
+    empty = not any(root.iterdir())
+    if empty:
+        answer = test_generator(model, test_prompt(plan), timeout=inference_timeout)
+        test_content = validate_tests(answer)
+        report['stage'] = 'scaffolding'
+        scaffold(root, plan, test_content)
+        amend = False
+    elif is_adm_project(root):
+        report['mode'] = 'amend'
+        old_tests = (root / 'test_app.py').read_text(encoding='utf-8')
+        old_names = _test_method_names(old_tests)
+        answer = test_generator(model, amend_test_prompt(plan, old_tests), timeout=inference_timeout)
+        test_content = validate_tests(answer)
+        if not old_names <= _test_method_names(test_content):
+            raise SafetyError('The updated tests dropped or renamed existing checks; refusing to weaken your project.')
+        report['stage'] = 'amending'
+        amend_project(root, plan, test_content)
+        amend = True
+    else:
+        raise SafetyError('This folder has files that ADM did not create. ADM can build into an empty folder '
+                          'or add to a project it made; it will not change your own files. Choose another folder.')
 
     report['stage'] = 'writing_and_testing_code'
     repair = direct_repair(root, Path(evidence), model=model, generator=code_generator,
@@ -145,8 +216,12 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
     report['repair'] = repair
     report['isolation'] = repair.get('isolation', 'none')
 
-    if repair['status'] == 'baseline_passed':
-        # The tests passed before any code was written: they do not actually test the behaviour.
+    if repair['status'] == 'baseline_passed' and amend:
+        # Amending and everything already passes: the requested change needed no code change.
+        report['status'] = 'already_passing'
+        report['message'] = 'All checks, new and existing, already pass — no code change was needed.'
+    elif repair['status'] == 'baseline_passed':
+        # New project whose tests passed before any code was written: they test nothing.
         report['status'] = 'rejected_trivial_tests'
         report['message'] = ('The generated tests passed before any program was written, so they are not '
                              'really testing anything. Nothing was built. Try rephrasing your request.')
@@ -192,6 +267,11 @@ def run_build(state, plan_path, *, test_generator, code_generator, model, runner
               timeout=120, max_repairs=3, require_sandbox=True) -> dict:
     """The path the dashboard uses: safe evidence location + a persisted report for the stats tiles."""
     plan = intake.require_approved(plan_path)
+    try:
+        from . import runtime_install
+        runtime_install.ensure_runtime()   # install the bundled Python (frozen app only); no-op in source
+    except SafetyError:
+        pass                               # project_python() will report clearly if no Python is available
     ev = _safe_evidence(state, plan)
     report = build_from_plan(plan_path, ev, test_generator=test_generator,
                              code_generator=code_generator, model=model, runner=runner,

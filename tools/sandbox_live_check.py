@@ -73,6 +73,20 @@ def build_through_sandbox(pw):
          {'status': report['status'], 'isolation': report['isolation'], 'report_saved': saved.is_file(),
           'evidence_outside_project': ev_outside, 'app_written': (Path(plan['folder']) / 'app.py').read_text()[:60]})
 
+def shared_python_in_sandbox(pw):
+    from adm import runtime_install
+    src = Path('pyembed')
+    if not (src / 'python.exe').is_file():
+        emit('shared_python_in_sandbox', False, 'pyembed was not prepared'); return
+    exe = runtime_install.ensure_shared_python(src)        # installs to C:\\ProgramData\\ADM\\python (admin)
+    proj = Path(tempfile.mkdtemp(prefix='embedsb_'))
+    (proj / 'app.py').write_text('def add(a, b):\n    return a + b\n')
+    (proj / 'test_app.py').write_text('import unittest\nfrom app import add\n'
+                                      'class T(unittest.TestCase):\n    def test(self):\n        self.assertEqual(add(2, 3), 5)\n')
+    r = sandbox.run_confined([str(exe), '-m', 'unittest', 'discover', '-s', '.', '-p', 'test_*.py'], proj, pw, timeout=90)
+    emit('shared_python_in_sandbox', r['exit_code'] == 0,
+         {'exit_code': r['exit_code'], 'timed_out': r['timed_out'], 'out': r['output'][-200:]})
+
 def main():
     pw = sandbox.provision()
     emit('provision', True, 'account + firewall rule created')
@@ -112,6 +126,7 @@ def main():
     scan(pw, 'hardened_shared_locations')
     e2e_repair()
     build_through_sandbox(sandbox.provision())
+    shared_python_in_sandbox(sandbox.provision())
 
 if __name__ == '__main__':
     if os.name != 'nt':

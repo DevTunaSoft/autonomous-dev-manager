@@ -44,6 +44,20 @@ def failing_code_gen():
     return g
 
 
+AMEND_TESTS = ('import unittest\n'
+               'from app import tip_total, per_person, grand_total\n\n'
+               'class T(unittest.TestCase):\n'
+               '    def test_total(self):\n        self.assertEqual(tip_total(100, 20), 120)\n'
+               '    def test_split(self):\n        self.assertEqual(per_person(120, 4), 30)\n'
+               '    def test_zero(self):\n        self.assertEqual(tip_total(100, 0), 100)\n'
+               '    def test_grand(self):\n        self.assertEqual(grand_total(100, 20, 4), 30)\n\n'
+               "if __name__ == '__main__':\n    unittest.main()\n")
+AMEND_CODE = (GOOD_CODE + '\ndef grand_total(bill, tip_percent, people):\n'
+              '    return per_person(tip_total(bill, tip_percent), people)\n')
+ALREADY_TESTS = (GOOD_TESTS.replace("if __name__",
+                 "    def test_extra(self):\n        self.assertEqual(tip_total(200, 10), 220)\n\nif __name__"))
+
+
 def sandbox_runner():
     def r(argv, cwd, root, timeout=90, output_limit=30000):
         return run_checked(argv, cwd, root, timeout=timeout)
@@ -148,6 +162,67 @@ class BuildStageTests(unittest.TestCase):
 
     def test_validate_tests_accepts_a_real_test_file(self):
         self.assertEqual(build.validate_tests({'files': [{'path': 'test_app.py', 'content': GOOD_TESTS}]}), GOOD_TESTS)
+
+    # --- existing-project support ------------------------------------
+    def _built_project(self):
+        plan = self.approved_plan()
+        self.build(plan)
+        return Path(plan['folder'])
+
+    def _amend_plan(self, folder, answer):
+        def g(model, prompt, timeout): return answer
+        p = intake.create_plan(self.state, 'add a per-person total including tip', mode='existing',
+                               folder=str(folder), generator=g, model='ollama/x', home=self.home)
+        return intake.approve(p['path'])
+
+    def test_is_adm_project_detects_only_adm_folders(self):
+        folder = self._built_project()
+        self.assertTrue(build.is_adm_project(folder))
+        other = self.base / 'mine'
+        other.mkdir()
+        (other / 'app.py').write_text('print(1)')
+        self.assertFalse(build.is_adm_project(other))
+
+    def test_amend_adds_a_check_and_modifies_only_the_app(self):
+        folder = self._built_project()
+        amend_answer = dict(PLAN_ANSWER, features=['Per-person total including tip'],
+                            tests=['When bill 100, tip 20 percent, split 4, each pays 30'])
+        plan = self._amend_plan(folder, amend_answer)
+        report = build.build_from_plan(plan['path'], self.base / 'ev-amend',
+                                       test_generator=test_gen(AMEND_TESTS), code_generator=code_gen(AMEND_CODE),
+                                       model='ollama/x', runner=None, require_sandbox=False)
+        self.assertEqual(report['status'], 'built')
+        self.assertEqual(report['mode'], 'amend')
+        tests = (folder / 'test_app.py').read_text()
+        self.assertIn('test_grand', tests)
+        self.assertIn('test_total', tests)       # old checks kept
+        self.assertIn('grand_total', (folder / 'app.py').read_text())
+
+    def test_amend_refuses_when_the_ai_drops_an_existing_check(self):
+        folder = self._built_project()
+        dropped = ('import unittest\nfrom app import tip_total\n\nclass T(unittest.TestCase):\n'
+                   '    def test_total(self):\n        self.assertEqual(tip_total(100, 20), 120)\n')  # lost test_split/test_zero
+        plan = self._amend_plan(folder, dict(PLAN_ANSWER, tests=['something new']))
+        with self.assertRaises(SafetyError):
+            build.build_from_plan(plan['path'], self.base / 'ev-drop', test_generator=test_gen(dropped),
+                                  code_generator=code_gen(), model='ollama/x', runner=None, require_sandbox=False)
+
+    def test_amend_that_already_passes_reports_already_passing(self):
+        folder = self._built_project()
+        plan = self._amend_plan(folder, dict(PLAN_ANSWER, tests=['When bill 200 tip 10, total 220']))
+        report = build.build_from_plan(plan['path'], self.base / 'ev-already',
+                                       test_generator=test_gen(ALREADY_TESTS), code_generator=code_gen(),
+                                       model='ollama/x', runner=None, require_sandbox=False)
+        self.assertEqual(report['status'], 'already_passing')
+
+    def test_build_refuses_a_folder_with_non_adm_files(self):
+        folder = self.base / 'theirs'
+        folder.mkdir()
+        (folder / 'important.py').write_text('# my own work')
+        plan = self._amend_plan(folder, PLAN_ANSWER)
+        with self.assertRaises(SafetyError):
+            build.build_from_plan(plan['path'], self.base / 'ev-refuse', test_generator=test_gen(),
+                                  code_generator=code_gen(), model='ollama/x', runner=None, require_sandbox=False)
 
     # --- run_build (the path the dashboard uses) ----------------------
     def test_run_build_keeps_evidence_outside_the_project_and_saves_a_report(self):

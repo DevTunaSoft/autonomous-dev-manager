@@ -31,6 +31,14 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_desktop_entry_exit.py' -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Prepare and verify bundled Python runtime
+        shell: pwsh
+        run: |
+          Invoke-WebRequest 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -OutFile embed.zip
+          Expand-Archive embed.zip -DestinationPath pyembed -Force
+          python -c "import sys; sys.path.insert(0,'.'); from adm.runtime_install import fixup_pth; print('pth:', fixup_pth('pyembed'))"
+          python tools/verify_bundled_python.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build and run packaged smoke test
         shell: cmd
         run: BUILD-WINDOWS-DESKTOP.cmd

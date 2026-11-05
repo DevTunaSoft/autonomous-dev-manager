@@ -43,11 +43,11 @@ def collect_stats(state) -> dict:
                 data = json.loads(r.read_text(encoding='utf-8'))
             except (OSError, ValueError):
                 continue
-            if data.get('status') == 'built':
+            if data.get('status') in ('built', 'already_passing'):
                 built += 1
             latest = data
         out['completed'] = built
-    if latest and latest.get('status') == 'built':
+    if latest and latest.get('status') in ('built', 'already_passing'):
         n = len(latest.get('checks', []) or [])
         out['passing'] = f'{n}/{n}' if n else '100%'
     dist = state / 'dist'
@@ -422,7 +422,7 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
             log('Build stopped: ' + error)
             return
         result['build'] = report
-        built = report['status'] == 'built'
+        built = report['status'] in ('built', 'already_passing')
         trivial = report['status'] == 'rejected_trivial_tests'
         set_stage('Code generation', 'done', t.SUCCESS)
         set_stage('Build & test', 'done' if built else 'fail', t.SUCCESS if built else t.DANGER)

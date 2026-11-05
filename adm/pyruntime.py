@@ -47,6 +47,10 @@ def self_command(module: str, args: list[str], *, frozen: bool | None = None,
 def _candidates() -> list[str]:
     found: list[str] = []
     if os.name == 'nt':
+        shared = os.environ.get('ProgramData')
+        if shared:
+            # Shared ADM runtime, readable by the sandbox account (see runtime_install).
+            found.append(str(Path(shared) / 'ADM' / 'python' / 'python.exe'))
         local = os.environ.get('LOCALAPPDATA')
         if local:
             found.append(str(Path(local) / 'ADM' / 'python' / 'python.exe'))   # ADM-managed runtime
