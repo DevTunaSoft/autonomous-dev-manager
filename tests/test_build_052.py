@@ -149,6 +149,22 @@ class BuildStageTests(unittest.TestCase):
     def test_validate_tests_accepts_a_real_test_file(self):
         self.assertEqual(build.validate_tests({'files': [{'path': 'test_app.py', 'content': GOOD_TESTS}]}), GOOD_TESTS)
 
+    # --- run_build (the path the dashboard uses) ----------------------
+    def test_run_build_keeps_evidence_outside_the_project_and_saves_a_report(self):
+        plan = self.approved_plan()
+        report = build.run_build(self.state, plan['path'], test_generator=test_gen(),
+                                 code_generator=code_gen(), model='ollama/x',
+                                 runner=sandbox_runner(), require_sandbox=True)
+        self.assertEqual(report['status'], 'built')
+        ev = Path(report['evidence']).resolve()
+        root = Path(plan['folder']).resolve()
+        self.assertNotEqual(ev, root)
+        self.assertNotIn(root, ev.parents)           # evidence is NOT inside the project
+        saved = build.builds_root(self.state) / (report['plan_id'] + '.json')
+        self.assertTrue(saved.is_file())
+        self.assertEqual(json.loads(saved.read_text())['status'], 'built')
+        self.assertEqual(report['checks'], plan['content']['tests'])
+
 
 if __name__ == '__main__':
     unittest.main()

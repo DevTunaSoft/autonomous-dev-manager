@@ -159,3 +159,44 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
                              'the test output were kept so you can see how far it got.')
     report['stage'] = 'done'
     return report
+
+
+def builds_root(state) -> Path:
+    return Path(state) / 'builds'
+
+
+def evidence_root(state) -> Path:
+    return Path(state) / 'evidence'
+
+
+def _safe_evidence(state, plan) -> Path:
+    """An evidence directory GUARANTEED to be outside the project folder (validate_project requires it)."""
+    root = Path(plan['folder']).resolve()
+    ev = (evidence_root(state) / f"{plan['id']}-{int(time.time())}").resolve()
+    if ev == root or root in ev.parents or ev in root.parents:
+        raise SafetyError('Evidence directory must be outside the project folder')
+    return ev
+
+
+def save_report(state, report: dict) -> Path:
+    folder = builds_root(state)
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f"{report['plan_id']}.json"
+    tmp = path.with_name(path.name + '.tmp')
+    tmp.write_text(json.dumps(report, indent=2, ensure_ascii=False, default=str), encoding='utf-8')
+    os.replace(tmp, path)
+    return path
+
+
+def run_build(state, plan_path, *, test_generator, code_generator, model, runner,
+              timeout=120, max_repairs=3, require_sandbox=True) -> dict:
+    """The path the dashboard uses: safe evidence location + a persisted report for the stats tiles."""
+    plan = intake.require_approved(plan_path)
+    ev = _safe_evidence(state, plan)
+    report = build_from_plan(plan_path, ev, test_generator=test_generator,
+                             code_generator=code_generator, model=model, runner=runner,
+                             timeout=timeout, max_repairs=max_repairs, require_sandbox=require_sandbox)
+    report['checks'] = plan['content']['tests']
+    report['evidence'] = str(ev)
+    save_report(state, report)
+    return report

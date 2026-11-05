@@ -29,6 +29,10 @@ class SandboxPureTests(unittest.TestCase):
         self.assertIn('> "C:\\o\\out.txt" 2>&1', line)
 
     @unittest.skipIf(sandbox.available(), 'non-Windows behavior')
+    def test_is_admin_is_false_off_windows(self):
+        self.assertFalse(sandbox.is_admin())
+
+    @unittest.skipIf(sandbox.available(), 'non-Windows behavior')
     def test_refuses_to_run_off_windows(self):
         with self.assertRaises(SandboxError):
             sandbox.provision()

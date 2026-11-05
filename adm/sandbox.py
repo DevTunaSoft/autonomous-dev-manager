@@ -27,6 +27,22 @@ def available() -> bool:
     return os.name == 'nt'
 
 
+def is_admin() -> bool:
+    """True if this process can create local accounts and firewall rules."""
+    if os.name != 'nt':
+        return False
+    try:
+        import ctypes
+        return bool(ctypes.windll.shell32.IsUserAnAdmin())
+    except Exception:
+        return False
+
+
+NEED_ADMIN = ("Building needs administrator access once, to create the locked-down sandbox account "
+              "that runs generated code safely. Close ADM, right-click it and choose "
+              "'Run as administrator', then try again.")
+
+
 def new_password() -> str:
     """Windows accepts <=14 chars without a legacy-compat prompt; 12 random chars cover complexity."""
     alphabet = 'abcdefghijkmnpqrstuvwxyz'
@@ -84,6 +100,8 @@ def provision(user: str = USER) -> str:
     """Create the account and its outbound firewall block; return a fresh password."""
     if not available():
         raise SandboxError('The Windows account sandbox only runs on Windows')
+    if not is_admin():
+        raise SandboxError(NEED_ADMIN)
     password = new_password()
     create, reset = setup_commands(password, user)
     if _run(create, check=False).returncode != 0:

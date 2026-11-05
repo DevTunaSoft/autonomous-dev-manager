@@ -64,12 +64,14 @@ def build_through_sandbox(pw):
     code = 'def tip_total(b, t):\n    return b + b * t / 100\ndef per_person(total, people):\n    return total / people\n'
     def tgen(model, prompt, timeout=300): return {'files': [{'path': 'test_app.py', 'content': tests}]}
     def cgen(model, prompt, timeout=300): return {'files': [{'path': 'app.py', 'content': code}]}
-    report = build.build_from_plan(plan['path'], base / 'evidence', test_generator=tgen,
-                                   code_generator=cgen, model='ollama/fake',
-                                   runner=sandbox.make_runner(pw), require_sandbox=True)
-    emit('build_through_sandbox', report['status'] == 'built' and report['isolation'] == 'sandbox',
-         {'status': report['status'], 'isolation': report['isolation'],
-          'repair': report['repair']['status'], 'app_written': (Path(plan['folder']) / 'app.py').read_text()[:60]})
+    report = build.run_build(state, plan['path'], test_generator=tgen, code_generator=cgen,
+                             model='ollama/fake', runner=sandbox.make_runner(pw), require_sandbox=True)
+    saved = build.builds_root(state) / (report['plan_id'] + '.json')
+    ev_outside = not str(Path(report['evidence']).resolve()).startswith(str(Path(plan['folder']).resolve()))
+    emit('build_through_sandbox', report['status'] == 'built' and report['isolation'] == 'sandbox'
+         and saved.is_file() and ev_outside,
+         {'status': report['status'], 'isolation': report['isolation'], 'report_saved': saved.is_file(),
+          'evidence_outside_project': ev_outside, 'app_written': (Path(plan['folder']) / 'app.py').read_text()[:60]})
 
 def main():
     pw = sandbox.provision()

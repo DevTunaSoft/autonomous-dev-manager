@@ -238,23 +238,32 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     current = {'plan': None, 'busy': False}
     result = {'status': 'no plan', 'folder': '', 'build': None}
 
+    def ui(fn):
+        """Run a UI update on the Tk main thread; safe to call from worker threads."""
+        try:
+            win.after(0, fn)
+        except RuntimeError:
+            pass
+
     def log(line):
         stamp = time.strftime('%H:%M:%S')
-        activity.config(state='normal')
-        activity.insert('end', f'{stamp}   {line}\n')
-        activity.see('end')
-        activity.config(state='disabled')
+        def do():
+            activity.config(state='normal')
+            activity.insert('end', f'{stamp}   {line}\n')
+            activity.see('end')
+            activity.config(state='disabled')
+        ui(do)   # may be called from a worker thread (e.g. local-AI setup progress)
 
     def set_live(on):
         live_dot.config(text='● running' if on else '● idle', fg=t.CYAN if on else t.FAINT)
 
     def set_stage(stage, status, color):
         dot, name, stg = stage_rows[stage]
-        glyph = {'done': '●', 'run': '◉', 'pending': '○', 'skip': '○'}.get(status, '○')
+        glyph = {'done': '●', 'run': '◉', 'fail': '✕', 'pending': '○', 'skip': '○', 'na': '○'}.get(status, '○')
         dot.config(text=glyph, fg=color)
-        name.config(fg=t.INK if status in ('done', 'run') else t.MUTED)
-        stg.config(text={'done': 'Complete', 'run': 'Running…', 'pending': 'Pending',
-                         'skip': 'Not built yet'}[status], fg=color)
+        name.config(fg=t.INK if status in ('done', 'run', 'fail') else t.MUTED)
+        stg.config(text={'done': 'Complete', 'run': 'Running…', 'fail': "Couldn't pass",
+                         'pending': 'Pending', 'skip': 'Skipped', 'na': 'Not built yet'}[status], fg=color)
 
     def reset_pipeline():
         for s in STAGES:
@@ -352,11 +361,11 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
                     from .backends import make_json_generator
                     gen = make_json_generator(use_model)
                 plan = intake.create_plan(state, text, mode=m, folder=f, generator=gen, model=use_model)
-                win.after(0, lambda: finish_plan(plan, None))
+                ui(lambda: finish_plan(plan, None))
             except SafetyError as exc:
-                win.after(0, lambda e=str(exc): finish_plan(None, e))
+                ui(lambda e=str(exc): finish_plan(None, e))
             except Exception as exc:
-                win.after(0, lambda e=f'{type(exc).__name__}: {exc}': finish_plan(None, 'Something went wrong: ' + e))
+                ui(lambda e=f'{type(exc).__name__}: {exc}': finish_plan(None, 'Something went wrong: ' + e))
         threading.Thread(target=work, daemon=True).start()
 
     def do_approve():
@@ -395,32 +404,33 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
                     tgen = make_json_generator(use_model)
                     cgen = make_generator(use_model)
                 runner = sandbox.make_runner(sandbox.provision())
-                report = build.build_from_plan(plan['path'], Path(plan['folder']) / '.adm-evidence',
-                                               test_generator=tgen, code_generator=cgen, model=use_model,
-                                               runner=runner, require_sandbox=True)
-                win.after(0, lambda: finish_build(report, None))
+                report = build.run_build(state, plan['path'], test_generator=tgen, code_generator=cgen,
+                                         model=use_model, runner=runner, require_sandbox=True)
+                ui(lambda: finish_build(report, None))
             except SafetyError as exc:
-                win.after(0, lambda e=str(exc): finish_build(None, e))
+                ui(lambda e=str(exc): finish_build(None, e))
             except Exception as exc:
-                win.after(0, lambda e=f'{type(exc).__name__}: {exc}': finish_build(None, e))
+                ui(lambda e=f'{type(exc).__name__}: {exc}': finish_build(None, e))
         threading.Thread(target=work, daemon=True).start()
 
     def finish_build(report, error):
         current['busy'] = False
         set_live(False)
         if error:
-            set_stage('Code generation', 'pending', t.FAINT)
+            set_stage('Code generation', 'fail', t.DANGER)
             set_status('Could not build: ' + error, t.DANGER)
             log('Build stopped: ' + error)
             return
         result['build'] = report
         built = report['status'] == 'built'
+        trivial = report['status'] == 'rejected_trivial_tests'
         set_stage('Code generation', 'done', t.SUCCESS)
-        set_stage('Build & test', 'done' if built else 'run', t.SUCCESS if built else t.WARN)
+        set_stage('Build & test', 'done' if built else 'fail', t.SUCCESS if built else t.DANGER)
         set_stage('Auto-fix', 'done' if built else 'skip', t.SUCCESS if built else t.FAINT)
-        set_stage('Package & deliver', 'skip', t.FAINT)
+        set_stage('Package & deliver', 'na', t.FAINT)
         set_status(report.get('message', report['status']), t.SUCCESS if built else t.WARN)
-        log(('Built — all checks pass (verified in the sandbox).' if built else 'Build result: ' + report['status']))
+        log('Built — all checks pass (verified in the sandbox).' if built
+            else ('Tests were trivial; nothing was built.' if trivial else 'Build result: ' + report['status']))
         refresh_stats()
         refresh_recent()
 
