@@ -426,4 +426,152 @@ On Windows: run **`BUILD-WINDOWS-DESKTOP.cmd`** (PyInstaller one-file, windowed 
 - `315b14d` Self-diagnostics (health checks, Run/Export diagnostics)
 - `9e07fe3` Adversarial round 9 (model-name traversal rejection; fuzz9 in CI)
 
+
+---
+
+## Appendix A — Complete module index (all 50)
+
+Every file in `adm/` with its purpose. "stdlib-only" is the default; exceptions are noted.
+
+| Module | Purpose |
+|---|---|
+| `__init__.py` / `__main__.py` | package marker / `python -m adm` entry |
+| `acceptance.py` | offline end-to-end acceptance: real HTTP transport + real subprocess tests, fake AI |
+| `adaptive.py` | resource-aware admission decisions; never changes verification requirements |
+| `agent.py` | guarded OpenCode/Ollama adapter and evidence-backed repair trial |
+| `agent_cli.py` | CLI for a real local OpenCode agent trial |
+| `ai_status.py` | read-only CLI reconciling a queued AI repair with its evidence |
+| `backends.py` | local + optional remote model backends behind one patch-request interface |
+| `build.py` | approved plan → frozen tests → scaffold → sandboxed repair loop → honest report |
+| `cli.py` | human-friendly proof command |
+| `context.py` | local analysis deciding what the model is shown (not what is tested/recorded) |
+| `core.py` | durable, resource-aware command verification supervisor |
+| `daemon.py` | persistent unattended trusted-job runner with observable lifecycle state |
+| `dashboard.py` | the dark Tkinter dashboard main window |
+| `desktop.py` | dependency-free desktop control panel helpers |
+| `desktop_entry.py` | single-file Windows entrypoint: GUI normally, headless supervisor with a flag |
+| `diagnostics.py` | persistent app log + one-click export bundle + self-check |
+| `engine.py` | bounded, evidence-backed autonomous repair proof; `SafetyError` lives here |
+| `firstrun.py` | first-run local-AI setup: detect missing, ask, install with progress |
+| `intake.py` | plain-language request → plan → explicit approval (writes no code) |
+| `intake_gui.py` | the "New request" window; thin layer over `intake` |
+| `live_acceptance.py` | opt-in real-Ollama acceptance on a disposable fixture |
+| `model_probe.py` | local-only Ollama readiness + bounded inference smoke benchmark |
+| `model_selection.py` | deterministic offline model selection from installed inventory |
+| `ollama_cli.py` | run a local direct-repair trial on a disposable project |
+| `ollama_direct.py` | direct local Ollama repair loop with guarded file edits + evidence |
+| `ollama_health.py` | read-only, loopback-only Ollama health + installed-model inspection |
+| `package.py` | package a verified build into a standalone EXE (generates CLI entry) |
+| `pipeline.py` | durable, fail-closed supervised local agent proof |
+| `pipeline_cli.py` | supervised local-AI proof CLI (no paid API, no auto-exec of unknown projects) |
+| `preflight.py` | read-only diagnostics for local Ollama/OpenCode availability |
+| `project_lock.py` | crash-released OS file lock for exclusive project ownership |
+| `provision.py` | resumable, dependency-aware local provisioning coordinator (sandbox) |
+| `pyruntime.py` | which interpreter runs what, in source vs frozen app |
+| `queued_ai.py` | queue a bounded local-Ollama repair for the supervisor |
+| `recovery.py` | bounded, verified workspace snapshot/restore for disposable trials |
+| `regression.py` | isolated, bounded regression runner (never turns timeouts into passes) |
+| `release.py` | reproducible source release + opt-in Windows EXE build planning + zip-bomb guards |
+| `release_entry.py` | frozen Windows entrypoint for the supervisor (not a GUI) |
+| `repair_recovery.py` | crash journal for local-model source replacements |
+| `repomap.py` | dependency-free AST map of a Python project |
+| `runtime_install.py` | install a bundled Python runtime so users needn't install Python |
+| `sandbox.py` | the Windows sandbox for generated code (low-priv account + firewall + ACL + Job Object) |
+| `selftest.py` | bounded, offline, non-executing packaged-app smoke test (`SMOKE_MODULES`) |
+| `setup.py` | auditable, explicit-consent local dependency provisioning |
+| `setup_cli.py` | read-only setup plan by default; `--apply` is opt-in |
+| `theme.py` | shared dark-theme colours/fonts/widget helpers for the dashboard |
+| `windows_startup.py` | opt-in Windows logon launcher (no install without user action) |
+| `worker.py` | durable single-owner worker supervision for trusted commands |
+| `worker_cli.py` | CLI for the trusted worker proof |
+
+## Appendix B — Test-file map (all 64)
+
+| Test file | Covers |
+|---|---|
+| `test_acceptance` | real HTTP + real tests with fake AI (offline e2e) |
+| `test_adaptive` / `test_adaptive_worker` | 16 GB admission decisions; denial defers without consuming an attempt |
+| `test_agent` / `test_ai_inspection` | evidence-backed repair; pending ≠ verified |
+| `test_auto_queue` | model auto-selection on 16 GB; persistence |
+| `test_build_052` | build requires an approved plan; pipeline semantics |
+| `test_build_hidden_imports_049` / `test_release_hidden_imports_049` | every smoke module is a PyInstaller hidden-import |
+| `test_context_051` | what the model reads is reduced; what is tested/recorded is not |
+| `test_core` / `test_worker` | supervisor success+evidence; real run + spooled logs |
+| `test_daemon` / `test_daemon_lifecycle` / `test_daemon_robustness_050` | lifecycle state; stale heartbeat reported unresponsive |
+| `test_dashboard_logic_052` | headless dashboard logic: stats + uptime (incl. corrupt-state guards) |
+| `test_desktop` / `test_desktop_entry_040` / `test_desktop_entry_exit` | GUI build plan; frozen launch; failure propagation to CI |
+| `test_diagnostics_052` | logging never raises; collect resilient; export bundle has no source; `_safe` default |
+| `test_engine` | end-to-end bounded repair proof |
+| `test_firstrun_050` | setup refuses without approval |
+| `test_hardening_050` / `test_hardening_*_052` / `test_hardening_round6_052` | regression tests pinning bugs from fuzz rounds 1–8 |
+| `test_independent_retest` / `test_repair_commit` / `test_repair_recovery` | second-process verification; commit boundary; crash-journal restore |
+| `test_intake_052` | plan saved unapproved; no project folder created yet |
+| `test_live_acceptance` | refuses a missing model without writing |
+| `test_local_transport_security` | local AI transport never follows redirects |
+| `test_model_probe` / `test_model_selection` / `test_ollama_health` | model readiness, selection, health |
+| `test_ollama_direct` | successful repair from a fake generator |
+| `test_package_052` | exe-name sanitising, generated entry runs, hostile titles, malformed plans |
+| `test_packaged_smoke_041` / `test_pyruntime_050` | real offline smoke; frozen self-command re-enters the EXE |
+| `test_pid_alive_049` / `test_process_tree` | liveness check must not kill; process-tree timeouts |
+| `test_pipeline` | supervised agent process end-to-end |
+| `test_project_lock` | persistent lock file + metadata |
+| `test_provision` / `test_sandbox_052` / `test_sandbox_harden_052` / `test_sandbox_integration_052` | consent required; password policy; per-dir deny rules; isolation reporting |
+| `test_recovery` | snapshot reverts add/change/delete |
+| `test_regression` / `test_regression_evidence_047` / `test_regression_guards` / `test_regression_log_isolation_048` / `test_regression_retention_049` | runner rejects vacuous success; evidence integrity; retention |
+| `test_release` | frozen launcher uses the EXE directly |
+| `test_repomap_backends_051` | repo map, second backend, escalation ladder |
+| `test_runtime_install_052` | shared-dir honours `%ProgramData%` override |
+| `test_setup` | constrained-machine setup planning |
+| `test_supervisor_singleton_045` | supervisor ownership (single owner) |
+| `test_windows_build_verifier_044` / `test_windows_startup` | build-verifier contract; startup command is argv, not shell |
+
+## Appendix C — Dependency footprint and rebuild from scratch
+
+**Runtime dependencies:** the application is **Python standard library only** for its core (no third-party runtime deps to run the pipeline or GUI — Tkinter ships with CPython). The only third-party tool is **PyInstaller**, used *at build time* to produce the EXE (and not yet bundled for the end-user PC — see §20). A local **Ollama** model is an external, free, user-provided dependency for real code generation.
+
+**Rebuild and test from scratch (any OS):**
+```
+# 1. unzip the cumulative package to a clean folder, then:
+cd <folder>
+python3 -m adm.regression        # expect: OVERALL: PASS; 437 completed tests
+python3 -I tools/fuzz_adversarial13.py   # (and 1..12) expect: N checks ok, 0 bugs
+```
+No install step, no virtualenv, no network needed for the suite. Python 3.12 or 3.13.
+
+**Build the Windows EXE (Windows only):** run `BUILD-WINDOWS-DESKTOP.cmd` (needs `pip install pyinstaller`), then `VERIFY-WINDOWS-DESKTOP.ps1`.
+
+## Appendix D — Exception taxonomy
+
+- **`SafetyError`** (`adm/engine.py`) — the base "we refuse / cannot safely proceed" signal. Raised by intake validation, build guards, packaging (`no app.py` / `no packager`), sandbox, startup, release. Callers and the GUI treat it as an expected, user-facing condition (shown, logged), never a crash.
+- **`SandboxError(SafetyError)`** (`adm/sandbox.py`) — confinement-specific refusals (bad command line, hardened location, missing admin).
+- **Tolerated-input exceptions** — untrusted parsers catch `ValueError`, `TypeError`, `RecursionError`, `OSError`/`PermissionError`. These never propagate out of a parse/collect step; they become a safe default or a skipped item.
+- **Anything else uncaught** = a bug by definition; the fuzz harnesses exist to find exactly these, and `diagnostics.install_excepthook` + the GUI's `report_callback_exception` log any that reach the top.
+
+## Appendix E — Failure-path behaviors (what the user sees)
+
+| Situation | Behavior |
+|---|---|
+| No local model available | Pipeline logic still runs; `create_plan` raises `SafetyError('No local model is available to make a plan')`; GUI shows it. Real generation needs Ollama. |
+| Model returns garbage JSON | `extract_json` repairs common issues + one re-ask (`JSON_REMINDER`); still bad → handled, surfaced, no crash. |
+| Build can't pass the tests in the attempt limit | `status: could_not_build`; code + output kept as evidence; **no EXE**. |
+| Generated tests pass before any code | `status: rejected_trivial_tests`; **no EXE**; message explains the tests weren't real. |
+| Not running as admin (sandbox needed) | `sandbox.is_admin()` false → `NEED_ADMIN` message; user elevates once. |
+| PyInstaller absent on user PC | Package step raises `SafetyError('Packaging needs Python with PyInstaller…')`; honest message; build/test unaffected. |
+| Corrupt plan.json / build report | Shape-guarded everywhere; stats/diagnostics degrade gracefully (rounds 11 & 13). |
+| Interrupted build | `_recover_interrupted` / repair journal restore under the project lock on next run. |
+
+## Appendix F — Security invariants (audit checklist)
+
+A reviewer can audit the code against these; each should hold at all times:
+
+1. **No network for generated code** — sandbox applies a per-user outbound firewall block (`sandbox.provision`).
+2. **No path escape** — generated code refuses/reports paths outside its project folder; device-path prefixes stripped (`refuse_hardened_location`); command lines reject the bad-char set (`cmdline_for`).
+3. **No fake success** — "built" requires `verified_direct_repair` (passed twice); trivial tests rejected (baseline-must-fail).
+4. **No unapproved remote model use** — remote backends are opt-in; local is default; prompts contain user source, so remote needs explicit approval.
+5. **No model-name injection** — `safe_model` / `safe_local_model` reject `..`, leading slash, null bytes before any path/command use.
+6. **No source in diagnostics** — `export_bundle` includes logs, reports and test *output* only, never generated `app.py` (pinned by `test_diagnostics_052`).
+7. **Single-owner builds** — the whole build runs under `project_lock.exclusive_project`; no concurrent scaffold.
+8. **One-time admin only** — only sandbox provisioning needs admin; normal use does not.
+9. **Free-only** — no code path requires a paid account.
+
 *Handoff 052. Code is on `main` @ `d4c2c7c`; the accompanying `ADM-052-source.zip` is a self-contained snapshot of `adm/`, `tests/`, `tools/`, `.github/`, and the build scripts. The session transcript is delivered separately and is intentionally not in the repository.*
