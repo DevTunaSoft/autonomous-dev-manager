@@ -70,15 +70,28 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     import tkinter as tk
     from tkinter import ttk, filedialog, messagebox
     t = theme
+    from . import diagnostics
     state = (Path.home() / 'AppData' / 'Local' / 'ADM' / 'state') if os.name == 'nt' else (Path.home() / '.adm-worker-state')
     state.mkdir(parents=True, exist_ok=True)
     started_at = time.time()
+    diagnostics.install_excepthook(state, 'gui')
+    diagnostics.log_line(state, f'dashboard started (ADM {diagnostics.VERSION})', component='gui')
 
     win = tk.Tk()
     win.title('ADM — Autonomous Development Manager')
     win.geometry('1180x740')
     win.minsize(1000, 680)
     t.apply(win)
+
+    def _report_callback_exception(exc, val, tb):
+        diagnostics.log_line(state, f'GUI callback error: {type(val).__name__}: {val}',
+                             level='error', component='gui')
+        try:
+            messagebox.showerror('ADM hit an error', f'{type(val).__name__}: {val}\n\n'
+                                 'The error was logged. You can send it with "Export diagnostics" in the sidebar.')
+        except Exception:
+            pass
+    win.report_callback_exception = _report_callback_exception
 
     # ---------------- Sidebar ----------------
     sidebar = tk.Frame(win, bg=t.SIDEBAR, width=180)
@@ -108,6 +121,23 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
         for w in (item, *item.winfo_children()):
             w.bind('<Button-1>', lambda e, l=label: nav_click(l))
 
+    def export_diagnostics():
+        from tkinter import filedialog, messagebox
+        path = filedialog.asksaveasfilename(title='Save diagnostics', defaultextension='.zip',
+                                            initialfile='adm-diagnostics.zip', filetypes=[('Zip archive', '*.zip')])
+        if not path:
+            return
+        try:
+            diagnostics.export_bundle(state, path)
+            log('Diagnostics exported to ' + path)
+            messagebox.showinfo('Diagnostics saved', 'Saved to:\n' + path +
+                                '\n\nYou can send this file for help. It contains logs and test output, '
+                                'not your generated source code.')
+        except Exception as exc:
+            messagebox.showerror('Diagnostics', f'Could not save diagnostics: {type(exc).__name__}: {exc}')
+
+    ttk.Button(sidebar, text='⬇  Export diagnostics', style='Secondary.TButton',
+               command=export_diagnostics).pack(side='bottom', fill='x', padx=12, pady=(0, 12))
     ai_box = tk.Frame(sidebar, bg=t.PANEL, highlightthickness=1, highlightbackground=t.BORDER)
     ai_box.pack(side='bottom', fill='x', padx=12, pady=14)
     ai_title = tk.Label(ai_box, text='○ LOCAL AI', bg=t.PANEL, fg=t.MUTED, font=t.font(9, 'bold'), anchor='w')
@@ -246,6 +276,7 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
             pass
 
     def log(line):
+        diagnostics.log_line(state, line, component='gui')   # persist to adm.log for the export bundle
         stamp = time.strftime('%H:%M:%S')
         def do():
             activity.config(state='normal')

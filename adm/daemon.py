@@ -53,6 +53,12 @@ def serve(state, *, poll_interval=1.0, job_timeout=DEFAULT_JOB_TIMEOUT, stop_eve
     stop_event = stop_event if stop_event is not None else threading.Event()
     state = Path(state).resolve()
     state.mkdir(parents=True, exist_ok=True)
+    try:
+        from . import diagnostics
+        diagnostics.install_excepthook(state, 'worker')
+        diagnostics.log_line(state, 'background worker started', component='worker')
+    except Exception:
+        pass
     status_path = state / 'daemon-status.json'
     stop_path = state / 'stop-request.json'
     # Honor stop requests already present; never silently discard them at startup.
