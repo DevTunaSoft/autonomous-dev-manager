@@ -16,7 +16,7 @@ def open_request_window(parent, state, *, generator=None, model=None, auto=None,
     from tkinter import ttk, filedialog, messagebox
     win = tk.Toplevel(parent) if parent is not None else tk.Tk()
     win.title('ADM — New request')
-    win.geometry('780x680')
+    win.geometry('780x640'); win.minsize(640, 480)
     tk.Label(win, text=WELCOME, wraplength=740, justify='left').pack(anchor='w', padx=16, pady=(14, 4))
     box = tk.Text(win, height=7, wrap='word')
     box.pack(fill='x', padx=16)
@@ -40,7 +40,7 @@ def open_request_window(parent, state, *, generator=None, model=None, auto=None,
     for b in (make_btn, approve_btn, reject_btn):
         b.pack(side='left', padx=6)
     tk.Label(win, textvariable=status, wraplength=740, justify='left', fg='#333').pack(anchor='w', padx=16)
-    out = tk.Text(win, height=18, wrap='word', state='disabled', bg='#f6f6f6')
+    out = tk.Text(win, height=12, wrap='word', state='disabled', bg='#f6f6f6')
     out.pack(fill='both', expand=True, padx=16, pady=8)
     current = {'plan': None, 'busy': False}
     result = {'status': 'no plan', 'plan_text': '', 'folder': ''}
@@ -107,6 +107,7 @@ def open_request_window(parent, state, *, generator=None, model=None, auto=None,
         except SafetyError as exc:
             status.set(str(exc)); return
         current['plan'] = done; set_buttons(None)
+        show(intake.plan_text(done))
         result.update(status='approved', folder=done['folder'])
         status.set('Approved and saved. The step that writes the code is not built yet, so nothing will be '
                    'written or run. Your folder: ' + done['folder'])

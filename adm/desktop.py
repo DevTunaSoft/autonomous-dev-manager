@@ -84,7 +84,7 @@ def main(*, auto_close_ms=None, ask=None):
     state = Path.home() / 'AppData' / 'Local' / 'ADM' / 'state' if os.name == 'nt' else Path.home() / '.adm-worker-state'
     window = tk.Tk()
     window.title('Autonomous Development Manager — Prototype')
-    window.geometry('760x600')
+    window.geometry('760x700'); window.minsize(640, 560)
     heading = tk.Label(window, text='Autonomous Development Manager', font=('Segoe UI', 17, 'bold'))
     heading.pack(pady=(18, 8))
     tk.Label(window, text='Trusted-job supervisor control panel (not yet a complete AI builder)').pack()
@@ -112,7 +112,7 @@ def main(*, auto_close_ms=None, ask=None):
     tk.Label(window, text='Trusted jobs only. Generated code is NOT sandboxed. Windows validation pending.',
              wraplength=700).pack(pady=12)
     from tkinter import ttk
-    table = ttk.Treeview(window, columns=('id','label','state','attempts','exit','note'), show='headings', height=9)
+    table = ttk.Treeview(window, columns=('id','label','state','attempts','exit','note'), show='headings', height=4)
     for name, width in [('id',65),('label',250),('state',130),('attempts',90),('exit',80), ('note',300)]:
         table.heading(name, text=name.title())
         table.column(name, width=width, stretch=(name in ('label', 'note')))

@@ -47,6 +47,14 @@ class IntakeTests(unittest.TestCase):
         self.assertTrue(Path(done['folder']).is_dir())
         self.assertEqual(intake.require_approved(plan['path'])['status'], 'approved')
 
+    def test_new_folder_is_named_after_the_plan_title_not_the_sentence(self):
+        plan = self.make()
+        self.assertTrue(plan['folder'].endswith('tip-calculator'), plan['folder'])
+
+    def test_plan_text_after_approval_says_approved(self):
+        done = intake.approve(self.make()['path'])
+        self.assertIn('Approved. Project folder:', intake.plan_text(done))
+
     def test_second_project_with_same_name_gets_its_own_folder(self):
         a = intake.approve(self.make()['path']); b = intake.approve(self.make()['path'])
         self.assertNotEqual(a['folder'], b['folder'])

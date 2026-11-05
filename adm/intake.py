@@ -137,9 +137,11 @@ def create_plan(state, request_text: str, *, mode: str, folder, generator, model
         existing = describe_existing(target)
         target_text = str(target)
     else:
-        existing, target_text = None, str(projects_root(home) / slugify(request))
+        existing, target_text = None, ''
     answer = generator(model, plan_prompt(request, existing), timeout)
     content = parse_plan(answer)
+    if mode == 'new':
+        target_text = str(projects_root(home) / slugify(content['title']))
     plan_id = time.strftime('%Y%m%d-%H%M%S') + '-' + secrets.token_hex(3)
     plan = {'id': plan_id, 'status': 'awaiting_approval' if not content['questions'] else 'needs_answers',
             'request': request, 'mode': mode, 'folder': target_text, 'model': model,
@@ -226,7 +228,10 @@ def plan_text(plan: dict) -> str:
     if c['questions']:
         lines += ['ADM needs answers before it can plan this. Add them to your request and press Make plan again:'] + \
                  [f'  ? {x}' for x in c['questions']] + ['']
-    where = 'A new folder will be created at' if plan['mode'] == 'new' else 'Your existing folder:'
+    if plan['status'] == 'approved':
+        where = 'Approved. Project folder:' if plan['mode'] == 'new' else 'Approved. Your existing folder:'
+    else:
+        where = 'A new folder will be created at' if plan['mode'] == 'new' else 'Your existing folder:'
     lines.append(f"{where} {plan['folder']}")
     return '\n'.join(lines)
 
