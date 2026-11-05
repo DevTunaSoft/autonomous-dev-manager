@@ -44,6 +44,33 @@ def scan(pw, label):
     lines = [l for l in r['output'].splitlines() if l.startswith(('WRITABLE', 'refused'))]
     emit('scan_' + label, 'RAN' in r['output'] and not any(l.startswith('WRITABLE') for l in lines), lines)
 
+def build_through_sandbox(pw):
+    """Full chain on real Windows: approved plan -> frozen tests -> scaffold -> sandboxed build."""
+    from adm import intake, build
+    base = Path(tempfile.mkdtemp(prefix='admbuild_'))
+    state, home = base / 'state', base / 'home'; home.mkdir()
+    plan_answer = {'title': 'Tip calculator', 'summary': 'Adds a tip and splits a bill.',
+                   'features': ['Add a tip', 'Split a total'],
+                   'tests': ['When the bill is 100 and the tip is 20 percent, the total is 120',
+                             'When 120 is split between 4 people, each pays 30'],
+                   'needs_internet': False, 'questions': []}
+    def plan_gen(model, prompt, timeout): return plan_answer
+    plan = intake.approve(intake.create_plan(state, 'a tip calculator that splits the bill',
+                          mode='new', folder='', generator=plan_gen, model='ollama/fake', home=home)['path'])
+    tests = ('import unittest\nfrom app import tip_total, per_person\n\n'
+             'class T(unittest.TestCase):\n'
+             '    def test_total(self):\n        self.assertEqual(tip_total(100, 20), 120)\n'
+             '    def test_split(self):\n        self.assertEqual(per_person(120, 4), 30)\n')
+    code = 'def tip_total(b, t):\n    return b + b * t / 100\ndef per_person(total, people):\n    return total / people\n'
+    def tgen(model, prompt, timeout=300): return {'files': [{'path': 'test_app.py', 'content': tests}]}
+    def cgen(model, prompt, timeout=300): return {'files': [{'path': 'app.py', 'content': code}]}
+    report = build.build_from_plan(plan['path'], base / 'evidence', test_generator=tgen,
+                                   code_generator=cgen, model='ollama/fake',
+                                   runner=sandbox.make_runner(pw), require_sandbox=True)
+    emit('build_through_sandbox', report['status'] == 'built' and report['isolation'] == 'sandbox',
+         {'status': report['status'], 'isolation': report['isolation'],
+          'repair': report['repair']['status'], 'app_written': (Path(plan['folder']) / 'app.py').read_text()[:60]})
+
 def main():
     pw = sandbox.provision()
     emit('provision', True, 'account + firewall rule created')
@@ -82,6 +109,7 @@ def main():
     shared_folder_check(pw)
     scan(pw, 'hardened_shared_locations')
     e2e_repair()
+    build_through_sandbox(sandbox.provision())
 
 if __name__ == '__main__':
     if os.name != 'nt':
