@@ -56,6 +56,11 @@ jobs:
         run: |
           python tools/verify_request_window.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Package a generated project into an EXE and run it
+        shell: pwsh
+        run: |
+          python tools/verify_package.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Print build evidence to the log
         if: always()
         shell: pwsh

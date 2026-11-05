@@ -500,12 +500,50 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
         set_stage('Code generation', 'done', t.SUCCESS)
         set_stage('Build & test', 'done' if built else 'fail', t.SUCCESS if built else t.DANGER)
         set_stage('Auto-fix', 'done' if built else 'skip', t.SUCCESS if built else t.FAINT)
-        set_stage('Package & deliver', 'na', t.FAINT)
         set_status(report.get('message', report['status']), t.SUCCESS if built else t.WARN)
         log('Built — all checks pass (verified in the sandbox).' if built
             else ('Tests were trivial; nothing was built.' if trivial else 'Build result: ' + report['status']))
         refresh_stats()
         refresh_recent()
+        if built and current['plan']:
+            start_package(current['plan'])
+        else:
+            set_stage('Package & deliver', 'na', t.FAINT)
+
+    def start_package(plan):
+        set_stage('Package & deliver', 'run', t.CYAN)
+        log('Packaging your program into a Windows app…')
+        current['busy'] = True
+        set_live(True)
+
+        def work():
+            from . import package
+            try:
+                report = package.package_project(plan['folder'], Path(plan['folder']) / 'dist', plan=plan)
+                ui(lambda: finish_package(report, None))
+            except SafetyError as exc:
+                ui(lambda e=str(exc): finish_package(None, e))
+            except Exception as exc:
+                ui(lambda e=f'{type(exc).__name__}: {exc}': finish_package(None, e))
+        threading.Thread(target=work, daemon=True).start()
+
+    def finish_package(report, error):
+        current['busy'] = False
+        set_live(False)
+        if error:
+            set_stage('Package & deliver', 'na', t.WARN)
+            set_status('Built, but not packaged: ' + error, t.WARN)
+            log('Packaging skipped: ' + error)
+            return
+        if report['status'] == 'packaged':
+            set_stage('Package & deliver', 'done', t.SUCCESS)
+            set_status('Done — your app is ready: ' + report['exe'], t.SUCCESS)
+            log('Packaged: ' + report['exe'])
+        else:
+            set_stage('Package & deliver', 'fail', t.DANGER)
+            set_status('Build succeeded but packaging failed. See diagnostics.', t.DANGER)
+            log('Packaging failed (exit ' + str(report.get('returncode')) + ')')
+        refresh_stats()
 
     def do_reject():
         plan = current['plan']
