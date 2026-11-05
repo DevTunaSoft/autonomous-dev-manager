@@ -59,10 +59,18 @@ def acl_grant_command(folder: str, user: str = USER) -> list[str]:
     return ['icacls', folder, '/grant', f'{user}:(OI)(CI)M']
 
 
+_CMDLINE_BAD = '"%\x00\r\n&|<>^'
+
+
 def cmdline_for(argv: list[str], stdout_path: str) -> str:
-    """Single command line that redirects output to a file the sandbox account can write."""
-    if not argv or any(not isinstance(a, str) or any(c in a for c in '"%\x00\r\n') for a in argv):
-        raise SandboxError('Arguments must be non-empty single-line strings without quotes or percent signs')
+    """Single command line that redirects output to a file the sandbox account can write.
+
+    Our argv is always a fixed interpreter plus flags, so we can afford to be strict: reject empty
+    args, shell metacharacters and a trailing backslash (which would escape the closing quote).
+    """
+    if not argv or any(not isinstance(a, str) or a == '' or a.endswith('\\')
+                       or any(c in a for c in _CMDLINE_BAD) for a in argv):
+        raise SandboxError('Command arguments must be non-empty, single-line, and free of shell metacharacters')
     quoted = ' '.join(f'"{a}"' for a in argv)
     return f'cmd.exe /c "{quoted} > "{stdout_path}" 2>&1"'
 

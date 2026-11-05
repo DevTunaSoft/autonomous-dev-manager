@@ -55,11 +55,14 @@ def check_existing_folder(folder) -> Path:
     from .sandbox import refuse_hardened_location
     refuse_hardened_location(raw)
     path = Path(raw)
-    if not path.is_dir():
-        raise SafetyError('That folder does not exist')
-    if path.is_symlink():
-        raise SafetyError('Linked folders are not supported')
-    return path.resolve()
+    try:
+        if path.is_symlink():
+            raise SafetyError('Linked folders are not supported')
+        if not path.is_dir():
+            raise SafetyError('That folder does not exist')
+        return path.resolve()
+    except OSError as exc:                       # e.g. a path far too long for the filesystem
+        raise SafetyError('That folder path cannot be used') from exc
 
 
 def describe_existing(folder: Path) -> dict:

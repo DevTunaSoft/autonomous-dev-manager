@@ -83,8 +83,13 @@ def _post(url: str, payload: dict, headers: dict, timeout: int) -> bytes:
 
 
 def request_json_openai(model: str, prompt: str, *, endpoint: str, timeout: int = 300,
-                        api_key: str = '', allow_remote: bool = False, num_ctx: int = 8192) -> object:
-    """JSON answer from an OpenAI-compatible server; the caller validates its shape."""
+                        api_key: str = '', allow_remote: bool = False, num_ctx: int = 8192,
+                        _retry: bool = True) -> object:
+    """JSON answer from an OpenAI-compatible server; the caller validates its shape.
+
+    Tolerant of prose/fences, and re-asks once (telling the model to return only JSON) before failing,
+    because small local models frequently wrap or dirty their output.
+    """
     kind, name = safe_model(model, allow_remote=allow_remote)
     if kind == 'ollama':
         raise SafetyError('Use the Ollama request path for ollama/ models')
@@ -106,9 +111,12 @@ def request_json_openai(model: str, prompt: str, *, endpoint: str, timeout: int 
     except (ValueError, KeyError, IndexError, TypeError) as exc:
         raise SafetyError('Model server answer had an unexpected shape') from exc
     try:
-        return json.loads(_strip_fence(content))
-    except (ValueError, TypeError) as exc:
-        raise SafetyError('Model did not return valid patch JSON') from exc
+        return extract_json(content)
+    except SafetyError:
+        if _retry:
+            return request_json_openai(model, prompt + JSON_REMINDER, endpoint=endpoint, timeout=timeout,
+                                       api_key=api_key, allow_remote=allow_remote, num_ctx=num_ctx, _retry=False)
+        raise
 
 
 def request_patch_openai(model: str, prompt: str, **kwargs) -> dict:
@@ -124,6 +132,63 @@ def _strip_fence(content: str) -> str:
         if text.rstrip().endswith('```'):
             text = text.rstrip()[:-3]
     return text.strip()
+
+
+JSON_REMINDER = ('\n\nIMPORTANT: Reply with ONLY the JSON value — no explanation, no notes, '
+                 'and no markdown code fences.')
+
+
+def _match_bracket(text: str, start: int) -> int:
+    """Index of the bracket that closes the one at `start`, respecting strings; -1 if unbalanced."""
+    depth, in_str, esc = 0, False, False
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == '\\':
+                esc = True
+            elif ch == '"':
+                in_str = False
+        elif ch == '"':
+            in_str = True
+        elif ch in '{[':
+            depth += 1
+        elif ch in '}]':
+            depth -= 1
+            if depth == 0:
+                return i
+    return -1
+
+
+def _no_trailing_commas(s: str) -> str:
+    import re
+    return re.sub(r',(\s*[}\]])', r'\1', s)
+
+
+def extract_json(text):
+    """Pull a JSON value out of a model's reply, even with prose, fences or trailing commas.
+
+    Small local models rarely return clean JSON. This is forgiving about WRAPPING only; it never
+    invents structure. The caller still validates the shape (envelope, plan, tests).
+    """
+    if not isinstance(text, str) or not text.strip():
+        raise SafetyError('The AI returned no text')
+    stripped = _strip_fence(text).strip()
+    candidates = [stripped]
+    for i, ch in enumerate(stripped):          # first embedded object/array, if wrapped in prose
+        if ch in '{[':
+            end = _match_bracket(stripped, i)
+            if end != -1:
+                candidates.append(stripped[i:end + 1])
+            break
+    for cand in candidates:
+        for variant in (cand, _no_trailing_commas(cand)):
+            try:
+                return json.loads(variant)
+            except (ValueError, TypeError):
+                continue
+    raise SafetyError('The AI did not return readable JSON')
 
 
 def make_generator(model: str, *, endpoint: str = '', api_key: str = '', allow_remote: bool = False):

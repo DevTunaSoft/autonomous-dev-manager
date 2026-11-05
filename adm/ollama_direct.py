@@ -17,7 +17,7 @@ from .repair_recovery import prepare_journal, recover_journal, finish_journal
 from .project_lock import exclusive_project
 from .context import (excerpt_failure, AttemptLedger, check_patch, build_repair_prompt)
 from .repomap import select_context
-from .backends import safe_model
+from .backends import safe_model, extract_json, JSON_REMINDER
 
 DEFAULT_ENDPOINT = 'http://127.0.0.1:11434'
 # Ollama truncates prompts that exceed the context window WITHOUT telling the caller,
@@ -39,17 +39,8 @@ _LOCAL_OPENER = urllib.request.build_opener(
 
 
 
-def request_json(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
-                 timeout: int = 90) -> object:
-    """Ask the local Ollama for a JSON answer; the caller validates its shape."""
-    safe_local_model(model)
-    parsed = urlsplit(endpoint)
-    if (parsed.scheme != 'http' or parsed.hostname != '127.0.0.1' or parsed.username
-            or parsed.password or parsed.path or parsed.query or parsed.fragment
-            or not parsed.port):
-        raise SafetyError('Only a local loopback Ollama endpoint is permitted')
-    if not 1 <= timeout <= 600:
-        raise SafetyError('Invalid inference timeout')
+def _ollama_generate(model: str, prompt: str, endpoint: str, timeout: int) -> str:
+    """One Ollama call; returns the model's answer text (envelope is Ollama's, always JSON)."""
     payload = json.dumps({'model': model.removeprefix('ollama/'), 'stream': False,
                           'format': 'json', 'prompt': prompt,
                           'options': {'num_ctx': NUM_CTX, 'temperature': 0}}).encode('utf-8')
@@ -65,9 +56,30 @@ def request_json(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
     if len(raw) > 1_000_000:
         raise SafetyError('Model response too large')
     try:
-        return json.loads(json.loads(raw)['response'])
+        return json.loads(raw)['response']
     except (ValueError, KeyError, TypeError) as exc:
-        raise SafetyError('Model did not return valid patch JSON') from exc
+        raise SafetyError('Local Ollama returned an unexpected envelope') from exc
+
+
+def request_json(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
+                 timeout: int = 90, _retry: bool = True) -> object:
+    """Ask the local Ollama for a JSON answer; tolerant of prose/fences, re-asks once. Caller checks shape."""
+    safe_local_model(model)
+    parsed = urlsplit(endpoint)
+    if (parsed.scheme != 'http' or parsed.hostname != '127.0.0.1' or parsed.username
+            or parsed.password or parsed.path or parsed.query or parsed.fragment
+            or not parsed.port):
+        raise SafetyError('Only a local loopback Ollama endpoint is permitted')
+    if not 1 <= timeout <= 600:
+        raise SafetyError('Invalid inference timeout')
+    content = _ollama_generate(model, prompt, endpoint, timeout)
+    try:
+        return extract_json(content)
+    except SafetyError:
+        if _retry:
+            return request_json(model, prompt + JSON_REMINDER, endpoint=endpoint,
+                                timeout=timeout, _retry=False)
+        raise
 
 
 def request_patch(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
@@ -83,6 +95,8 @@ request_patch.adm_live_generator = True      # talks to a real model server
 
 def apply_patch(root: Path, patch: dict) -> list[str]:
     """Validate *all* changes before writing any; only replace existing app .py files."""
+    if not isinstance(patch, dict) or not isinstance(patch.get('files'), list):
+        raise SafetyError('Invalid patch envelope')
     files = patch['files']
     if not 1 <= len(files) <= 12:
         raise SafetyError('Expected 1 to 12 file replacements')
