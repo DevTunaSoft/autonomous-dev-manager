@@ -8,8 +8,8 @@
 | **Date** | 2026-11-05 |
 | **Language / runtime** | Python 3.12 (the version the EXE bundles); code also runs on 3.13 |
 | **Platform** | Windows 11 desktop app; test suite is cross-platform |
-| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 13 fuzz harnesses |
-| **Test status** | `OVERALL: PASS; 437 completed tests` |
+| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 15 fuzz harnesses |
+| **Test status** | `OVERALL: PASS; 440 completed tests` |
 | **GUI** | Dark-theme dashboard, **plain Tkinter** (no third-party UI deps) |
 
 This handoff is written for an engineer reviewing the project cold and for the maintainers who will extend it. It is intentionally detailed: it documents the product constraints, the architecture, every module group with its key API, the on-disk data formats, the security/sandbox model, the build pipeline semantics, the packaging subsystem, the testing and adversarial-fuzzing strategy, the CI, and an explicit extension guide. Sections 1–4 are orientation; 5–14 are the system in depth; 15–18 are operations; 19–23 are status, caveats, and how to extend.
@@ -322,7 +322,7 @@ These are real defects found and fixed; they are the kind of thing a reviewer sh
 
 ## 15. Testing: inventory and how to run
 
-**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 437 completed tests`.
+**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 440 completed tests`.
 **One file:** `PYTHONPATH=. python tests/test_package_052.py`.
 **One fuzz round:** `python -I tools/fuzz_adversarial11.py`.
 
@@ -352,6 +352,8 @@ Each harness throws hostile/malformed input at a subsystem. **Graceful** = retur
 | **11** | `…11.py` | **dashboard** `collect_stats` + `_fmt_uptime` under corrupt state | **5 bugs:** non-list `checks` → len() crash; top-level JSON array → .get() crash; `_fmt_uptime(nan/inf)` → ValueError. Fixed via shape checks + float coercion. |
 | **12** | `…12.py` | **packaging** filesystem/concurrency: `main.py` as a directory, missing/file/empty roots, 12-thread entry race, empty-name guards | **0 bugs** — round 10's repr() injection + the `is_file()` guard already hold. Locked in as a CI regression. |
 | **13** | `…13.py` | **diagnostics collector**: `_safe` default contract, `_plan_counts`/`_recent_builds`/`collect`/`export_bundle` under corrupt plans/reports | **3 bugs:** `_safe` ignored its `default` (returned an error string where a dict/list/str was expected); `_plan_counts`/`_recent_builds` crashed on a top-level JSON array. Fixed via sentinel default + shape guards. |
+| **14** | `…14.py` | **model-facing analysis**: `context.patch_key`/`check_patch`/`AttemptLedger` on malformed model patches; `repomap`/`traceback_files` on hostile trees | **24 bugs:** patch shape unchecked before `apply_patch`, so a malformed model patch crashed the repair loop (KeyError/TypeError); `traceback_files` let an over-long filename's `is_file()` raise OSError. Fixed via `context.patch_files()` shape validator (used by patch_key/check_patch and `request_patch`) + widened try. |
+| **15** | `…15.py` | **intake**: `plan_text` on corrupt/partial plans; `parse_plan` on hostile model output; digest tamper | **8 bugs:** `plan_text` indexed content/status fields directly, so a partial/hand-edited `plan.json` crashed the GUI renderer. Fixed by rendering defensively. (`parse_plan`/`load_plan`/`require_approved` were already robust.) |
 
 Rounds 10 and 11 each found real bugs on first contact with new code; round 12 found none (the packaging seam was already hardened by round 10), so further rounds against newer seams (packaging filesystem/concurrency, the build→report→stats→package contract, GUI event streaming) would likely still be productive.
 
@@ -533,7 +535,7 @@ Every file in `adm/` with its purpose. "stdlib-only" is the default; exceptions 
 ```
 # 1. unzip the cumulative package to a clean folder, then:
 cd <folder>
-python3 -m adm.regression        # expect: OVERALL: PASS; 437 completed tests
+python3 -m adm.regression        # expect: OVERALL: PASS; 440 completed tests
 python3 -I tools/fuzz_adversarial13.py   # (and 1..12) expect: N checks ok, 0 bugs
 ```
 No install step, no virtualenv, no network needed for the suite. Python 3.12 or 3.13.
@@ -573,5 +575,24 @@ A reviewer can audit the code against these; each should hold at all times:
 7. **Single-owner builds** — the whole build runs under `project_lock.exclusive_project`; no concurrent scaffold.
 8. **One-time admin only** — only sandbox provisioning needs admin; normal use does not.
 9. **Free-only** — no code path requires a paid account.
+
+
+## Appendix G — Defect log (fuzz rounds 10–15, this hardening pass)
+
+Every defect below was found by an adversarial harness, root-caused, fixed permanently, pinned by a regression test, and the full suite re-run. "Verified" = reproduced the crash, then confirmed the fix on Python 3.12/3.13 here; EXE/sandbox behaviour is verified on Windows CI only.
+
+| Round | Defects | Root cause | Fix | Regression test |
+|---|---|---|---|---|
+| 10 | 10 | packaging injected the program title into the generated `main.py` by raw string replace; malformed plan indexed directly | `repr()` literal injection + control-char strip; `package.plan_title()` reads any plan shape | `test_package_052` |
+| 11 | 5 | `collect_stats` assumed report/plan shapes; `_fmt_uptime` assumed finite input | isinstance guards; float coercion → `'0m'` | `test_dashboard_logic_052` |
+| 12 | 0 | — (packaging FS/concurrency already hardened by round 10) | — | harness only |
+| 13 | 3 | `diagnostics._safe` ignored its `default`; `_plan_counts`/`_recent_builds` assumed dict JSON | sentinel-guarded default; non-dict shape guards | `test_diagnostics_052` |
+| 14 | 24 | model patch shape validated only in `apply_patch`, after `patch_key`/`check_patch`/`seen_patch`; `traceback_files` OSError outside try | `context.patch_files()` shape gate used everywhere incl. `request_patch`; widened try | `test_context_051` |
+| 15 | 8 | `plan_text` indexed `content`/`status` fields directly | defensive rendering (`.get` + type coercion + defaults) | `test_intake_052` |
+
+**Totals this pass:** 50 defects fixed across rounds 10, 11, 13, 14, 15 (round 12 found none). All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
+
+**Remaining risks / not verified here:** real local-model generation quality (fake model used in this environment); the actual PyInstaller EXE build and the Windows sandbox confinement (Windows CI only, not this Linux workspace); GUI pixel rendering (logic is tested headless, screenshots run in a separate CI job).
+
 
 *Handoff 052. Code is on `main` @ `d4c2c7c`; the accompanying `ADM-052-source.zip` is a self-contained snapshot of `adm/`, `tests/`, `tools/`, `.github/`, and the build scripts. The session transcript is delivered separately and is intentionally not in the repository.*
