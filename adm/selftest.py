@@ -6,6 +6,7 @@ runs queued commands or generated code. Writes atomic JSON for --windowed EXEs.
 from __future__ import annotations
 import json
 import os
+import sys
 from pathlib import Path
 import tempfile
 import time
@@ -27,7 +28,7 @@ def smoke_report():
             checks['import:' + name] = 'passed'
         except Exception as exc:
             checks['import:' + name] = f'failed: {type(exc).__name__}: {exc}'
-    if os.name == 'nt':
+    if os.name == 'nt' and getattr(sys, 'frozen', False):   # only the packaged EXE promises to bundle pywin32
         try:
             import win32job, win32con  # the sandbox needs these inside the packaged EXE
             checks['import:pywin32 (sandbox)'] = 'passed'
