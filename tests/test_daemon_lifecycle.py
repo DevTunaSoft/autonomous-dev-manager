@@ -9,11 +9,11 @@ from adm.daemon import read_status, request_stop, serve
 
 class DaemonLifecycleTests(unittest.TestCase):
     def test_status_unknown_before_start(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             self.assertEqual(read_status(tmp)['state'], 'unknown')
 
     def test_heartbeat_and_graceful_stop(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             state = Path(tmp) / 'queue'
             errors = []
             def worker():
@@ -42,7 +42,7 @@ class DaemonLifecycleTests(unittest.TestCase):
                 t.join(5)
 
     def test_max_cycles_stops_and_records(self):
-        with tempfile.TemporaryDirectory() as tmp:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
             self.assertEqual(serve(tmp, max_cycles=1, poll_interval=.05), 1)
             self.assertEqual(read_status(tmp)['cycles'], 1)
             self.assertEqual(read_status(tmp)['state'], 'stopped')

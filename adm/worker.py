@@ -108,11 +108,24 @@ class WorkerSupervisor:
     def __init__(self, directory):
         self.directory = Path(directory).resolve()
         self.directory.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(self.directory / 'jobs.sqlite', timeout=20, isolation_level=None)
-        self.db.execute('PRAGMA journal_mode=WAL')
-        self.db.execute('PRAGMA busy_timeout=20000')
-        self.db.executescript(DDL)
+        self.db = self._open_db()
         self.owner = uuid.uuid4().hex
+
+    def _open_db(self):
+        # Tolerate a transient Windows lock on the SQLite WAL files (e.g. a stale handle still
+        # releasing); a worker starting up should retry briefly, not crash.
+        last = None
+        for _ in range(15):
+            try:
+                db = sqlite3.connect(self.directory / 'jobs.sqlite', timeout=20, isolation_level=None)
+                db.execute('PRAGMA journal_mode=WAL')
+                db.execute('PRAGMA busy_timeout=20000')
+                db.executescript(DDL)
+                return db
+            except (sqlite3.Error, OSError) as exc:
+                last = exc
+                time.sleep(0.1)
+        raise last
 
     def event(self, job_id, kind, **details):
         self.db.execute('INSERT INTO job_events(job_id,kind,payload,timestamp) VALUES(?,?,?,?)',
