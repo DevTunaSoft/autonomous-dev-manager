@@ -39,8 +39,9 @@ _LOCAL_OPENER = urllib.request.build_opener(
 
 
 
-def request_patch(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
-                  timeout: int = 90) -> dict:
+def request_json(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
+                 timeout: int = 90) -> object:
+    """Ask the local Ollama for a JSON answer; the caller validates its shape."""
     safe_local_model(model)
     parsed = urlsplit(endpoint)
     if (parsed.scheme != 'http' or parsed.hostname != '127.0.0.1' or parsed.username
@@ -64,9 +65,14 @@ def request_patch(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
     if len(raw) > 1_000_000:
         raise SafetyError('Model response too large')
     try:
-        answer = json.loads(json.loads(raw)['response'])
+        return json.loads(json.loads(raw)['response'])
     except (ValueError, KeyError, TypeError) as exc:
         raise SafetyError('Model did not return valid patch JSON') from exc
+
+
+def request_patch(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
+                  timeout: int = 90) -> dict:
+    answer = request_json(model, prompt, endpoint=endpoint, timeout=timeout)
     if not isinstance(answer, dict) or set(answer) != {'files'} or not isinstance(answer['files'], list):
         raise SafetyError('Invalid patch envelope')
     return answer

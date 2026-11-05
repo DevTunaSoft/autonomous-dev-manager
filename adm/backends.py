@@ -82,8 +82,9 @@ def _post(url: str, payload: dict, headers: dict, timeout: int) -> bytes:
     return raw
 
 
-def request_patch_openai(model: str, prompt: str, *, endpoint: str, timeout: int = 300,
-                         api_key: str = '', allow_remote: bool = False, num_ctx: int = 8192) -> dict:
+def request_json_openai(model: str, prompt: str, *, endpoint: str, timeout: int = 300,
+                        api_key: str = '', allow_remote: bool = False, num_ctx: int = 8192) -> object:
+    """JSON answer from an OpenAI-compatible server; the caller validates its shape."""
     kind, name = safe_model(model, allow_remote=allow_remote)
     if kind == 'ollama':
         raise SafetyError('Use the Ollama request path for ollama/ models')
@@ -104,7 +105,15 @@ def request_patch_openai(model: str, prompt: str, *, endpoint: str, timeout: int
         content = json.loads(raw)['choices'][0]['message']['content']
     except (ValueError, KeyError, IndexError, TypeError) as exc:
         raise SafetyError('Model server answer had an unexpected shape') from exc
-    return parse_patch_text(_strip_fence(content))
+    try:
+        return json.loads(_strip_fence(content))
+    except (ValueError, TypeError) as exc:
+        raise SafetyError('Model did not return valid patch JSON') from exc
+
+
+def request_patch_openai(model: str, prompt: str, **kwargs) -> dict:
+    content = request_json_openai(model, prompt, **kwargs)
+    return parse_patch_text(json.dumps(content))
 
 
 def _strip_fence(content: str) -> str:
@@ -133,6 +142,23 @@ def make_generator(model: str, *, endpoint: str = '', api_key: str = '', allow_r
                                         api_key=api_key, allow_remote=allow_remote)
     generate.adm_live_generator = True
     generate.adm_backend = kind
+    return generate
+
+
+def make_json_generator(model: str, *, endpoint: str = '', api_key: str = ''):
+    """(model, prompt, timeout) -> any JSON value, local models only (plans never leave this PC)."""
+    kind, _ = safe_model(model)
+    if kind == 'ollama':
+        from .ollama_direct import request_json, DEFAULT_ENDPOINT
+        def generate(model_id, prompt, timeout=300):
+            return request_json(model_id, prompt, endpoint=endpoint or DEFAULT_ENDPOINT, timeout=timeout)
+    else:
+        if not endpoint:
+            raise SafetyError('An endpoint is required for local/ models')
+        check_endpoint(endpoint)
+        def generate(model_id, prompt, timeout=300):
+            return request_json_openai(model_id, prompt, endpoint=endpoint, timeout=timeout, api_key=api_key)
+    generate.adm_live_generator = True
     return generate
 
 

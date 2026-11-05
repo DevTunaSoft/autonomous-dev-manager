@@ -16,7 +16,10 @@ USER = 'admsandbox'
 RULE = 'ADM-sandbox-block-outbound'
 
 
-class SandboxError(RuntimeError):
+from .engine import SafetyError
+
+
+class SandboxError(SafetyError):
     pass
 
 

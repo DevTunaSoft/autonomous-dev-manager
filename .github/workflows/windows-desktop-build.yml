@@ -43,6 +43,11 @@ jobs:
           python -c "import json; from adm import firstrun; a=firstrun.assess(); print(json.dumps(a, indent=1)); print('----- TEXT THE USER SEES -----'); print(firstrun.prompt_text(a)[1])"
           python -c "from adm import desktop; desktop.main(auto_close_ms=6000, ask=lambda t, m: (print('GUI PROMPT SHOWN:', t), print(m), False)[2])"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Request window (real Windows window, FAKE model, plan approved)
+        shell: pwsh
+        run: |
+          python tools/verify_request_window.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Print build evidence to the log
         if: always()
         shell: pwsh

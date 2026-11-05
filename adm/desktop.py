@@ -84,7 +84,7 @@ def main(*, auto_close_ms=None, ask=None):
     state = Path.home() / 'AppData' / 'Local' / 'ADM' / 'state' if os.name == 'nt' else Path.home() / '.adm-worker-state'
     window = tk.Tk()
     window.title('Autonomous Development Manager — Prototype')
-    window.geometry('760x540')
+    window.geometry('760x600')
     heading = tk.Label(window, text='Autonomous Development Manager', font=('Segoe UI', 17, 'bold'))
     heading.pack(pady=(18, 8))
     tk.Label(window, text='Trusted-job supervisor control panel (not yet a complete AI builder)').pack()
@@ -187,6 +187,10 @@ def main(*, auto_close_ms=None, ask=None):
             except RuntimeError:
                 pass
         threading.Thread(target=work, daemon=True).start()
+    def new_request():
+        from .intake_gui import open_request_window
+        open_request_window(window, state)
+    tk.Button(window, text='New request...', command=new_request, width=20).pack(pady=5)
     tk.Button(window, text='Set up local AI...', command=lambda: setup_flow(prompt_only_if_missing=False)).pack(pady=5)
     def refresh():
         data = status_summary(state)
