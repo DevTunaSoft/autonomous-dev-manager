@@ -37,7 +37,8 @@ def safe_model(model: str, *, allow_remote: bool = False) -> tuple[str, str]:
         raise SafetyError('Unknown model backend')
     if kind == 'remote' and not allow_remote:
         raise SafetyError('Remote models need explicit user approval')
-    if not name or len(name) > 120 or not all(c.isalnum() or c in '._:/+-' for c in name):
+    if (not name or len(name) > 120 or '..' in name or name.startswith(('/', '.'))
+            or not all(c.isalnum() or c in '._:/+-' for c in name)):
         raise SafetyError('Invalid model identifier')
     return kind, name
 

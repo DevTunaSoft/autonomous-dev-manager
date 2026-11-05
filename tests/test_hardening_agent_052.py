@@ -21,5 +21,22 @@ class SlugTests(unittest.TestCase):
             self.assertNotIn('..', Path(slug).parts)
 
 
+class ModelNameTests(unittest.TestCase):
+    def test_model_names_with_traversal_are_rejected(self):
+        from adm import backends
+        from adm.engine import SafetyError
+        for bad in ('ollama/../x', 'ollama/./x', 'ollama//x', 'local/../x'):
+            with self.assertRaises(SafetyError):
+                backends.safe_model(bad)
+            if bad.startswith('ollama/'):
+                with self.assertRaises(SafetyError):
+                    agent.safe_local_model(bad)
+
+    def test_ordinary_model_names_still_accepted(self):
+        from adm import backends
+        self.assertEqual(backends.safe_model('ollama/qwen2.5-coder:3b')[0], 'ollama')
+        self.assertEqual(agent.safe_local_model('ollama/library-model:7b'), 'ollama/library-model:7b')
+
+
 if __name__ == '__main__':
     unittest.main()

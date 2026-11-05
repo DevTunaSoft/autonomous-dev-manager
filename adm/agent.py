@@ -26,7 +26,8 @@ def safe_local_model(model: str) -> str:
     if not isinstance(model, str) or not model.startswith('ollama/'):
         raise SafetyError('Only explicitly selected local Ollama models are allowed')
     rest = model[len('ollama/'):]
-    if not rest or len(rest) > 120 or not all(c.isalnum() or c in '._:/+-' for c in rest):
+    if (not rest or len(rest) > 120 or '..' in rest or rest.startswith(('/', '.'))
+            or not all(c.isalnum() or c in '._:/+-' for c in rest)):
         raise SafetyError('Invalid local model identifier')
     return model
 

@@ -27,7 +27,8 @@ class StartupTests(unittest.TestCase):
                 cmd = startup_command(tmp)
             self.assertEqual(cmd[1:3], ['-m', 'adm.daemon'])
     def test_no_automatic_install(self):
-        with self.assertRaises((PermissionError, RuntimeError)):
+        from adm.engine import SafetyError
+        with self.assertRaises((PermissionError, SafetyError)):
             install('ignored', approve=False)
     def test_missing_python_is_rejected(self):
         with self.assertRaises(FileNotFoundError):

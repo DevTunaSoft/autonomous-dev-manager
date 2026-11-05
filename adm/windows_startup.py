@@ -44,8 +44,9 @@ def windows_task_command(state: str, *, python_executable: str | None = None) ->
 
 
 def install(state: str, *, approve: bool = False) -> subprocess.CompletedProcess:
+    from .engine import SafetyError
     if os.name != 'nt':
-        raise RuntimeError('Windows only')
+        raise SafetyError('Startup registration is only available on Windows')
     if not approve:
         raise PermissionError('Explicit approval required for startup registration')
     return subprocess.run(windows_task_command(state), check=True, capture_output=True, text=True)
