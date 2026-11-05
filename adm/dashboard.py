@@ -7,6 +7,7 @@ drives the real build stage (adm.build), which runs generated code only in the s
 """
 from __future__ import annotations
 import json
+import math
 import os
 import threading
 import time
@@ -28,7 +29,8 @@ def collect_stats(state) -> dict:
     if plans.is_dir():
         for pj in plans.glob('*/plan.json'):
             try:
-                if json.loads(pj.read_text(encoding='utf-8')).get('status') == 'approved':
+                data = json.loads(pj.read_text(encoding='utf-8'))
+                if isinstance(data, dict) and data.get('status') == 'approved':
                     approved += 1
             except (OSError, ValueError, RecursionError):
                 pass
@@ -43,12 +45,15 @@ def collect_stats(state) -> dict:
                 data = json.loads(r.read_text(encoding='utf-8'))
             except (OSError, ValueError, RecursionError):
                 continue
+            if not isinstance(data, dict):
+                continue
             if data.get('status') in ('built', 'already_passing'):
                 built += 1
             latest = data
         out['completed'] = built
     if latest and latest.get('status') in ('built', 'already_passing'):
-        n = len(latest.get('checks', []) or [])
+        checks = latest.get('checks')
+        n = len(checks) if isinstance(checks, (list, tuple)) else 0
         out['passing'] = f'{n}/{n}' if n else '100%'
     dist = state / 'dist'
     out['builds'] = len(list(dist.glob('*.exe'))) if dist.is_dir() else 0
@@ -61,6 +66,12 @@ def collect_stats(state) -> dict:
 
 
 def _fmt_uptime(seconds: float) -> str:
+    try:
+        seconds = float(seconds)
+    except (TypeError, ValueError):
+        return '0m'
+    if not math.isfinite(seconds) or seconds < 0:
+        return '0m'
     m = int(seconds // 60)
     h, m = divmod(m, 60)
     return f'{h}h {m:02d}m' if h else f'{m}m'

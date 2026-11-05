@@ -21,6 +21,10 @@ class UptimeTests(unittest.TestCase):
         self.assertEqual(dashboard._fmt_uptime(65 * 60), '1h 05m')
         self.assertEqual(dashboard._fmt_uptime(130 * 60), '2h 10m')
 
+    def test_non_finite_and_bad_values_do_not_crash(self):
+        for bad in (float('nan'), float('inf'), float('-inf'), -1, -999, None, 'x'):
+            self.assertEqual(dashboard._fmt_uptime(bad), '0m')
+
 
 class CollectStatsTests(unittest.TestCase):
     def setUp(self):
@@ -56,6 +60,21 @@ class CollectStatsTests(unittest.TestCase):
         s = dashboard.collect_stats(self.state)
         self.assertEqual(s['completed'], 0)
         self.assertEqual(s['passing'], '—')
+
+    def test_corrupt_reports_and_plans_do_not_crash(self):
+        # A report or plan.json may be hand-edited or corrupt: wrong top-level
+        # type, or a 'checks' field that isn't a list. Stats must still compute.
+        (self.state / 'builds').mkdir(parents=True, exist_ok=True)
+        (self.state / 'plans' / 'bad').mkdir(parents=True, exist_ok=True)
+        (self.state / 'builds' / '001.json').write_text(
+            json.dumps({'status': 'built', 'checks': 5}), encoding='utf-8')      # checks not a list
+        (self.state / 'builds' / '002.json').write_text(
+            json.dumps(['not', 'a', 'dict']), encoding='utf-8')                  # top-level array
+        (self.state / 'builds' / '003.json').write_text('garbage{', encoding='utf-8')
+        (self.state / 'plans' / 'bad' / 'plan.json').write_text('nope{', encoding='utf-8')
+        s = dashboard.collect_stats(self.state)                                 # must not raise
+        self.assertIsInstance(s['completed'], int)
+        self.assertIn(s['passing'], ('100%', '—'))                              # built-with-0-real-checks
 
 
 if __name__ == '__main__':
