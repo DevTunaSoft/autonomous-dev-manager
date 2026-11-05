@@ -8,7 +8,7 @@
 | **Date** | 2026-11-05 |
 | **Language / runtime** | Python 3.12 (the version the EXE bundles); code also runs on 3.13 |
 | **Platform** | Windows 11 desktop app; test suite is cross-platform |
-| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 11 fuzz harnesses |
+| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 12 fuzz harnesses |
 | **Test status** | `OVERALL: PASS; 435 completed tests` |
 | **GUI** | Dark-theme dashboard, **plain Tkinter** (no third-party UI deps) |
 
@@ -350,8 +350,9 @@ Each harness throws hostile/malformed input at a subsystem. **Graceful** = retur
 | 9 | `…9.py` | repair enqueue API, windows startup commands, failure excerpting bounds, journal prep | model names with traversal rejected |
 | **10** | `…10.py` | **packaging** (entry gen, exe names, hostile plans) + diagnostics self-check | **10 bugs:** backslash/null-byte titles → invalid `main.py`; malformed plan → AttributeError. Fixed via `repr()` injection + `plan_title`. |
 | **11** | `…11.py` | **dashboard** `collect_stats` + `_fmt_uptime` under corrupt state | **5 bugs:** non-list `checks` → len() crash; top-level JSON array → .get() crash; `_fmt_uptime(nan/inf)` → ValueError. Fixed via shape checks + float coercion. |
+| **12** | `…12.py` | **packaging** filesystem/concurrency: `main.py` as a directory, missing/file/empty roots, 12-thread entry race, empty-name guards | **0 bugs** — round 10's repr() injection + the `is_file()` guard already hold. Locked in as a CI regression. |
 
-Fuzzing was **stopped at the user's request after round 11**, not because the space was exhausted. Rounds 10 and 11 each found real bugs on first contact with new code, so further rounds against newer seams (packaging filesystem/concurrency, the build→report→stats→package contract, GUI event streaming) would likely still be productive.
+Rounds 10 and 11 each found real bugs on first contact with new code; round 12 found none (the packaging seam was already hardened by round 10), so further rounds against newer seams (packaging filesystem/concurrency, the build→report→stats→package contract, GUI event streaming) would likely still be productive.
 
 ---
 
