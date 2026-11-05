@@ -53,8 +53,12 @@ def probe_restricted_token_pipes():
     cmd = f'"{sys.executable}" -c "{code}"'
     h, ht, pid, tid = win32process.CreateProcessAsUser(restricted, None, cmd, None, None, True, 0, None, None, si)
     win32event.WaitForSingleObject(h, 30000); wr.Close()
-    out = win32file.ReadFile(rd, 4096)[1].decode(errors='replace')
-    emit('restricted_token_child_with_pipes', 'CHILD 0 7' in out, out.strip())
+    code_rc = win32process.GetExitCodeProcess(h)
+    try:
+        out = win32file.ReadFile(rd, 4096)[1].decode(errors='replace')
+    except Exception as exc:
+        out = f'(no output: {exc})'
+    emit('restricted_token_child_with_pipes', 'CHILD 0 7' in out, f'exit=0x{code_rc & 0xFFFFFFFF:08X} out={out.strip()!r}')
 
 def probe_dedicated_user_and_firewall():
     user, pw = 'admsandbox', 'Ab1!' + os.urandom(4).hex()
@@ -74,12 +78,25 @@ def probe_dedicated_user_and_firewall():
         emit('firewall_rule_for_user', 'RULE_OK' in rule.stdout, rule.stdout + rule.stderr)
         script = os.path.join(work, 'net.py'); open(script, 'w').write(CHILD_NET)
         subprocess.run(['icacls', work, '/grant', f'{user}:(OI)(CI)F'], capture_output=True)
-        import win32process, win32event, win32con
-        si = win32process.STARTUPINFO()
-        cmd = f'cmd.exe /c ""{py}" "{script}" > "{work}\\out.txt" 2>&1"'
-        h, ht, pid, tid = win32process.CreateProcessWithLogonW(user, '.', pw, 0, None, cmd,
-                                                              win32con.CREATE_NO_WINDOW, None, work, si)
-        win32event.WaitForSingleObject(h, 60000)
+        import ctypes, ctypes.wintypes as w
+        adv = ctypes.WinDLL('advapi32', use_last_error=True); k32 = ctypes.WinDLL('kernel32', use_last_error=True)
+        class SI(ctypes.Structure):
+            _fields_ = [("cb", w.DWORD), ("r", w.LPWSTR), ("d", w.LPWSTR), ("t", w.LPWSTR)] + \
+                       [(n, w.DWORD) for n in ("x", "y", "xs", "ys", "xc", "yc", "fa", "fl")] + \
+                       [("sw", w.WORD), ("cb2", w.WORD), ("r2", ctypes.c_void_p), ("i", w.HANDLE), ("o", w.HANDLE), ("e", w.HANDLE)]
+        class PI(ctypes.Structure):
+            _fields_ = [("hp", w.HANDLE), ("ht", w.HANDLE), ("pid", w.DWORD), ("tid", w.DWORD)]
+        adv.CreateProcessWithLogonW.argtypes = [w.LPCWSTR, w.LPCWSTR, w.LPCWSTR, w.DWORD, w.LPCWSTR, w.LPWSTR,
+                                                w.DWORD, ctypes.c_void_p, w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
+        k32.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
+        si = SI(); si.cb = ctypes.sizeof(si); pi = PI()
+        cmdline = ctypes.create_unicode_buffer(f'cmd.exe /c ""{py}" "{script}" > "{work}\\out.txt" 2>&1"')
+        ok = adv.CreateProcessWithLogonW(user, '.', pw, 0, None, cmdline, 0x08000000, None, work,
+                                         ctypes.byref(si), ctypes.byref(pi))
+        if not ok:
+            emit('sandbox_user_network_blocked', False, f'launch failed, winerror={ctypes.get_last_error()}'); return
+        h = pi.hp
+        k32.WaitForSingleObject(h, 60000)
         out = ''
         try: out = open(os.path.join(work, 'out.txt')).read()
         except OSError: pass
