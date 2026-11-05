@@ -19,8 +19,8 @@ import inspect
 import sys
 import app
 
-TITLE = "APP_TITLE"
-EXE = "APP_EXE"
+TITLE = __ADM_TITLE__
+EXE = __ADM_EXE__
 
 
 def _functions():
@@ -77,14 +77,32 @@ def exe_name(title: str) -> str:
     return (base or 'app')[:40]
 
 
-def write_entry(root, plan: dict) -> Path:
+def plan_title(plan) -> str:
+    """Read a human title from a plan of any shape, defensively.
+
+    A plan may be malformed (not a dict, or 'content' missing or not a dict).
+    Never raise; fall back to a safe default. Control characters (including
+    null bytes and newlines) are stripped so the title is safe to embed.
+    """
+    content = plan.get('content') if isinstance(plan, dict) else None
+    raw = content.get('title') if isinstance(content, dict) else None
+    title = str(raw) if raw not in (None, '') else 'My Program'
+    cleaned = ''.join(ch for ch in title if ch >= ' ' and ch != '\x7f')
+    cleaned = ' '.join(cleaned.split())          # collapse any whitespace runs
+    return (cleaned or 'My Program')[:60]
+
+
+def write_entry(root, plan) -> Path:
     """Write main.py (if absent) that exposes app's functions on the command line."""
     root = Path(root)
-    title = str(plan.get('content', {}).get('title', 'My Program'))[:60].replace('"', "'").replace('\n', ' ')
+    title = plan_title(plan)
     name = exe_name(title)
     entry = root / 'main.py'
     if not entry.is_file():
-        content = ENTRY.replace('APP_TITLE', title).replace('APP_EXE', name)
+        # Inject as repr() so backslashes, quotes, and unicode can never break
+        # the generated source. EXE first (its slug is alnum/hyphen only, so it
+        # can't contain the title token), then TITLE.
+        content = ENTRY.replace('__ADM_EXE__', repr(name)).replace('__ADM_TITLE__', repr(title))
         with open(entry, 'w', encoding='utf-8', newline='') as stream:
             stream.write(content)
     return entry
@@ -125,7 +143,7 @@ def package_project(root, dist_dir, *, plan: dict, python=None, timeout=1200) ->
     py = python or find_packager_python()
     if not py:
         raise SafetyError('Packaging needs Python with PyInstaller, which is not available yet on this PC.')
-    name = exe_name(str(plan.get('content', {}).get('title', 'app')))
+    name = exe_name(plan_title(plan))
     dist_dir = Path(dist_dir)
     dist_dir.mkdir(parents=True, exist_ok=True)
     build_dir = root / '.adm-build'

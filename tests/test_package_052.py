@@ -68,6 +68,39 @@ class PackageTests(unittest.TestCase):
         result = package.find_packager_python([sys.executable])
         self.assertIn(result, (sys.executable, None))
 
+    def test_hostile_titles_still_generate_valid_python(self):
+        # Windows paths, trailing backslashes, quotes, null bytes, newlines,
+        # and the template's own tokens must never break the generated entry.
+        hostile = [
+            r'C:\Users\x', 'ends with backslash\\', 'quote"inside',
+            'triple"""quote', 'new\nline\ttab', '\x00null\x01', "'single'",
+            '__ADM_EXE__', '__ADM_TITLE__', 'café ☕', 'A' * 300, '',
+        ]
+        for title in hostile:
+            root = Path(self.tmp.name) / ('h' + str(abs(hash(title)) % 10**8))
+            root.mkdir()
+            (root / 'app.py').write_text('def add(a, b):\n    return a + b\n')
+            entry = package.write_entry(root, {'content': {'title': title}})
+            src = entry.read_text(encoding='utf-8')
+            compile(src, 'main.py', 'exec')         # must be valid Python
+            r = subprocess.run([sys.executable, str(entry), 'add', '2', '3'],
+                               cwd=root, capture_output=True, text=True, timeout=30)
+            self.assertEqual(r.returncode, 0, f'title={title!r}: {r.stderr}')
+            self.assertIn('5', r.stdout)
+
+    def test_malformed_plans_do_not_crash(self):
+        # A plan of any shape must degrade to a safe default title, never raise.
+        for plan in (None, [], 'string', 42, {}, {'content': None},
+                     {'content': []}, {'content': 'x'}, {'content': {}},
+                     {'content': {'title': None}}, {'content': {'title': 123}}):
+            self.assertIsInstance(package.plan_title(plan), str)
+            self.assertTrue(package.plan_title(plan))                # non-empty
+            root = Path(self.tmp.name) / ('m' + str(abs(hash(repr(plan))) % 10**8))
+            root.mkdir()
+            (root / 'app.py').write_text('def add(a, b):\n    return a + b\n')
+            entry = package.write_entry(root, plan)                  # must not raise
+            compile(entry.read_text(encoding='utf-8'), 'main.py', 'exec')
+
 
 if __name__ == '__main__':
     unittest.main()
