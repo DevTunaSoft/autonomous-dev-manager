@@ -115,8 +115,9 @@ def card(parent, height=None):
     """A flat rounded panel drawn on a Canvas; returns (holder, content_frame)."""
     import tkinter as tk
     holder = tk.Frame(parent, bg=PAGE, highlightthickness=0, bd=0)
-    canvas = tk.Canvas(holder, bg=PAGE, highlightthickness=0, bd=0,
-                       height=height or 1)
+    canvas = tk.Canvas(holder, bg=PAGE, highlightthickness=0, bd=0)
+    if height:
+        canvas.config(height=height)
     canvas.pack(fill='both', expand=True)
     inner = tk.Frame(canvas, bg=PANEL)
     win = canvas.create_window(14, 14, anchor='nw', window=inner, tags='content')

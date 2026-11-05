@@ -141,7 +141,7 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
 
     # Content: left (request) + right (pipeline/activity)
     middle = tk.Frame(main_area, bg=t.PAGE)
-    middle.pack(fill='both', expand=True, padx=18, pady=8)
+    middle.pack(fill='both', expand=True, padx=18, pady=(4, 6))
     middle.columnconfigure(0, weight=3, uniform='col')
     middle.columnconfigure(1, weight=2, uniform='col')
     middle.rowconfigure(0, weight=1)
@@ -152,7 +152,7 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     tk.Label(left, text='New request', bg=t.PANEL, fg=t.INK, font=t.font(13, 'bold')).pack(anchor='w')
     tk.Label(left, text='Describe the app or change you want, in your own words.',
              bg=t.PANEL, fg=t.MUTED, font=t.font(9)).pack(anchor='w', pady=(2, 8))
-    box_frame, request_box = t.entry_text(left, height=4)
+    box_frame, request_box = t.entry_text(left, height=3)
     box_frame.pack(fill='x')
 
     mode = tk.StringVar(value='new')
@@ -188,7 +188,7 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     plan_status = tk.Label(left, text='Nothing has been created or run yet.', bg=t.PANEL, fg=t.MUTED,
                            font=t.font(9), anchor='w', justify='left', wraplength=460)
     plan_status.pack(fill='x', pady=(2, 6))
-    doc_frame, plan_doc = t.document(left, height=9)
+    doc_frame, plan_doc = t.document(left, height=8)
     doc_frame.pack(fill='both', expand=True)
 
     # --- Right: pipeline + activity ---
@@ -198,7 +198,7 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     right.rowconfigure(1, weight=1)
     right.columnconfigure(0, weight=1)
 
-    pipe_holder, pipe = t.card(right)
+    pipe_holder, pipe = t.card(right, height=200)
     pipe_holder.grid(row=0, column=0, sticky='nsew', pady=(0, 10))
     tk.Label(pipe, text='Project pipeline', bg=t.PANEL, fg=t.INK, font=t.font(12, 'bold')).pack(anchor='w')
     stage_rows = {}
@@ -225,10 +225,10 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     activity.pack(fill='both', expand=True, pady=(6, 0))
 
     # Recent projects strip (reserved at the bottom so it is always visible)
-    rec_holder, rec = t.card(main_area, height=150)
+    rec_holder, rec = t.card(main_area, height=120)
     rec_holder.pack(side='bottom', fill='x', padx=18, pady=(2, 14))
     tk.Label(rec, text='Recent projects', bg=t.PANEL, fg=t.INK, font=t.font(12, 'bold')).pack(anchor='w', pady=(0, 6))
-    rec_table = ttk.Treeview(rec, columns=('name', 'status', 'folder'), show='headings', height=3)
+    rec_table = ttk.Treeview(rec, columns=('name', 'status', 'folder'), show='headings', height=2)
     for c, title, w in [('name', 'Project', 200), ('status', 'Status', 140), ('folder', 'Folder', 420)]:
         rec_table.heading(c, text=title)
         rec_table.column(c, width=w, anchor='w', stretch=(c == 'folder'))
