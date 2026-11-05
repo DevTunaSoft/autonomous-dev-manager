@@ -65,7 +65,15 @@ def run_pipeline(state_dir, *, timeout=180):
     """Run one queued worker and reconcile its real evidence. Never infer success
     from an agent's prose or from the worker's exit code alone."""
     state_dir = Path(state_dir).resolve()
-    spec = json.loads((state_dir / 'pipeline.json').read_text(encoding='utf-8'))
+    spec_path = state_dir / 'pipeline.json'
+    if not spec_path.is_file():
+        raise SafetyError('No pipeline to run; start one first')
+    try:
+        spec = json.loads(spec_path.read_text(encoding='utf-8'))
+    except (OSError, ValueError, RecursionError) as exc:
+        raise SafetyError('Pipeline spec is unreadable') from exc
+    if not isinstance(spec, dict) or 'job_id' not in spec:
+        raise SafetyError('Pipeline spec is malformed')
     sup = WorkerSupervisor(state_dir / 'workers')
     try:
         recovered = sup.recover(stale_after=30)

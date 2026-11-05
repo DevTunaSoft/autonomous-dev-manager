@@ -65,6 +65,12 @@ def verify_source_release(path: str | Path):
             names = archive.namelist()
             if len(names) != len(set(names)):
                 raise ValueError("Duplicate archive entries")
+            # Guard against a decompression bomb: refuse before reading an oversized entry into memory.
+            max_entry, max_total = 50 * 1024 * 1024, 300 * 1024 * 1024
+            if sum(i.file_size for i in archive.infolist()) > max_total:
+                raise ValueError("Archive uncompressed size is implausibly large")
+            if archive.getinfo("ADM/SOURCE-MANIFEST.json").file_size > 8 * 1024 * 1024:
+                raise ValueError("Source manifest is implausibly large")
             manifest = json.loads(archive.read("ADM/SOURCE-MANIFEST.json"))
             if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
                 raise ValueError("Source manifest is missing or malformed")
@@ -76,6 +82,8 @@ def verify_source_release(path: str | Path):
             for name, digest in expected.items():
                 if name.startswith("/") or ".." in Path(name).parts or "\\" in name:
                     raise ValueError("Unsafe manifest path")
+                if archive.getinfo("ADM/" + name).file_size > max_entry:
+                    raise ValueError(f"Archive entry too large: {name}")
                 if hashlib.sha256(archive.read("ADM/" + name)).hexdigest() != digest:
                     raise ValueError(f"Hash mismatch: {name}")
         return len(expected)

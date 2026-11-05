@@ -37,10 +37,12 @@ def execute_plan(plan: dict, journal_path: str | Path, *, approved: bool = False
     """
     if not approved:
         raise PermissionError('Explicit installation/download approval is required')
+    if not isinstance(plan, dict):
+        raise ValueError('Invalid plan')
     if plan.get('platform') != 'Windows':
         raise ValueError('This installer only supports Windows')
     steps = plan.get('steps')
-    if not isinstance(steps, list):
+    if not isinstance(steps, list) or any(not isinstance(s, dict) for s in steps):
         raise ValueError('Invalid plan')
     keys = [s.get('key') for s in steps]
     if len(keys) != len(set(keys)) or any(k not in {'install_ollama', 'pull_model'} for k in keys):
@@ -49,7 +51,12 @@ def execute_plan(plan: dict, journal_path: str | Path, *, approved: bool = False
     # A journal is bound to the precise commands, preventing stale resume after a changed plan.
     fingerprint = json.dumps(steps, sort_keys=True)
     if path.exists():
-        state = json.loads(path.read_text(encoding='utf-8'))
+        try:
+            state = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, ValueError, RecursionError) as exc:
+            raise ValueError('Existing setup journal is unreadable') from exc
+        if not isinstance(state, dict) or not isinstance(state.get('results'), dict):
+            raise ValueError('Existing setup journal is malformed')
         if state.get('fingerprint') != fingerprint:
             raise ValueError('Existing setup journal belongs to a different plan')
     else:

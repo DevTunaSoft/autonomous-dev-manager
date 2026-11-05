@@ -86,7 +86,7 @@ def smoke_test(model: str, *, timeout=60, opener=None) -> ProbeResult:
         return ProbeResult(model, 'passed' if exact else 'failed',
                            round(time.monotonic()-start, 3), exact,
                            'Tiny inference smoke check only; coding capability remains unverified')
-    except (URLError, HTTPError, TimeoutError, OSError, ValueError, json.JSONDecodeError) as exc:
+    except (URLError, HTTPError, TimeoutError, OSError, ValueError, json.JSONDecodeError, RecursionError) as exc:
         return ProbeResult(model, 'blocked', round(time.monotonic()-start, 3), False,
                            f'Local Ollama probe failed: {type(exc).__name__}')
 
