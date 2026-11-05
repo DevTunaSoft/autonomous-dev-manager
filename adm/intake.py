@@ -239,6 +239,23 @@ def plan_text(plan: dict) -> str:
     return '\n'.join(lines)
 
 
+def test_model(model=None, *, generator=None, timeout=120) -> dict:
+    """One quick real inference so the person can confirm the local AI works before a long build.
+
+    Returns {model, seconds, ok, answer}. Raises SafetyError with a plain message if the model is
+    missing or unreachable. `generator` injection is for tests only.
+    """
+    use_model = model or choose_model()
+    gen = generator
+    if gen is None:
+        from .backends import make_json_generator
+        gen = make_json_generator(use_model)
+    start = time.time()
+    answer = gen(use_model, 'Reply with only this JSON and nothing else: {"ok": true}', timeout)
+    return {'model': use_model, 'seconds': round(time.time() - start, 2),
+            'ok': isinstance(answer, dict), 'answer': answer}
+
+
 def choose_model(*, installed=None, ram_gib=None) -> str:
     """Pick an installed local model, or explain in plain words what is missing."""
     from .model_selection import select_installed_model

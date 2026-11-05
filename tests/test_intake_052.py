@@ -137,6 +137,21 @@ class IntakeTests(unittest.TestCase):
         self.assertIn('NO internet', text); self.assertIn('Tip calculator', text)
         self.assertIn('When the bill is 100', text)
 
+    def test_test_model_times_a_quick_inference(self):
+        r = intake.test_model(model='ollama/x', generator=lambda m, p, t: {'ok': True})
+        self.assertTrue(r['ok'])
+        self.assertEqual(r['model'], 'ollama/x')
+        self.assertIsInstance(r['seconds'], float)
+
+    def test_test_model_reports_non_dict_as_not_ok(self):
+        self.assertFalse(intake.test_model(model='ollama/x', generator=lambda m, p, t: 'nope')['ok'])
+
+    def test_test_model_propagates_model_errors(self):
+        def boom(m, p, t):
+            raise SafetyError('model not installed')
+        with self.assertRaises(SafetyError):
+            intake.test_model(model='ollama/x', generator=boom)
+
     def test_choose_model_explains_missing_pieces(self):
         for installed in ([], ['gemma-no-size']):
             with self.assertRaises(SafetyError) as cm:

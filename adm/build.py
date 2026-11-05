@@ -161,9 +161,18 @@ def scaffold(root: Path, plan: dict, test_content: str) -> None:
     _write(root / 'app.py', STUB)
 
 
+def _say(on_event, stage, **detail):
+    if on_event is None:
+        return
+    try:
+        on_event(stage, detail)
+    except Exception:
+        pass
+
+
 def build_from_plan(plan_path, evidence, *, test_generator, code_generator, model,
-                    runner=None, timeout=120, max_repairs=3, inference_timeout=300,
-                    require_sandbox=True):
+                    runner=None, timeout=120, max_repairs=3, inference_timeout=600,
+                    require_sandbox=True, on_event=None):
     """Full build. `test_generator`/`code_generator` are (model, prompt, timeout) callables.
 
     `runner` runs the tests; in production pass a sandbox runner. With require_sandbox=True
@@ -195,13 +204,16 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
     if empty or resumed_new:
         if resumed_new:
             _reset_scaffold(root)
+        _say(on_event, 'writing_tests')
         answer = test_generator(model, test_prompt(plan), timeout=inference_timeout)
         test_content = validate_tests(answer)
         report['stage'] = 'scaffolding'
+        _say(on_event, 'scaffolding')
         scaffold(root, plan, test_content)
         amend = False
     elif is_adm_project(root):
         report['mode'] = 'amend'
+        _say(on_event, 'writing_tests', amend=True)
         old_tests = (root / 'test_app.py').read_text(encoding='utf-8')
         old_names = _test_method_names(old_tests)
         answer = test_generator(model, amend_test_prompt(plan, old_tests), timeout=inference_timeout)
@@ -216,9 +228,10 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
                           'or add to a project it made; it will not change your own files. Choose another folder.')
 
     report['stage'] = 'writing_and_testing_code'
+    _say(on_event, 'writing_code')
     repair = direct_repair(root, Path(evidence), model=model, generator=code_generator,
                            runner=runner, timeout=timeout, max_repairs=max_repairs,
-                           inference_timeout=inference_timeout)
+                           inference_timeout=inference_timeout, on_event=on_event)
     report['repair'] = repair
     report['isolation'] = repair.get('isolation', 'none')
 
@@ -298,7 +311,7 @@ def save_report(state, report: dict) -> Path:
 
 
 def run_build(state, plan_path, *, test_generator, code_generator, model, runner,
-              timeout=120, max_repairs=3, require_sandbox=True) -> dict:
+              timeout=120, max_repairs=3, require_sandbox=True, on_event=None) -> dict:
     """The path the dashboard uses: safe evidence location + a persisted report for the stats tiles."""
     plan = intake.require_approved(plan_path)
     try:
@@ -310,7 +323,8 @@ def run_build(state, plan_path, *, test_generator, code_generator, model, runner
     _recover_interrupted(Path(plan['folder']), ev)     # clean up after any crashed prior build
     report = build_from_plan(plan_path, ev, test_generator=test_generator,
                              code_generator=code_generator, model=model, runner=runner,
-                             timeout=timeout, max_repairs=max_repairs, require_sandbox=require_sandbox)
+                             timeout=timeout, max_repairs=max_repairs, require_sandbox=require_sandbox,
+                             on_event=on_event)
     report['checks'] = plan['content']['tests']
     report['evidence'] = str(ev)
     save_report(state, report)

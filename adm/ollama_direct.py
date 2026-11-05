@@ -146,11 +146,21 @@ def _save_text(path: Path, text: str) -> None:
     path.write_text(text, encoding='utf-8', errors='replace', newline='')
 
 
+def _emit(on_event, stage, **detail):
+    """Best-effort progress callback; never let a UI callback break the build."""
+    if on_event is None:
+        return
+    try:
+        on_event(stage, detail)
+    except Exception:
+        pass
+
+
 def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                   max_repairs=2, timeout=90, generator=request_patch,
                   inference_timeout=DEFAULT_INFERENCE_TIMEOUT,
                   escalation_model=None, escalation_generator=None, escalate_after=2,
-                  runner=None):
+                  runner=None, on_event=None):
     """Evidence-backed repair. Generator injection permits fake-server tests, not live claims.
 
     The test runner is the only gate. The model sees a bounded excerpt of each failure
@@ -177,6 +187,7 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
         raise SafetyError('Evidence directory already contains a trial; choose a new directory')
     protected = protected_hashes(root)
     initial = source_hashes(root)
+    _emit(on_event, 'baseline')
     baseline = runner(test_command(), root, root, timeout=timeout)
     report = {'status': 'baseline_passed' if baseline['exit_code'] == 0 else 'baseline_failed',
               'model': model, 'baseline': baseline, 'attempts': [], 'live_model_verified': False, 'network_generator': False,
@@ -204,6 +215,7 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
         use_generator = escalation_generator if escalated else generator
         use_model = escalation_model if escalated else model
         try:
+            _emit(on_event, 'inference', index=index, total=max_repairs, escalated=escalated)
             view = excerpt_failure(failure, saved_to=failure_file)
             notes = ledger.notes()
             fixed = len(requirements[:12000]) + len(view['text']) + len(notes) + 1400
@@ -212,6 +224,7 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
             if len(prompt) > budget:
                 raise SafetyError('Prompt would exceed the model context window; refusing silent truncation')
             patch = use_generator(use_model, prompt, timeout=inference_timeout)
+            _emit(on_event, 'testing', index=index, total=max_repairs)
             repeated = ledger.seen_patch(patch)
             if repeated is not None:
                 raise SafetyError(f'Model repeated the patch from attempt {repeated}; not applied again')
@@ -291,7 +304,7 @@ def direct_repair(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                   max_repairs=2, timeout=90, generator=request_patch,
                   inference_timeout=DEFAULT_INFERENCE_TIMEOUT,
                   escalation_model=None, escalation_generator=None, escalate_after=2,
-                  runner=None):
+                  runner=None, on_event=None):
     """Hold exclusive project ownership across baseline, inference, edits and tests."""
     with exclusive_project(root):
         return _direct_repair_unlocked(root, evidence, model=model,
@@ -299,4 +312,4 @@ def direct_repair(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                                        generator=generator, inference_timeout=inference_timeout,
                                        escalation_model=escalation_model,
                                        escalation_generator=escalation_generator,
-                                       escalate_after=escalate_after, runner=runner)
+                                       escalate_after=escalate_after, runner=runner, on_event=on_event)

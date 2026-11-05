@@ -215,6 +215,24 @@ class BuildStageTests(unittest.TestCase):
                                        model='ollama/x', runner=None, require_sandbox=False)
         self.assertEqual(report['status'], 'already_passing')
 
+    def test_build_streams_progress_events(self):
+        plan = self.approved_plan()
+        events = []
+        build.build_from_plan(plan['path'], self.base / 'ev-evt', test_generator=test_gen(),
+                              code_generator=failing_code_gen(), model='ollama/x', runner=sandbox_runner(),
+                              require_sandbox=True, max_repairs=2, on_event=lambda s, d: events.append(s))
+        for stage in ('writing_tests', 'scaffolding', 'writing_code', 'baseline', 'inference', 'testing'):
+            self.assertIn(stage, events, stage)
+
+    def test_build_survives_a_crashing_event_callback(self):
+        plan = self.approved_plan()
+        def boom(stage, detail):
+            raise RuntimeError('the UI callback blew up')
+        report = build.build_from_plan(plan['path'], self.base / 'ev-boom', test_generator=test_gen(),
+                                       code_generator=code_gen(), model='ollama/x', runner=sandbox_runner(),
+                                       require_sandbox=True, on_event=boom)
+        self.assertEqual(report['status'], 'built')
+
     def test_crashed_new_build_resumes_cleanly_without_corruption(self):
         from adm.repair_recovery import prepare_journal
         plan = self.approved_plan()

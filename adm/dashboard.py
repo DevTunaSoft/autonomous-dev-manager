@@ -143,7 +143,11 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     ai_title = tk.Label(ai_box, text='○ LOCAL AI', bg=t.PANEL, fg=t.MUTED, font=t.font(9, 'bold'), anchor='w')
     ai_title.pack(fill='x', padx=12, pady=(10, 2))
     ai_detail = tk.Label(ai_box, text='Checking this PC…', bg=t.PANEL, fg=t.MUTED, font=t.font(9), anchor='w', justify='left', wraplength=130)
-    ai_detail.pack(fill='x', padx=12, pady=(0, 10))
+    ai_detail.pack(fill='x', padx=12, pady=(0, 6))
+    ttk.Button(ai_box, text='Set up…', style='Secondary.TButton',
+               command=lambda: setup_flow(prompt_only_if_missing=False)).pack(fill='x', padx=12, pady=(0, 4))
+    ttk.Button(ai_box, text='Test local AI', style='Secondary.TButton',
+               command=lambda: test_local_ai()).pack(fill='x', padx=12, pady=(0, 10))
 
     # ---------------- Main area ----------------
     main_area = tk.Frame(win, bg=t.PAGE)
@@ -422,7 +426,27 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
         set_stage('Plan & requirements', 'done', t.SUCCESS)
         set_stage('Code generation', 'run', t.CYAN)
         set_status('Building in a sandbox on this PC…', t.MUTED)
-        log('Writing tests and code, then testing in the sandbox…')
+        log('Starting the build on this PC. On a modest machine each step can take a few minutes…')
+
+        def on_build_event(stage, detail):
+            def apply_evt():
+                if stage == 'writing_tests':
+                    set_stage('Code generation', 'run', t.CYAN)
+                    log('Writing the tests from your checks…' + (' (adding to your project)' if detail.get('amend') else ''))
+                elif stage == 'scaffolding':
+                    log('Setting up the project files…')
+                elif stage == 'writing_code':
+                    log('Asking the local AI to write the code…')
+                elif stage == 'baseline':
+                    set_stage('Build & test', 'run', t.CYAN)
+                    log('Running the tests to see what is failing…')
+                elif stage == 'inference':
+                    set_stage('Auto-fix', 'run', t.CYAN)
+                    log(f'Attempt {detail.get("index")} of {detail.get("total")}: the AI is writing a fix…'
+                        + (' (using the larger model)' if detail.get('escalated') else ''))
+                elif stage == 'testing':
+                    log(f'Attempt {detail.get("index")}: testing the fix in the sandbox…')
+            ui(apply_evt)
 
         def work():
             from . import build, sandbox
@@ -436,7 +460,8 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
                     cgen = make_generator(use_model)
                 runner = sandbox.make_runner(sandbox.provision())
                 report = build.run_build(state, plan['path'], test_generator=tgen, code_generator=cgen,
-                                         model=use_model, runner=runner, require_sandbox=True)
+                                         model=use_model, runner=runner, require_sandbox=True,
+                                         on_event=on_build_event)
                 ui(lambda: finish_build(report, None))
             except SafetyError as exc:
                 ui(lambda e=str(exc): finish_build(None, e))
@@ -487,6 +512,25 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
 
     # Local AI status (real check, off the UI thread)
     model_holder = {'model': _plan_model}
+
+    def test_local_ai():
+        if current['busy']:
+            return
+        log('Testing the local AI with a quick prompt…')
+
+        def work():
+            try:
+                r = intake.test_model(model=model_holder.get('model'))
+                ui(lambda: (log(f'Local AI replied in {r["seconds"]}s (model {r["model"]}).'),
+                            messagebox.showinfo('Local AI works',
+                                                f'The local AI replied in {r["seconds"]} seconds.\n'
+                                                f'Model: {r["model"]}\n\nA full build makes several such calls.')))
+            except SafetyError as exc:
+                ui(lambda e=str(exc): (log('Local AI test failed: ' + e), messagebox.showwarning('Local AI', e)))
+            except Exception as exc:
+                ui(lambda e=f'{type(exc).__name__}: {exc}':
+                   (log('Local AI test error: ' + e), messagebox.showerror('Local AI', e)))
+        threading.Thread(target=work, daemon=True).start()
 
     def check_ai():
         def work():
