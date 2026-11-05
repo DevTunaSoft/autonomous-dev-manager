@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from adm.context import (excerpt_failure, failing_tests, traceback_files, failure_signature,
-                         AttemptLedger, check_patch, build_repair_prompt)
+                         AttemptLedger, check_patch, build_repair_prompt, patch_key, patch_files)
 from adm.engine import SafetyError, make_broken_demo
 from adm.ollama_direct import direct_repair
 
@@ -182,6 +182,33 @@ class LoopIntegrationTests(unittest.TestCase):
         self.assertEqual(report['status'], 'verified_direct_repair')
         self.assertIn('AssertionError', prompts[1])             # still sees the real failure
         self.assertIn('rejected before testing', prompts[1])
+
+    def test_malformed_model_patches_raise_safetyerror_not_crash(self):
+        # A patch is untrusted model output. patch_key / check_patch / the ledger
+        # must reject any malformed shape with SafetyError, never KeyError/TypeError.
+        bad = [{}, {'files': 'x'}, {'files': None}, {'files': [123]}, {'files': [None]},
+               {'files': [{'path': 'a.py'}]}, {'files': [{'content': 'x'}]},
+               {'files': [{'path': 1, 'content': 'x'}]}, {'files': [{'path': 'a.py', 'content': 2}]},
+               {'files': [{'path': 'a.py', 'content': 'x'}, 'oops']}]
+        led = AttemptLedger()
+        (self.root / 'calculator.py').write_text('x = 1\n' * 100, encoding='utf-8')
+        for p in bad:
+            with self.assertRaises(SafetyError):
+                patch_key(p)
+            with self.assertRaises(SafetyError):
+                led.seen_patch(p)
+            with self.assertRaises(SafetyError):
+                check_patch(self.root, p, {'calculator.py'})
+        # a well-formed shape passes the shape gate
+        self.assertEqual(patch_files({'files': [{'path': 'a.py', 'content': 'x'}]}),
+                         [{'path': 'a.py', 'content': 'x'}])
+
+    def test_traceback_files_tolerates_oversized_and_bad_paths(self):
+        # An over-long or null-containing filename in a traceback must not raise.
+        out = ('File "' + 'A' * 5000 + '", line 1\n'
+               'File "bad\x00name.py", line 2\n'
+               'File "../../etc/passwd", line 3\n')
+        self.assertEqual(traceback_files(out, self.root), [])    # none are real project files
 
 
 if __name__ == '__main__':

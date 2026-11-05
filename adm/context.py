@@ -111,11 +111,11 @@ def traceback_files(output: str, root: Path) -> list[str]:
             if not path.is_absolute():
                 path = root / path
             path = path.resolve()
+            if not inside(path, root) or not path.is_file():
+                continue
+            rel = path.relative_to(root).as_posix()
         except (OSError, ValueError):
             continue
-        if not inside(path, root) or not path.is_file():
-            continue
-        rel = path.relative_to(root).as_posix()
         if rel in order:
             order.remove(rel)
         order.append(rel)
@@ -132,8 +132,25 @@ def failure_signature(output: str) -> str:
     return digest[:16]
 
 
+def patch_files(patch: dict) -> list[dict]:
+    """Validate the SHAPE of a model-produced patch and return its file items.
+
+    The patch comes from model output, so it may be any JSON value. This never
+    trusts it: a malformed envelope or item raises SafetyError (a handled
+    condition) rather than crashing a caller with KeyError/TypeError. Path
+    safety and size limits are enforced separately by ollama_direct.apply_patch.
+    """
+    if not isinstance(patch, dict) or not isinstance(patch.get('files'), list):
+        raise SafetyError('Invalid patch envelope')
+    for item in patch['files']:
+        if (not isinstance(item, dict) or 'path' not in item or 'content' not in item
+                or not isinstance(item['path'], str) or not isinstance(item['content'], str)):
+            raise SafetyError('Invalid file replacement')
+    return patch['files']
+
+
 def patch_key(patch: dict) -> str:
-    files = sorted((f['path'], f['content']) for f in patch['files'])
+    files = sorted((f['path'], f['content']) for f in patch_files(patch))
     return hashlib.sha256(json.dumps(files).encode('utf-8')).hexdigest()
 
 
@@ -174,7 +191,7 @@ class AttemptLedger:
 def check_patch(root: Path, patch: dict, shown_in_full: set[str]) -> None:
     """Reject patches that are certainly wrong, before they touch any file."""
     root = Path(root)
-    for item in patch['files']:
+    for item in patch_files(patch):
         name, content = item['path'], item['content']
         if name not in shown_in_full:
             raise SafetyError(f'{name} was not shown to the model in full; refusing to replace it')

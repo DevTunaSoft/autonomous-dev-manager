@@ -15,7 +15,7 @@ from .agent import (safe_local_model, validate_project, protected_hashes,
 from .engine import SafetyError, run_checked
 from .repair_recovery import prepare_journal, recover_journal, finish_journal
 from .project_lock import exclusive_project
-from .context import (excerpt_failure, AttemptLedger, check_patch, build_repair_prompt)
+from .context import (excerpt_failure, AttemptLedger, check_patch, build_repair_prompt, patch_files)
 from .repomap import select_context
 from .backends import safe_model, extract_json, JSON_REMINDER
 
@@ -87,6 +87,7 @@ def request_patch(model: str, prompt: str, *, endpoint: str = DEFAULT_ENDPOINT,
     answer = request_json(model, prompt, endpoint=endpoint, timeout=timeout)
     if not isinstance(answer, dict) or set(answer) != {'files'} or not isinstance(answer['files'], list):
         raise SafetyError('Invalid patch envelope')
+    patch_files(answer)          # validate each item's shape before it enters the loop
     return answer
 
 
