@@ -111,11 +111,12 @@ def round_rect(canvas, x1, y1, x2, y2, r=12, **kw):
     return canvas.create_polygon(pts, smooth=True, **kw)
 
 
-def card(parent):
+def card(parent, height=None):
     """A flat rounded panel drawn on a Canvas; returns (holder, content_frame)."""
     import tkinter as tk
     holder = tk.Frame(parent, bg=PAGE, highlightthickness=0, bd=0)
-    canvas = tk.Canvas(holder, bg=PAGE, highlightthickness=0, bd=0)
+    canvas = tk.Canvas(holder, bg=PAGE, highlightthickness=0, bd=0,
+                       height=height or 1)
     canvas.pack(fill='both', expand=True)
     inner = tk.Frame(canvas, bg=PANEL)
     win = canvas.create_window(14, 14, anchor='nw', window=inner, tags='content')

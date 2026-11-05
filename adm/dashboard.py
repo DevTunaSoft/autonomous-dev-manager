@@ -110,9 +110,9 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
 
     ai_box = tk.Frame(sidebar, bg=t.PANEL, highlightthickness=1, highlightbackground=t.BORDER)
     ai_box.pack(side='bottom', fill='x', padx=12, pady=14)
-    ai_title = tk.Label(ai_box, bg=t.PANEL, fg=t.MUTED, font=t.font(9, 'bold'), anchor='w')
+    ai_title = tk.Label(ai_box, text='○ LOCAL AI', bg=t.PANEL, fg=t.MUTED, font=t.font(9, 'bold'), anchor='w')
     ai_title.pack(fill='x', padx=12, pady=(10, 2))
-    ai_detail = tk.Label(ai_box, bg=t.PANEL, fg=t.INK, font=t.font(9), anchor='w', justify='left', wraplength=130)
+    ai_detail = tk.Label(ai_box, text='Checking this PC…', bg=t.PANEL, fg=t.MUTED, font=t.font(9), anchor='w', justify='left', wraplength=130)
     ai_detail.pack(fill='x', padx=12, pady=(0, 10))
 
     # ---------------- Main area ----------------
@@ -129,15 +129,15 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
     # KPI tiles
     tiles = tk.Frame(main_area, bg=t.PAGE)
     tiles.pack(fill='x', padx=18, pady=(6, 4))
-    tile_defs = [('▦', 'Active projects', t.CYAN), ('▤', 'In queue', t.BRAND_HI),
-                 ('✓', 'Completed', t.SUCCESS), ('◆', 'Checks passing', t.SUCCESS),
-                 ('⬢', 'Builds ready', t.BRAND_HI), ('◷', 'Session uptime', t.CYAN)]
+    tile_defs = [('projects', '▦', 'Projects', t.CYAN), ('queue', '▤', 'In queue', t.BRAND_HI),
+                 ('completed', '✓', 'Completed', t.SUCCESS), ('passing', '◆', 'Checks', t.SUCCESS),
+                 ('builds', '⬢', 'Builds', t.BRAND_HI), ('uptime', '◷', 'Uptime', t.CYAN)]
     setters = {}
-    for i, (icon, label, accent) in enumerate(tile_defs):
+    for i, (key, icon, label, accent) in enumerate(tile_defs):
         tiles.columnconfigure(i, weight=1, uniform='tile')
         cell, setv = t.stat_tile(tiles, icon, label, accent)
         cell.grid(row=0, column=i, padx=5, sticky='nsew')
-        setters[label] = setv
+        setters[key] = setv
 
     # Content: left (request) + right (pipeline/activity)
     middle = tk.Frame(main_area, bg=t.PAGE)
@@ -224,9 +224,9 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
                        bg=t.PANEL, fg=t.MUTED, font=t.font(9), padx=2, pady=6)
     activity.pack(fill='both', expand=True, pady=(6, 0))
 
-    # Recent projects strip
-    rec_holder, rec = t.card(main_area)
-    rec_holder.pack(fill='x', padx=18, pady=(2, 14))
+    # Recent projects strip (reserved at the bottom so it is always visible)
+    rec_holder, rec = t.card(main_area, height=150)
+    rec_holder.pack(side='bottom', fill='x', padx=18, pady=(2, 14))
     tk.Label(rec, text='Recent projects', bg=t.PANEL, fg=t.INK, font=t.font(12, 'bold')).pack(anchor='w', pady=(0, 6))
     rec_table = ttk.Treeview(rec, columns=('name', 'status', 'folder'), show='headings', height=3)
     for c, title, w in [('name', 'Project', 200), ('status', 'Status', 140), ('folder', 'Folder', 420)]:
@@ -276,12 +276,12 @@ def main(*, auto_close_ms=None, ask=None, _plan_generator=None, _plan_model=None
 
     def refresh_stats():
         s = collect_stats(state)
-        setters['Active projects'](s['projects'])
-        setters['In queue'](s['queue'])
-        setters['Completed'](s['completed'])
-        setters['Checks passing'](s['passing'])
-        setters['Builds ready'](s['builds'])
-        setters['Session uptime'](_fmt_uptime(time.time() - started_at))
+        setters['projects'](s['projects'])
+        setters['queue'](s['queue'])
+        setters['completed'](s['completed'])
+        setters['passing'](s['passing'])
+        setters['builds'](s['builds'])
+        setters['uptime'](_fmt_uptime(time.time() - started_at))
 
     def refresh_recent():
         rec_table.delete(*rec_table.get_children())
