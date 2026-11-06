@@ -23,6 +23,14 @@ class SandboxPureTests(unittest.TestCase):
             with self.assertRaises(SandboxError):
                 sandbox.cmdline_for(bad, r'C:\o.txt')
 
+    def test_cmdline_rejects_hostile_stdout_path(self):
+        # The output path is interpolated into the same command line, so a quote
+        # or shell metacharacter there must be rejected too (no injection).
+        for bad_out in (r'C:\o\a"b.log', 'C:\\o\\a&b.log', 'C:\\o\\a\x00.log',
+                        'C:\\o\\a|b.log', 'C:\\o\\a>b.log', '', 'C:\\o\\x\\'):
+            with self.assertRaises(SandboxError):
+                sandbox.cmdline_for(['python.exe'], bad_out)
+
     def test_cmdline_redirects_output(self):
         line = sandbox.cmdline_for(['python.exe', '-c', 'print(1)'], r'C:\o\out.txt')
         self.assertTrue(line.startswith('cmd.exe /c "\"python.exe\" '))

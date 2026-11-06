@@ -71,6 +71,12 @@ def cmdline_for(argv: list[str], stdout_path: str) -> str:
     if not argv or any(not isinstance(a, str) or a == '' or a.endswith('\\')
                        or any(c in a for c in _CMDLINE_BAD) for a in argv):
         raise SandboxError('Command arguments must be non-empty, single-line, and free of shell metacharacters')
+    # The stdout path is interpolated into the same command line, so hold it to the
+    # same rule: a quote or shell metacharacter there could otherwise break out of
+    # the quoting and inject a command.
+    if (not isinstance(stdout_path, str) or stdout_path == '' or stdout_path.endswith('\\')
+            or any(c in stdout_path for c in _CMDLINE_BAD)):
+        raise SandboxError('Output path must be non-empty, single-line, and free of shell metacharacters')
     quoted = ' '.join(f'"{a}"' for a in argv)
     return f'cmd.exe /c "{quoted} > "{stdout_path}" 2>&1"'
 
