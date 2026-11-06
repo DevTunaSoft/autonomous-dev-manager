@@ -110,7 +110,11 @@ def apply_patch(root: Path, patch: dict) -> list[str]:
         if not isinstance(name, str) or not isinstance(content, str) or len(content) > 250_000:
             raise SafetyError('Invalid file replacement data')
         rel = Path(name)
-        if rel.is_absolute() or '..' in rel.parts or len(rel.parts) != 1 or not name.endswith('.py') or name.startswith('test_'):
+        # Reject control characters (incl. null byte) explicitly: a null byte makes
+        # Path.is_file() raise ValueError on Python 3.12 (the version the EXE bundles)
+        # but return False on 3.13, so guard here for consistent SafetyError behaviour.
+        if (rel.is_absolute() or '..' in rel.parts or len(rel.parts) != 1 or not name.endswith('.py')
+                or name.startswith('test_') or any(ord(c) < 32 for c in name)):
             raise SafetyError('Only existing top-level application Python files can be edited')
         path = root / name
         if name in seen or not path.is_file() or path.is_symlink():

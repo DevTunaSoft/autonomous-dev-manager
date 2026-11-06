@@ -25,6 +25,15 @@ class DirectTests(unittest.TestCase):
         self.assertFalse(result['live_model_verified'])
         self.assertEqual(len(result['attempts']), 1)
 
+    def test_apply_patch_rejects_control_chars_and_containment_escapes(self):
+        # apply_patch is the containment boundary: generated code cannot escape
+        # the project folder or use control-character paths. Consistent across
+        # Python 3.12/3.13 (null byte raised ValueError on 3.12 via is_file()).
+        for bad in ('x\x00.py', 'a\tb.py', '../escape.py', 'sub/x.py', 'app.txt', 'test_app.py'):
+            with self.assertRaises(SafetyError):
+                apply_patch(self.root, {'files': [{'path': bad, 'content': 'y = 1\n'}]})
+            self.assertFalse((self.base / 'escape.py').exists())
+
     def test_faulty_test_runner_never_crashes_or_falsely_verifies(self):
         # A flaky/faulty executor (raises, times out, or returns a malformed
         # result) must not crash the loop, and must never yield a verified pass.
