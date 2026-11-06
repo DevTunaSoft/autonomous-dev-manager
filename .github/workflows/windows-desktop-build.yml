@@ -6,6 +6,7 @@ on:
     paths:
       - 'adm/**'
       - 'tests/**'
+      - 'tools/**'
       - 'BUILD-WINDOWS-DESKTOP.cmd'
       - 'VERIFY-WINDOWS-DESKTOP.ps1'
       - '.github/workflows/windows-desktop-build.yml'
