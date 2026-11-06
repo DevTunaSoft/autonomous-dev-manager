@@ -19,6 +19,15 @@ import inspect
 import sys
 import app
 
+# Force UTF-8 output so a program whose name or output contains non-ASCII text
+# (e.g. "cafe" with an accent, or an emoji) does not crash on a Windows console,
+# whose default code page (cp1252) cannot encode those characters.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 TITLE = __ADM_TITLE__
 EXE = __ADM_EXE__
 

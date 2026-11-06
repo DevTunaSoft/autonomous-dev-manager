@@ -98,7 +98,7 @@ jobs:
         run: |
           python -B -m adm.regression --root . --timeout 300 --output win-regression/regression.json
           $code = $LASTEXITCODE
-          python -c "import json;r=json.load(open('win-regression/regression.json'));[print('=== %s %s (%s tests)\n%s' % (m['module'],m['status'],m['tests'],m['output_tail'][-2500:])) for m in r['modules'] if m['status']!='passed']"
+          python -c "import sys,json; sys.stdout.reconfigure(encoding='utf-8',errors='replace'); r=json.load(open('win-regression/regression.json')); [print('=== %s %s (%s tests)\n%s' % (m['module'],m['status'],m['tests'],m['output_tail'][-2500:])) for m in r['modules'] if m['status']!='passed']"
           exit $code
       - name: Adversarial fuzz harnesses
         shell: pwsh

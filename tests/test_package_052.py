@@ -30,16 +30,16 @@ class PackageTests(unittest.TestCase):
         compile(entry.read_text(), 'main.py', 'exec')               # valid Python
         # the generated CLI actually runs the app's functions
         r = subprocess.run([sys.executable, str(entry), 'add', '2', '3'],
-                           cwd=self.root, capture_output=True, text=True, timeout=30)
+                           cwd=self.root, capture_output=True, text=True, encoding='utf-8', timeout=30)
         self.assertEqual(r.returncode, 0)
         self.assertIn('5', r.stdout)
         r = subprocess.run([sys.executable, str(entry), '--help'], cwd=self.root,
-                           capture_output=True, text=True, timeout=30)
+                           capture_output=True, text=True, encoding='utf-8', timeout=30)
         self.assertIn('add', r.stdout)
         self.assertIn('greet', r.stdout)
         # an unknown command exits non-zero without crashing
         r = subprocess.run([sys.executable, str(entry), 'nope'], cwd=self.root,
-                           capture_output=True, text=True, timeout=30)
+                           capture_output=True, text=True, encoding='utf-8', timeout=30)
         self.assertEqual(r.returncode, 2)
 
     def test_write_entry_does_not_overwrite_existing_main(self):
@@ -84,7 +84,7 @@ class PackageTests(unittest.TestCase):
             src = entry.read_text(encoding='utf-8')
             compile(src, 'main.py', 'exec')         # must be valid Python
             r = subprocess.run([sys.executable, str(entry), 'add', '2', '3'],
-                               cwd=root, capture_output=True, text=True, timeout=30)
+                               cwd=root, capture_output=True, text=True, encoding='utf-8', timeout=30)
             self.assertEqual(r.returncode, 0, f'title={title!r}: {r.stderr}')
             self.assertIn('5', r.stdout)
 
