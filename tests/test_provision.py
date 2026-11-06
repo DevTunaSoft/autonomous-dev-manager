@@ -57,4 +57,15 @@ class ProvisionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             execute_plan(self.plan, self.path, approved=True, executor=self.execute)
 
+    def test_corrupt_journal_with_nondict_result_value_rejected(self):
+        # A tampered resume journal whose results value is not a dict must raise
+        # ValueError, never AttributeError on .get().
+        fp = json.dumps(self.plan['steps'], sort_keys=True)
+        for bad in ('{"results": {"install_ollama": "notadict"}, "fingerprint": %s}' % json.dumps(fp),
+                    '{"results": {"install_ollama": 123}, "fingerprint": %s}' % json.dumps(fp),
+                    '{"results": {"install_ollama": null}, "fingerprint": %s}' % json.dumps(fp)):
+            self.path.write_text(bad, encoding='utf-8')
+            with self.assertRaises(ValueError):
+                execute_plan(self.plan, self.path, approved=True, executor=self.execute)
+
 if __name__ == '__main__': unittest.main()

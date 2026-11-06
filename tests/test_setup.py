@@ -75,5 +75,19 @@ class SetupTests(unittest.TestCase):
         self.assertEqual(result['status'], 'failed')
 
 
+class MalformedInputTests(unittest.TestCase):
+    def test_execute_step_rejects_non_dict_step(self):
+        for step in (None, [], 'x', 42):
+            with self.assertRaises(ValueError):
+                execute_step(step, approved=True, system='Windows')
+
+    def test_build_plan_rejects_non_mapping_binaries_or_hardware(self):
+        hw = {'ram_available_bytes': 16 * GIB, 'disk_free_bytes': 100 * GIB}
+        with self.assertRaises(ValueError):
+            build_plan(system='Windows', binaries='notadict', hardware=hw)
+        with self.assertRaises(ValueError):
+            build_plan(system='Windows', binaries={}, hardware='notadict')
+
+
 if __name__ == '__main__':
     unittest.main()

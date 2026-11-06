@@ -55,7 +55,8 @@ def execute_plan(plan: dict, journal_path: str | Path, *, approved: bool = False
             state = json.loads(path.read_text(encoding='utf-8'))
         except (OSError, ValueError, RecursionError) as exc:
             raise ValueError('Existing setup journal is unreadable') from exc
-        if not isinstance(state, dict) or not isinstance(state.get('results'), dict):
+        if not isinstance(state, dict) or not isinstance(state.get('results'), dict) \
+                or any(not isinstance(v, dict) for v in state['results'].values()):
             raise ValueError('Existing setup journal is malformed')
         if state.get('fingerprint') != fingerprint:
             raise ValueError('Existing setup journal belongs to a different plan')

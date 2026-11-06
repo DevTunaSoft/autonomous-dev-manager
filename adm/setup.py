@@ -55,6 +55,8 @@ def build_plan(*, system: str | None = None, binaries: dict | None = None,
     system = system or platform.system()
     binaries = binaries if binaries is not None else {x: shutil.which(x) for x in ('winget', 'ollama', 'opencode')}
     hardware = hardware if hardware is not None else resources()
+    if not isinstance(binaries, dict) or not isinstance(hardware, dict):
+        raise ValueError('binaries and hardware must be mappings')
     selected = model or choose_model(hardware)
     if selected not in MODELS.values():
         raise ValueError('Model must be an explicitly allowlisted local model')
@@ -90,6 +92,8 @@ def execute_step(step: dict, *, approved: bool = False,
         raise PermissionError('Installation or model download requires explicit approval')
     if (system or platform.system()) != 'Windows':
         raise RuntimeError('Provisioning execution is Windows-only')
+    if not isinstance(step, dict):
+        raise ValueError('Invalid setup command')
     key, argv = step.get('key'), step.get('argv')
     if not isinstance(argv, (list, tuple)) or not all(isinstance(v, str) for v in argv):
         raise ValueError('Invalid setup command')
