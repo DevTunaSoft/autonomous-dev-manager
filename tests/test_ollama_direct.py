@@ -25,6 +25,25 @@ class DirectTests(unittest.TestCase):
         self.assertFalse(result['live_model_verified'])
         self.assertEqual(len(result['attempts']), 1)
 
+    def test_faulty_test_runner_never_crashes_or_falsely_verifies(self):
+        # A flaky/faulty executor (raises, times out, or returns a malformed
+        # result) must not crash the loop, and must never yield a verified pass.
+        import subprocess
+        def fix(model, prompt, timeout):
+            return {'files': [{'path': 'calculator.py', 'content': 'def add(a, b):\n    return a + b\n'}]}
+        faulty = {
+            'raise': lambda *a, **k: (_ for _ in ()).throw(OSError('disk fail')),
+            'timeout': lambda *a, **k: (_ for _ in ()).throw(subprocess.TimeoutExpired('cmd', 1)),
+            'no_exit': lambda *a, **k: {'output': 'x'},
+            'not_dict': lambda *a, **k: 'nope',
+            'none': lambda *a, **k: None,
+        }
+        for name, runner in faulty.items():
+            root = make_broken_demo(self.base / ('f_' + name))
+            ev = self.base / ('fev_' + name)
+            report = direct_repair(root, ev, max_repairs=2, generator=fix, runner=runner)  # must not raise
+            self.assertNotEqual(report['status'], 'verified_direct_repair', name)
+
     def test_failed_patch_restores_source(self):
         original = (self.root / 'calculator.py').read_bytes()
         result = direct_repair(self.root, self.evidence, max_repairs=1,

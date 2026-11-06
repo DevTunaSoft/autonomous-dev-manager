@@ -157,6 +157,21 @@ def _emit(on_event, stage, **detail):
         pass
 
 
+def _invoke_runner(runner, root, timeout):
+    """Call the test runner and normalise its result so the repair loop can never
+    be crashed by a flaky/faulty executor (disk pressure, process kill, OS error,
+    or a malformed return). Any fault becomes a non-passing run with a recorded
+    reason, which is the honest outcome: the tests did not demonstrably pass."""
+    try:
+        result = runner(test_command(), root, root, timeout=timeout)
+    except Exception as exc:          # noqa: BLE001 - runner is an injected boundary
+        return {'exit_code': -1, 'output': f'test runner failed: {type(exc).__name__}: {exc}'}
+    if not isinstance(result, dict) or not isinstance(result.get('exit_code'), int) or isinstance(result.get('exit_code'), bool):
+        return {'exit_code': -1, 'output': f'test runner returned a malformed result: {result!r}'[:500]}
+    output = result.get('output')
+    return {'exit_code': result['exit_code'], 'output': output if isinstance(output, str) else str(output)}
+
+
 def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
                   max_repairs=2, timeout=90, generator=request_patch,
                   inference_timeout=DEFAULT_INFERENCE_TIMEOUT,
@@ -189,7 +204,7 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
     protected = protected_hashes(root)
     initial = source_hashes(root)
     _emit(on_event, 'baseline')
-    baseline = runner(test_command(), root, root, timeout=timeout)
+    baseline = _invoke_runner(runner, root, timeout)
     report = {'status': 'baseline_passed' if baseline['exit_code'] == 0 else 'baseline_failed',
               'model': model, 'baseline': baseline, 'attempts': [], 'live_model_verified': False, 'network_generator': False,
               'gate': 'tests_only', 'isolation': 'sandbox' if getattr(runner, 'adm_isolation', None) == 'sandbox' else 'none',
@@ -234,13 +249,13 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
             changed = apply_patch(root, patch)
             report['status'] = 'testing_patch'
             atomic_json(report_path, report)
-            result = runner(test_command(), root, root, timeout=timeout)
+            result = _invoke_runner(runner, root, timeout)
             safe = protected_hashes(root) == protected
             # A second independent invocation guards against a one-off/flaky green test.
             # Never mark success based on only one passing process.
             verification = None
             if result['exit_code'] == 0 and safe and source_hashes(root) != initial:
-                verification = runner(test_command(), root, root, timeout=timeout)
+                verification = _invoke_runner(runner, root, timeout)
             safe = safe and protected_hashes(root) == protected
             successful = (verification is not None and verification['exit_code'] == 0
                           and safe and source_hashes(root) != initial)
