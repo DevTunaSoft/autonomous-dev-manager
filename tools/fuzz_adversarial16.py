@@ -87,7 +87,10 @@ def pass_journal_roundtrip(base):
     ev = base / 'evrt'
     patch = {'files': [{'path': 'app.py', 'content': 'x = 2   # changed\n'}]}
     rr.prepare_journal(root, ev, patch)
-    (root / 'app.py').write_text('x = 2   # changed\n', encoding='utf-8')   # the replacement got written
+    # Write the replacement exactly as apply_patch does (no newline translation),
+    # so the bytes match the recorded hash on Windows too (write_text would turn
+    # \n into \r\n on Windows and look like an unexpected change).
+    (root / 'app.py').write_text('x = 2   # changed\n', encoding='utf-8', newline='')
     returns('recover_roundtrip', lambda: rr.recover_journal(root, ev), True)
     if (root / 'app.py').read_text() != 'x = 1\n':
         BUGS.append('[recover_roundtrip] original not restored')
