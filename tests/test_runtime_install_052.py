@@ -51,5 +51,18 @@ class RuntimeInstallTests(unittest.TestCase):
         self.assertIsNone(runtime_install.ensure_runtime())   # not frozen in tests
 
 
+    def test_fixup_pth_tolerates_non_utf8_pth(self):
+        # A corrupt/non-UTF8 ._pth must not crash the runtime install; the file
+        # is still fixed to contain '.' and 'import site'.
+        d = Path(self.tmp.name) / 'binpth'
+        d.mkdir()
+        (d / 'python312._pth').write_bytes(b'python312.zip\r\n\xff\xfe\x00bad\n#import site\n')
+        res = runtime_install.fixup_pth(d)                 # must not raise
+        self.assertIsNotNone(res)
+        txt = res.read_text(encoding='utf-8', errors='replace')
+        self.assertIn('.', txt.splitlines())
+        self.assertIn('import site', txt)
+
+
 if __name__ == '__main__':
     unittest.main()

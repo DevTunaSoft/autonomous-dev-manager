@@ -27,7 +27,9 @@ def fixup_pth(py_dir) -> Path | None:
     py_dir = Path(py_dir)
     for pth in sorted(py_dir.glob('python*._pth')):
         out, have_dot, have_site = [], False, False
-        for line in pth.read_text(encoding='utf-8').splitlines():
+        # A corrupt embeddable distribution could ship a non-UTF8 ._pth; decode
+        # tolerantly rather than crash the runtime install (we rewrite it anyway).
+        for line in pth.read_text(encoding='utf-8', errors='replace').splitlines():
             s = line.strip()
             if s == '.':
                 have_dot = True
