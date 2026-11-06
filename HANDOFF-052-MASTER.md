@@ -8,8 +8,8 @@
 | **Date** | 2026-11-05 |
 | **Language / runtime** | Python 3.12 (the version the EXE bundles); code also runs on 3.13 |
 | **Platform** | Windows 11 desktop app; test suite is cross-platform |
-| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 23 fuzz harnesses |
-| **Test status** | `OVERALL: PASS; 447 completed tests` |
+| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 25 fuzz harnesses |
+| **Test status** | `OVERALL: PASS; 448 completed tests` |
 | **GUI** | Dark-theme dashboard, **plain Tkinter** (no third-party UI deps) |
 
 This handoff is written for an engineer reviewing the project cold and for the maintainers who will extend it. It is intentionally detailed: it documents the product constraints, the architecture, every module group with its key API, the on-disk data formats, the security/sandbox model, the build pipeline semantics, the packaging subsystem, the testing and adversarial-fuzzing strategy, the CI, and an explicit extension guide. Sections 1–4 are orientation; 5–14 are the system in depth; 15–18 are operations; 19–23 are status, caveats, and how to extend.
@@ -322,7 +322,7 @@ These are real defects found and fixed; they are the kind of thing a reviewer sh
 
 ## 15. Testing: inventory and how to run
 
-**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 447 completed tests`.
+**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 448 completed tests`.
 **One file:** `PYTHONPATH=. python tests/test_package_052.py`.
 **One fuzz round:** `python -I tools/fuzz_adversarial11.py`.
 
@@ -362,6 +362,8 @@ Each harness throws hostile/malformed input at a subsystem. **Graceful** = retur
 | **21** | `…21.py` | **core.Supervisor** durability: corrupt job row (bad JSON / non-list / empty / non-str) | **5 bugs:** `run_next` did an unguarded `json.loads` + unvalidated argv, crashing the loop. Fixed to mirror `worker.run_once` (fail the one task cleanly). |
 | **22** | `…22.py` | **provisioning/setup**: `execute_plan` corrupt journals, `execute_step`/`build_plan` malformed inputs | **9 bugs:** a tampered resume journal (non-dict result value) and non-dict `step`/`binaries`/`hardware` crashed with `AttributeError` on `.get()`. Fixed with dict-shape validation → `ValueError`. |
 | **23** | `…23.py` | **runtime install / AI reconcile**: `fixup_pth` on corrupt `._pth`; `inspect_repair`/`enqueue_repair` guards | **1 bug:** `fixup_pth` read the embeddable `._pth` as strict UTF-8, so a corrupt/non-UTF8 file crashed the runtime install. Fixed with `errors='replace'`. (`queued_ai` robust.) |
+| **24** | `…24.py` | **model_probe**: hostile Ollama responses to `/api/tags` & `/api/generate` (injected opener) | **0 bugs** — redirect refusal, size cap, shape validation, broad except all hold. |
+| **25** | `…25.py` | **fault injection on the TEST RUNNER**: raises/timeouts/malformed/None results | **18 bugs:** the baseline runner call was unguarded, so a flaky executor crashed the build (OSError/TimeoutExpired/KeyError/TypeError). Fixed with a normalising `_invoke_runner()` at every call site. |
 
 Rounds 10 and 11 each found real bugs on first contact with new code; round 12 found none (the packaging seam was already hardened by round 10), so further rounds against newer seams (packaging filesystem/concurrency, the build→report→stats→package contract, GUI event streaming) would likely still be productive.
 
@@ -543,7 +545,7 @@ Every file in `adm/` with its purpose. "stdlib-only" is the default; exceptions 
 ```
 # 1. unzip the cumulative package to a clean folder, then:
 cd <folder>
-python3 -m adm.regression        # expect: OVERALL: PASS; 447 completed tests
+python3 -m adm.regression        # expect: OVERALL: PASS; 448 completed tests
 python3 -I tools/fuzz_adversarial13.py   # (and 1..12) expect: N checks ok, 0 bugs
 ```
 No install step, no virtualenv, no network needed for the suite. Python 3.12 or 3.13.
@@ -605,8 +607,10 @@ Every defect below was found by an adversarial harness, root-caused, fixed perma
 | 21 | 5 | `core.Supervisor.run_next` unguarded `json.loads` + unvalidated argv | validate stored command; fail the one task cleanly (mirror `worker.run_once`) | `test_core` |
 | 22 | 9 | `execute_plan` didn't check result values are dicts; `execute_step`/`build_plan` called `.get` on possibly-non-dict args | dict-shape validation → `ValueError` | `test_provision`, `test_setup` |
 | 23 | 1 | `fixup_pth` decoded `._pth` as strict UTF-8 | decode with `errors='replace'` | `test_runtime_install_052` |
+| 24 | 0 | — (model_probe hostile-response parsing held) | — | harness only (injected opener) |
+| 25 | 18 | baseline test-runner call unguarded; a flaky executor crashed the build | normalising `_invoke_runner()` at baseline/attempt/verification | `test_ollama_direct` |
 
-**Totals this pass:** 76 defects fixed across rounds 10, 11, 13, 14, 15, 16, 17, 21, 22, 23. Rounds 12, 18, 19, 20 found none: 18 proves the repair-loop honesty invariants, 19 confirms archive hardening, 20 confirms the worker single-owner claim under real concurrency. Round 21 then found a latent corrupt-DB-row crash in the secondary (ADM-002) supervisor, fixed for consistency with the hardened worker. The hot untrusted-input and concurrency paths are well-hardened; occasional latent issues remain in secondary code paths. All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
+**Totals this pass:** 94 defects fixed across rounds 10, 11, 13, 14, 15, 16, 17, 21, 22, 23, 25. Rounds 12, 18, 19, 20 found none: 18 proves the repair-loop honesty invariants, 19 confirms archive hardening, 20 confirms the worker single-owner claim under real concurrency. Round 21 then found a latent corrupt-DB-row crash in the secondary (ADM-002) supervisor, fixed for consistency with the hardened worker. The hot untrusted-input and concurrency paths are well-hardened; occasional latent issues remain in secondary code paths — e.g. round 25 found an unguarded baseline test-runner call that crashed the build under a flaky executor, a genuine autonomous fault-tolerance gap now fixed. All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
 
 **Remaining risks / not verified here:** real local-model generation quality (fake model used in this environment); the actual PyInstaller EXE build and the Windows sandbox confinement (Windows CI only, not this Linux workspace); GUI pixel rendering (logic is tested headless, screenshots run in a separate CI job).
 
