@@ -9,7 +9,7 @@
 | **Language / runtime** | Python 3.12 (the version the EXE bundles); code also runs on 3.13 |
 | **Platform** | Windows 11 desktop app; test suite is cross-platform |
 | **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 28 fuzz harnesses |
-| **Test status** | `OVERALL: PASS; 450 completed tests` |
+| **Test status** | `OVERALL: PASS; 450 completed tests` — **green on Windows CI too** (both windows-build and windows-full-regression jobs pass; EXE artifact produced) |
 | **GUI** | Dark-theme dashboard, **plain Tkinter** (no third-party UI deps) |
 
 This handoff is written for an engineer reviewing the project cold and for the maintainers who will extend it. It is intentionally detailed: it documents the product constraints, the architecture, every module group with its key API, the on-disk data formats, the security/sandbox model, the build pipeline semantics, the packaging subsystem, the testing and adversarial-fuzzing strategy, the CI, and an explicit extension guide. Sections 1–4 are orientation; 5–14 are the system in depth; 15–18 are operations; 19–23 are status, caveats, and how to extend.
@@ -401,6 +401,7 @@ On Windows: run **`BUILD-WINDOWS-DESKTOP.cmd`** (PyInstaller one-file, windowed 
 
 ## 20. Known limitations, caveats, and open decisions
 
+0. **Windows CI is green and produces `ADM-Desktop.exe`** (artifact `ADM-Desktop-Windows-unverified`), with the embeddable Python runtime bundled (`pyembed`), so the ADM app itself runs as a standalone EXE on Windows without a Python install. Runtime *acceptance* on a real machine (below) is still unproven.
 1. **PyInstaller not yet bundled for the end-user PC.** Packaging is implemented and proven on CI (where PyInstaller is installed). On the user's PC the Package step shows an honest message — *"Packaging needs Python with PyInstaller, which is not available yet on this PC"* — until a future update bundles a packager. The build/test/auto-fix pipeline is unaffected. See `package.find_packager_python`.
 2. **Auto-package vs. manual button (open UX decision).** Today a verified build flows straight into packaging (`finish_build → start_package`). A manual "Package to EXE" button was discussed as possibly safer for non-coders; not implemented.
 3. **Generated-program quality tracks the local model.** ADM's guarantees are about *process honesty and containment*, not model cleverness.
@@ -615,6 +616,7 @@ Every defect below was found by an adversarial harness, root-caused, fixed perma
 | 26 | 0 | — (build-lock contention + release-on-fault held) | — | harness only (3x stable) |
 | 27 | 0* | *proactive cross-version hardening:* null-byte path raised ValueError on Py3.12 (EXE) vs False on 3.13 | explicit control-char guard in `apply_patch` → SafetyError on all versions | `test_ollama_direct` |
 | 28 | 6 | `cmdline_for` didn't validate the sandbox `stdout_path` → command-injection vector | hold the output path to the same metachar/empty/backslash rule | `test_sandbox_052` |
+| Win | 1 | **Windows-only product bug:** the generated program crashed (`UnicodeEncodeError`, cp1252) when its title/output contained non-ASCII (e.g. an accented or emoji program name) | generated entry reconfigures stdout/stderr to UTF-8 at startup | `test_package_052` |
 
 **Totals this pass:** 100 defects fixed across rounds 10, 11, 13, 14, 15, 16, 17, 21, 22, 23, 25, 28, plus a cross-version containment hardening in round 27. Rounds 12, 18, 19, 20 found none: 18 proves the repair-loop honesty invariants, 19 confirms archive hardening, 20 confirms the worker single-owner claim under real concurrency. Round 21 then found a latent corrupt-DB-row crash in the secondary (ADM-002) supervisor, fixed for consistency with the hardened worker. The hot untrusted-input and concurrency paths are well-hardened; occasional latent issues remain in secondary code paths — e.g. round 25 found an unguarded baseline test-runner call that crashed the build under a flaky executor, a genuine autonomous fault-tolerance gap now fixed. All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
 
