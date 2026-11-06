@@ -8,8 +8,8 @@
 | **Date** | 2026-11-05 |
 | **Language / runtime** | Python 3.12 (the version the EXE bundles); code also runs on 3.13 |
 | **Platform** | Windows 11 desktop app; test suite is cross-platform |
-| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 27 fuzz harnesses |
-| **Test status** | `OVERALL: PASS; 449 completed tests` |
+| **Size** | 50 modules in `adm/` (~6,640 LOC), 64 test files, 28 fuzz harnesses |
+| **Test status** | `OVERALL: PASS; 450 completed tests` |
 | **GUI** | Dark-theme dashboard, **plain Tkinter** (no third-party UI deps) |
 
 This handoff is written for an engineer reviewing the project cold and for the maintainers who will extend it. It is intentionally detailed: it documents the product constraints, the architecture, every module group with its key API, the on-disk data formats, the security/sandbox model, the build pipeline semantics, the packaging subsystem, the testing and adversarial-fuzzing strategy, the CI, and an explicit extension guide. Sections 1–4 are orientation; 5–14 are the system in depth; 15–18 are operations; 19–23 are status, caveats, and how to extend.
@@ -322,7 +322,7 @@ These are real defects found and fixed; they are the kind of thing a reviewer sh
 
 ## 15. Testing: inventory and how to run
 
-**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 449 completed tests`.
+**Run everything:** `python -m adm.regression` → expect `OVERALL: PASS; 450 completed tests`.
 **One file:** `PYTHONPATH=. python tests/test_package_052.py`.
 **One fuzz round:** `python -I tools/fuzz_adversarial11.py`.
 
@@ -366,6 +366,7 @@ Each harness throws hostile/malformed input at a subsystem. **Graceful** = retur
 | **25** | `…25.py` | **fault injection on the TEST RUNNER**: raises/timeouts/malformed/None results | **18 bugs:** the baseline runner call was unguarded, so a flaky executor crashed the build (OSError/TimeoutExpired/KeyError/TypeError). Fixed with a normalising `_invoke_runner()` at every call site. |
 | **26** | `…26.py` | **build-level concurrency + fault**: 7 `build_from_plan` racing on one folder; a generator crashing mid-build | **0 bugs** — project lock serialises cleanly (one builds, rest fail with clear SafetyError), releases on a faulting build (later build on same folder succeeds), no deadlock/corruption. |
 | **27** | `…27.py` | **apply_patch containment**: traversal/absolute/subdir/symlink/control-char/oversized/protected-file patches | **0 crashes; 1 cross-version hardening:** all escapes rejected; added a control-char (null byte) guard so containment raises SafetyError on Python 3.12 too (not just 3.13). |
+| **28** | `…28.py` | **sandbox command-builders**: `cmdline_for` argv+stdout quoting, `refuse_hardened_location` bypass attempts | **6 bugs:** `cmdline_for` validated argv but not the `stdout_path` it interpolates into the same command line → a quote/metachar there could inject a command. Fixed: same validation for the output path. (`refuse_hardened_location` solid.) |
 
 Rounds 10 and 11 each found real bugs on first contact with new code; round 12 found none (the packaging seam was already hardened by round 10), so further rounds against newer seams (packaging filesystem/concurrency, the build→report→stats→package contract, GUI event streaming) would likely still be productive.
 
@@ -547,7 +548,7 @@ Every file in `adm/` with its purpose. "stdlib-only" is the default; exceptions 
 ```
 # 1. unzip the cumulative package to a clean folder, then:
 cd <folder>
-python3 -m adm.regression        # expect: OVERALL: PASS; 449 completed tests
+python3 -m adm.regression        # expect: OVERALL: PASS; 450 completed tests
 python3 -I tools/fuzz_adversarial13.py   # (and 1..12) expect: N checks ok, 0 bugs
 ```
 No install step, no virtualenv, no network needed for the suite. Python 3.12 or 3.13.
@@ -613,8 +614,9 @@ Every defect below was found by an adversarial harness, root-caused, fixed perma
 | 25 | 18 | baseline test-runner call unguarded; a flaky executor crashed the build | normalising `_invoke_runner()` at baseline/attempt/verification | `test_ollama_direct` |
 | 26 | 0 | — (build-lock contention + release-on-fault held) | — | harness only (3x stable) |
 | 27 | 0* | *proactive cross-version hardening:* null-byte path raised ValueError on Py3.12 (EXE) vs False on 3.13 | explicit control-char guard in `apply_patch` → SafetyError on all versions | `test_ollama_direct` |
+| 28 | 6 | `cmdline_for` didn't validate the sandbox `stdout_path` → command-injection vector | hold the output path to the same metachar/empty/backslash rule | `test_sandbox_052` |
 
-**Totals this pass:** 94 defects fixed across rounds 10, 11, 13, 14, 15, 16, 17, 21, 22, 23, 25, plus a cross-version containment hardening in round 27. Rounds 12, 18, 19, 20 found none: 18 proves the repair-loop honesty invariants, 19 confirms archive hardening, 20 confirms the worker single-owner claim under real concurrency. Round 21 then found a latent corrupt-DB-row crash in the secondary (ADM-002) supervisor, fixed for consistency with the hardened worker. The hot untrusted-input and concurrency paths are well-hardened; occasional latent issues remain in secondary code paths — e.g. round 25 found an unguarded baseline test-runner call that crashed the build under a flaky executor, a genuine autonomous fault-tolerance gap now fixed. All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
+**Totals this pass:** 100 defects fixed across rounds 10, 11, 13, 14, 15, 16, 17, 21, 22, 23, 25, 28, plus a cross-version containment hardening in round 27. Rounds 12, 18, 19, 20 found none: 18 proves the repair-loop honesty invariants, 19 confirms archive hardening, 20 confirms the worker single-owner claim under real concurrency. Round 21 then found a latent corrupt-DB-row crash in the secondary (ADM-002) supervisor, fixed for consistency with the hardened worker. The hot untrusted-input and concurrency paths are well-hardened; occasional latent issues remain in secondary code paths — e.g. round 25 found an unguarded baseline test-runner call that crashed the build under a flaky executor, a genuine autonomous fault-tolerance gap now fixed. All are concurrency/robustness/data-corruption classes against untrusted model output, corrupt on-disk state, and hostile inputs — none required target hardware to reproduce.
 
 **Remaining risks / not verified here:** real local-model generation quality (fake model used in this environment); the actual PyInstaller EXE build and the Windows sandbox confinement (Windows CI only, not this Linux workspace); GUI pixel rendering (logic is tested headless, screenshots run in a separate CI job).
 
