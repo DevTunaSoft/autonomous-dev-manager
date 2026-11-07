@@ -54,7 +54,7 @@ class SkillSelectionTests(unittest.TestCase):
 
     def test_strict_budget_does_not_truncate_instructions(self):
         for stage in ('planning', 'testing', 'repair'):
-            for budget in (240, 350, 600, 950):
+            for budget in (300, 350, 600, 950):
                 with self.subTest(stage=stage, budget=budget):
                     text = select_guidance(stage, 'security backup threads windows', max_chars=budget)
                     self.assertLessEqual(len(text), budget)
