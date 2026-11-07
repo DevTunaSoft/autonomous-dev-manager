@@ -79,7 +79,7 @@ with tempfile.TemporaryDirectory(prefix='adm-056-fuzz-') as temp:
         ev = parent / f'good-evidence-{i}'
         new = f'replacement_{i}\n'
         prepare_journal(root, ev, {'files': [{'path': 'app.py', 'content': new}]})
-        source.write_text(new, encoding='utf-8')
+        source.write_bytes(new.encode('utf-8'))
         try:
             _recover_interrupted(root, ev)
             checks += 1
