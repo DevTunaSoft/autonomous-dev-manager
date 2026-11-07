@@ -261,7 +261,7 @@ class BuildStageTests(unittest.TestCase):
         ev = build.evidence_root(self.state) / plan['id']
         ev.mkdir(parents=True)
         prepare_journal(root, ev, {'files': [{'path': 'app.py', 'content': 'def tip_total(b, t):\n    return -1\n'}]})
-        (root / 'app.py').write_text('def tip_total(b, t):\n    return -1\n')   # half-applied, not the stub
+        (root / 'app.py').write_bytes(b'def tip_total(b, t):\n    return -1\n')   # emulate apply_patch's exact LF bytes
         report = build.run_build(self.state, plan['path'], test_generator=test_gen(), code_generator=code_gen(),
                                  model='ollama/x', runner=sandbox_runner(), require_sandbox=True)
         self.assertEqual(report['status'], 'built')

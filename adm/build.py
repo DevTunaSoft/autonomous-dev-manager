@@ -456,17 +456,61 @@ def _safe_evidence(state, plan) -> Path:
 
 
 def _recover_interrupted(root: Path, ev: Path) -> None:
-    """Roll back a half-applied patch from a crashed build, then clear stale evidence for a clean retry."""
+    """Recover verified crash journals, or STOP without destroying evidence.
+
+    Called while holding the project lock and before any scaffold reset.
+    A bad journal means the project may contain uncommitted/unknown changes.
+    Silently deleting that journal would make safe recovery impossible.
+    """
+    import re
     import shutil
+    root = Path(root).resolve()
+    ev = Path(ev)
+    if ev.is_symlink():
+        raise SafetyError('Recovery evidence is a symlink; refusing to delete it')
+    actual = ev.resolve()
+    if actual == root or root in actual.parents or actual in root.parents:
+        raise SafetyError('Recovery evidence overlaps the project; refusing destructive cleanup')
     if not ev.exists():
         return
+    if not ev.is_dir():
+        raise SafetyError('Recovery evidence must be a directory')
+
     try:
-        if (ev / 'repair-journal.json').exists():
-            from .repair_recovery import recover_journal
-            recover_journal(root, ev)
-    except SafetyError:
-        pass
-    shutil.rmtree(ev, ignore_errors=True)
+        contents = list(ev.iterdir())
+    except OSError as exc:
+        raise SafetyError('Cannot inspect existing recovery evidence') from exc
+    known = {'repair-journal.json', 'ollama-direct-report.json', 'baseline-output.log'}
+    for item in contents:
+        name = item.name
+        allowed = name in known or re.fullmatch(r'attempt-[1-5]-output\.log', name) is not None
+        if not allowed or item.is_symlink() or not item.is_file():
+            raise SafetyError('Unknown or unsafe recovery evidence; preserving it for inspection')
+    if contents and not ({p.name for p in contents} & {'repair-journal.json', 'ollama-direct-report.json'}):
+        raise SafetyError('Recovery evidence lacks an ADM journal/report; refusing deletion')
+
+    report_path = ev / 'ollama-direct-report.json'
+    if report_path.exists():
+        try:
+            if report_path.stat().st_size > 2 * 1024 * 1024:
+                raise SafetyError('Existing repair report is too large; preserving evidence')
+            prior = json.loads(report_path.read_text(encoding='utf-8'))
+            if not isinstance(prior, dict) or not isinstance(prior.get('status'), str):
+                raise SafetyError('Malformed repair report; preserving evidence')
+        except (OSError, ValueError, RecursionError) as exc:
+            raise SafetyError('Unreadable repair report; preserving evidence') from exc
+
+    journal = ev / 'repair-journal.json'
+    if journal.exists():
+        from .repair_recovery import recover_journal
+        # DO NOT swallow SafetyError: damaged/unexpected data must preserve the
+        # journal and original workspace for a future safe recovery decision.
+        recover_journal(root, ev)
+
+    try:
+        shutil.rmtree(ev)
+    except OSError as exc:
+        raise SafetyError('Could not clear verified evidence safely; retry blocked') from exc
 
 
 def _reset_scaffold(root: Path) -> None:
