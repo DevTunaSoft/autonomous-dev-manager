@@ -115,7 +115,9 @@ class BuildStageTests(unittest.TestCase):
     # --- the honesty guards ------------------------------------------
     def test_trivial_tests_that_pass_before_code_are_rejected(self):
         trivial = ('import unittest, app\n\nclass T(unittest.TestCase):\n'
-                   '    def test_nothing(self):\n        self.assertTrue(True)\n')
+                   '    def test_nothing_one(self):\n        self.assertTrue(True)\n'
+                   '    def test_nothing_two(self):\n        self.assertTrue(True)\n'
+                   '    def test_nothing_three(self):\n        self.assertTrue(True)\n')
         plan = self.approved_plan()
         report = self.build(plan, test_generator=test_gen(trivial))
         self.assertEqual(report['status'], 'rejected_trivial_tests')
