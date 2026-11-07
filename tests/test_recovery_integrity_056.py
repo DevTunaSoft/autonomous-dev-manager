@@ -50,7 +50,7 @@ class EvidenceRecoveryIntegrityTests(unittest.TestCase):
     def test_valid_crash_journal_recovers_and_clears_evidence(self):
         replacement = 'def value():\n    return 2\n'
         prepare_journal(self.root, self.ev, {'files': [{'path': 'app.py', 'content': replacement}]})
-        self.code.write_text(replacement, encoding='utf-8')
+        self.code.write_bytes(replacement.encode('utf-8'))
         build._recover_interrupted(self.root, self.ev)
         self.assertEqual(self.code.read_bytes(), self.original)
         self.assertFalse(self.ev.exists())
