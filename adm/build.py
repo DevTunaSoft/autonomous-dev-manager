@@ -214,7 +214,10 @@ def ensure_existing_tests_unchanged(before: str, after: str) -> None:
         raise SafetyError('Unable to safely compare existing test definitions') from exc
 
     def fingerprint(node):
-        return ast.dump(node, include_attributes=False)
+        try:
+            return ast.dump(node, include_attributes=False)
+        except (RecursionError, MemoryError) as exc:
+            raise SafetyError('Test structure exceeds safe comparison complexity') from exc
 
     def imports(tree):
         found = set()
