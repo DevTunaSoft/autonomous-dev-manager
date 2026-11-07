@@ -90,7 +90,9 @@ def plan_prompt(request: str, existing: dict | None) -> str:
         base += ("The person already has a project folder. It contains these Python files: "
                  f"{existing['python_files']} and these test files: {existing['test_files']}. "
                  "Plan changes to fit it; do not plan a rewrite.\n")
-    return base + "REQUEST:\n" + request
+    from .skills import select_guidance
+    guidance = select_guidance('planning', request, max_chars=800)
+    return base + 'WORKFLOW GUIDANCE (trusted, applies before the user request):\n' + guidance + '\nREQUEST:\n' + request
 
 
 def _text_list(value, name, required):

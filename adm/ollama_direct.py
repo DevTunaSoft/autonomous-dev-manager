@@ -238,7 +238,7 @@ def _direct_repair_unlocked(root, evidence, *, model='ollama/qwen2.5-coder:3b',
             _emit(on_event, 'inference', index=index, total=max_repairs, escalated=escalated)
             view = excerpt_failure(failure, saved_to=failure_file)
             notes = ledger.notes()
-            fixed = len(requirements[:12000]) + len(view['text']) + len(notes) + 1400
+            fixed = len(requirements[:12000]) + len(view['text']) + len(notes) + 2400
             ctx = select_context(root, failure, budget - fixed)
             prompt = build_repair_prompt(requirements, view['text'], index, ctx['text'], notes)
             if len(prompt) > budget:

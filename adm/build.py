@@ -20,6 +20,7 @@ import ast, json, os, time
 from pathlib import Path
 from . import intake
 from .engine import SafetyError
+from .skills import select_guidance
 
 STUB = '"""ADM will write this file to make the approved tests pass. It starts empty on purpose."""\n'
 CONFLICTS = ('app.py', 'test_app.py', 'requirements.json')
@@ -51,6 +52,7 @@ def test_prompt(plan: dict) -> str:
         "- Choose clear function names in app for the behaviour each check describes; the program itself "
         "will be written afterwards to match these tests.\n"
         "- Do not write app.py here, only the tests.\n\n"
+        f"WORKFLOW GUIDANCE:\n{select_guidance('testing', c['summary'] + ' ' + checks, max_chars=800)}\n"
         f"TITLE: {c['title']}\nWHAT IT SHOULD DO:\n{c['summary']}\n\nCHECKS TO TURN INTO TESTS:\n{checks}\n")
 
 
