@@ -200,6 +200,22 @@ class BuildStageTests(unittest.TestCase):
         self.assertIn('test_total', tests)       # old checks kept
         self.assertIn('grand_total', (folder / 'app.py').read_text())
 
+    def test_amend_refuses_to_change_old_assertions_before_writing(self):
+        folder = self._built_project()
+        prior_tests = (folder / 'test_app.py').read_bytes()
+        prior_requirements = (folder / 'requirements.json').read_bytes()
+        amend_answer = dict(PLAN_ANSWER, tests=['When bill 100 tip 20 split 4, each pays 30'])
+        plan = self._amend_plan(folder, amend_answer)
+        weakened = AMEND_TESTS.replace("self.assertEqual(tip_total(100, 20), 120)",
+                                       "self.assertTrue(True)")
+        with self.assertRaisesRegex(SafetyError, 'previous test'):
+            build.build_from_plan(plan['path'], self.base / 'ev-weakening',
+                                  test_generator=test_gen(weakened),
+                                  code_generator=lambda *a, **k: self.fail('code generator must not run'),
+                                  model='ollama/x', runner=None, require_sandbox=False)
+        self.assertEqual((folder / 'test_app.py').read_bytes(), prior_tests)
+        self.assertEqual((folder / 'requirements.json').read_bytes(), prior_requirements)
+
     def test_amend_refuses_when_the_ai_drops_an_existing_check(self):
         folder = self._built_project()
         dropped = ('import unittest\nfrom app import tip_total\n\nclass T(unittest.TestCase):\n'

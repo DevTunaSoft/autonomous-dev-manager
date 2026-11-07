@@ -173,22 +173,24 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -I tools/fuzz_adversarial30.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I tools/fuzz_adversarial31.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Export complete source snapshot and SHA-256
         if: always()
         shell: pwsh
         run: |
-          git archive --format=zip --output=ADM-054-complete-source.zip HEAD
+          git archive --format=zip --output=ADM-055-complete-source.zip HEAD
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          (Get-FileHash -Path ADM-054-complete-source.zip -Algorithm SHA256).Hash | Set-Content -Path ADM-054-complete-source.sha256
+          (Get-FileHash -Path ADM-055-complete-source.zip -Algorithm SHA256).Hash | Set-Content -Path ADM-055-complete-source.sha256
       - name: Upload cumulative ADM source and master handoff
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ADM-054-complete-source-and-handoff
+          name: ADM-055-complete-source-and-handoff
           path: |
-            ADM-054-complete-source.zip
-            ADM-054-complete-source.sha256
-            HANDOFF-054-MASTER.md
+            ADM-055-complete-source.zip
+            ADM-055-complete-source.sha256
+            HANDOFF-055-MASTER.md
           if-no-files-found: error
           retention-days: 30
       - name: Upload Windows regression evidence
