@@ -232,6 +232,26 @@ def ensure_existing_tests_unchanged(before: str, after: str) -> None:
     if not imports(old_tree) <= imports(new_tree):
         raise SafetyError('The updated tests removed or changed a previous import')
 
+    def imported_bindings(tree):
+        bindings = {}
+        for node in tree.body:
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    name = alias.asname or alias.name.split('.')[0]
+                    bindings.setdefault(name, set()).add(('import', alias.name))
+            elif isinstance(node, ast.ImportFrom):
+                for alias in node.names:
+                    name = alias.asname or alias.name
+                    bindings.setdefault(name, set()).add(
+                        ('from', node.module, node.level, alias.name))
+        return bindings
+
+    # Adding imports is fine, but must not shadow a binding used by an old test.
+    old_bindings = imported_bindings(old_tree)
+    for name, origins in imported_bindings(new_tree).items():
+        if name in old_bindings and not origins <= old_bindings[name]:
+            raise SafetyError('A new import shadows an existing test dependency')
+
     def classes(tree):
         result = {}
         for node in tree.body:
