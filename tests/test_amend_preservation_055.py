@@ -69,6 +69,14 @@ class PreserveExistingTests(unittest.TestCase):
             with self.subTest(sample=revised[:80]), self.assertRaisesRegex(SafetyError, 'import'):
                 ensure_existing_tests_unchanged(OLD, revised)
 
+    def test_new_import_cannot_shadow_existing_test_dependency(self):
+        # A later import with the same binding name would change the meaning
+        # of the unchanged test method without touching the old assertion AST.
+        edited = GOOD.replace("from app import total, extra\n",
+                              "from app import total, extra\nfrom fake import total\n")
+        with self.assertRaisesRegex(SafetyError, 'shadows'):
+            ensure_existing_tests_unchanged(OLD, edited)
+
     def test_existing_helper_code_must_remain(self):
         for revised in (
             GOOD.replace("return v + 1", "return v + 100"),
