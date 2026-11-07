@@ -26,11 +26,14 @@ with tempfile.TemporaryDirectory(prefix='adm-056-fuzz-') as temp:
         ev = parent / f'evidence-{i}'
         ev.mkdir()
 
-        mode = random_source.choice(('bad_json', 'unknown_file', 'unexpected_change',
+        mode = random_source.choice(('bad_json', 'bad_report', 'unknown_file', 'unexpected_change',
                                      'nested_dir', 'orphan', 'bad_journal_root'))
         if mode == 'bad_json':
             saved = bytes(random_source.randrange(256) for _ in range(random_source.randint(1, 180)))
             (ev / 'repair-journal.json').write_bytes(saved)
+        elif mode == 'bad_report':
+            saved = b'not a valid repair report'
+            (ev / 'ollama-direct-report.json').write_bytes(saved)
         elif mode == 'unknown_file':
             saved = b'important data, no marker'
             (ev / 'ollama-direct-report.json').write_bytes(b'{}')
