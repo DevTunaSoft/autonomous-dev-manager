@@ -209,9 +209,11 @@ def check_patch(root: Path, patch: dict, shown_in_full: set[str]) -> None:
 def build_repair_prompt(requirements: str, failure_view: str, attempt: int,
                         source_text: str, notes: str = '') -> str:
     from .agent import make_prompt
+    from .skills import select_guidance
     head = make_prompt(requirements, failure_view, attempt)
+    guidance = select_guidance('repair', requirements, max_chars=850)
     return (head + '\nReturn ONLY JSON of the form '
             '{"files":[{"path":"existing.py","content":"complete replacement Python source"}]}. '
             'No markdown, no test edits, no shell commands. Only files shown in full below may be '
             'changed, and each must be returned complete.\n'
-            + (notes + '\n' if notes else '') + source_text)
+            + guidance + '\n' + (notes + '\n' if notes else '') + source_text)
