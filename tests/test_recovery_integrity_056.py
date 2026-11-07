@@ -107,9 +107,20 @@ class EvidenceRecoveryIntegrityTests(unittest.TestCase):
             build._recover_interrupted(self.root, self.ev)
         self.assertEqual(self.code.read_bytes(), self.original)
 
+    def test_malformed_report_is_preserved_for_diagnosis(self):
+        self.ev.mkdir()
+        report = self.ev / 'ollama-direct-report.json'
+        for bad in (b'{bad report', b'[]', b'{}', b'\xff\xfe'):
+            with self.subTest(bad=bad):
+                report.write_bytes(bad)
+                with self.assertRaises(SafetyError):
+                    build._recover_interrupted(self.root, self.ev)
+                self.assertEqual(report.read_bytes(), bad)
+                self.assertEqual(self.code.read_bytes(), self.original)
+
     def test_cleanup_errors_no_longer_silenced(self):
         self.ev.mkdir()
-        (self.ev / 'ollama-direct-report.json').write_text('{}', encoding='utf-8')
+        (self.ev / 'ollama-direct-report.json').write_text('{"status":"repair_failed"}', encoding='utf-8')
         with patch('shutil.rmtree', side_effect=PermissionError('file is locked')):
             with self.assertRaisesRegex(SafetyError, 'Could not clear'):
                 build._recover_interrupted(self.root, self.ev)
