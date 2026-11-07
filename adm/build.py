@@ -196,6 +196,78 @@ def _test_method_names(content: str) -> set:
     return {n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef) and n.name.startswith('test')}
 
 
+def ensure_existing_tests_unchanged(before: str, after: str) -> None:
+    """Fail closed if an amendment changes *any* existing test fixture or assertion.
+
+    Old test-class definitions are an AST subsequence of the new file: new test
+    methods may be added, but old methods, class bases, fixtures and assignments
+    must remain unchanged. Existing imports and non-class statements are preserved.
+    AST equality ignores harmless whitespace; no generated code is executed here.
+    """
+    if not isinstance(before, str) or not isinstance(after, str):
+        raise SafetyError('Test-preservation inputs must be text')
+    if len(before) > MAX_TEST_CHARS or len(after) > MAX_TEST_CHARS:
+        raise SafetyError('Test file exceeds safe comparison limit')
+    try:
+        old_tree, new_tree = ast.parse(before), ast.parse(after)
+    except (ValueError, SyntaxError, RecursionError, MemoryError) as exc:
+        raise SafetyError('Unable to safely compare existing test definitions') from exc
+
+    def fingerprint(node):
+        return ast.dump(node, include_attributes=False)
+
+    def imports(tree):
+        found = set()
+        for node in tree.body:
+            if isinstance(node, ast.Import):
+                found.update(('import', alias.name, alias.asname) for alias in node.names)
+            elif isinstance(node, ast.ImportFrom):
+                found.update(('from', node.module, node.level, alias.name, alias.asname)
+                             for alias in node.names)
+        return found
+
+    if not imports(old_tree) <= imports(new_tree):
+        raise SafetyError('The updated tests removed or changed a previous import')
+
+    def classes(tree):
+        result = {}
+        for node in tree.body:
+            if isinstance(node, ast.ClassDef):
+                if node.name in result:
+                    raise SafetyError('Duplicate class prevents test preservation audit')
+                result[node.name] = node
+        return result
+
+    prior, current = classes(old_tree), classes(new_tree)
+    for name, old_class in prior.items():
+        new_class = current.get(name)
+        if new_class is None:
+            raise SafetyError('An existing test class was removed or renamed')
+        if ([fingerprint(n) for n in old_class.bases] !=
+                [fingerprint(n) for n in new_class.bases] or
+                [fingerprint(n) for n in old_class.decorator_list] !=
+                [fingerprint(n) for n in new_class.decorator_list] or
+                [fingerprint(k) for k in old_class.keywords] !=
+                [fingerprint(k) for k in new_class.keywords]):
+            raise SafetyError('An existing test class changed its inheritance or decorators')
+        # Existing body must be an ordered subsequence: a model can ADD methods,
+        # but cannot rewrite any prior method, fixture, or class-level constant.
+        original = [fingerprint(n) for n in old_class.body]
+        cursor = iter(fingerprint(n) for n in new_class.body)
+        for needed in original:
+            if not any(item == needed for item in cursor):
+                raise SafetyError('A previous test, assertion or fixture was changed')
+
+    def outer(tree):
+        return [fingerprint(node) for node in tree.body
+                if not isinstance(node, (ast.ClassDef, ast.Import, ast.ImportFrom))]
+    original = outer(old_tree)
+    cursor = iter(outer(new_tree))
+    for needed in original:
+        if not any(item == needed for item in cursor):
+            raise SafetyError('An existing test helper or module statement was changed')
+
+
 def amend_test_prompt(plan: dict, old_tests: str) -> str:
     c = plan['content']
     checks = '\n'.join(f'{i}. {t}' for i, t in enumerate(c['tests'], 1))
@@ -304,6 +376,7 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
                                           previous_names=old_names)
             if not old_names <= _test_method_names(test_content):
                 raise SafetyError('The updated tests dropped or renamed existing checks; refusing to weaken your project.')
+            ensure_existing_tests_unchanged(old_tests, test_content)
             report['stage'] = 'amending'
             amend_project(root, plan, test_content)
             amend = True
