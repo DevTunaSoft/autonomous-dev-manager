@@ -72,6 +72,25 @@ class AcceptanceCoverageTests(unittest.TestCase):
         with self.assertRaisesRegex(SafetyError, 'skip approved'):
             build.validate_tests(reply(raw), required_checks=1)
 
+    def test_decorators_cannot_hide_or_transform_approved_methods(self):
+        for decorator in ("@unittest.expectedFailure", "@staticmethod",
+                          "@classmethod", "@property"):
+            raw = ("import unittest, app\nclass Checks(unittest.TestCase):\n"
+                   f"    {decorator}\n"
+                   "    def test_hidden(self):\n"
+                   "        self.assertTrue(app.ok())\n")
+            with self.subTest(decorator=decorator), self.assertRaisesRegex(
+                    SafetyError, 'Decorated test methods'):
+                build.validate_tests(reply(raw), required_checks=1)
+
+    def test_decorated_class_is_refused(self):
+        raw = ("import unittest, app\n"
+               "@unittest.skip('all tests skipped')\n"
+               "class Checks(unittest.TestCase):\n"
+               "    def test_hidden(self):\n        self.assertTrue(app.ok())\n")
+        with self.assertRaisesRegex(SafetyError, 'skip a test class'):
+            build.validate_tests(reply(raw), required_checks=1)
+
     def test_nonasserting_methods_are_not_accepted(self):
         raw = (
             "import unittest, app\n"
