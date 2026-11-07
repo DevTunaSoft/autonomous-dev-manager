@@ -47,7 +47,7 @@ def test_prompt(plan: dict) -> str:
         "- Put every test in one file named test_app.py.\n"
         "- The program under test is a module named app (import it with 'from app import ...' or 'import app').\n"
         "- Use only Python's standard library and the built-in unittest framework.\n"
-        "- Write one test method per check, each with a real assertion (self.assertEqual and friends). "
+        "- Write one discoverable method per check inside a unittest.TestCase class, each with a real assertion (self.assertEqual and friends). "
         "Never write a test that is always true, and never weaken a check.\n"
         "- Choose clear function names in app for the behaviour each check describes; the program itself "
         "will be written afterwards to match these tests.\n"
@@ -56,7 +56,70 @@ def test_prompt(plan: dict) -> str:
         f"TITLE: {c['title']}\nWHAT IT SHOULD DO:\n{c['summary']}\n\nCHECKS TO TURN INTO TESTS:\n{checks}\n")
 
 
-def validate_tests(answer) -> str:
+def _discoverable_tests(tree: ast.AST) -> list[str]:
+    """Count only non-skipped unittest.TestCase methods that the runner will find.
+
+    This is a static safety check, not an execution or semantic coverage proof.
+    Refuse duplicate definitions: Python would silently replace an earlier method.
+    """
+    module_aliases = set()
+    testcase_aliases = set()
+    for node in tree.body:
+        if isinstance(node, ast.Import):
+            module_aliases.update(alias.asname or 'unittest' for alias in node.names
+                                  if alias.name == 'unittest')
+        elif isinstance(node, ast.ImportFrom) and node.module == 'unittest':
+            testcase_aliases.update(alias.asname or alias.name for alias in node.names
+                                    if alias.name in {'TestCase', 'IsolatedAsyncioTestCase'})
+
+    def skip_decorator(decorator):
+        target = decorator.func if isinstance(decorator, ast.Call) else decorator
+        name = target.id if isinstance(target, ast.Name) else (
+            target.attr if isinstance(target, ast.Attribute) else '')
+        return name in {'skip', 'skipIf', 'skipUnless'}
+
+    found = []
+    class_names = set()
+    for node in tree.body:
+        if not isinstance(node, ast.ClassDef):
+            continue
+        is_case = any(
+            (isinstance(base, ast.Name) and base.id in testcase_aliases) or
+            (isinstance(base, ast.Attribute) and isinstance(base.value, ast.Name) and
+             base.value.id in module_aliases and base.attr in {'TestCase', 'IsolatedAsyncioTestCase'})
+            for base in node.bases)
+        if not is_case:
+            continue
+        if node.name in class_names:
+            raise SafetyError('Generated tests define the same test class twice')
+        class_names.add(node.name)
+        if any(skip_decorator(dec) for dec in node.decorator_list):
+            raise SafetyError('Generated tests must not skip a test class')
+        if node.decorator_list:
+            raise SafetyError('Decorated test classes cannot be verified as discoverable')
+        names = set()
+        for method in node.body:
+            if not isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)) or not method.name.startswith('test'):
+                continue
+            if method.name in names:
+                raise SafetyError('Generated tests redefine a test method')
+            names.add(method.name)
+            if any(skip_decorator(dec) for dec in method.decorator_list):
+                raise SafetyError('Generated tests must not skip approved checks')
+            if method.decorator_list:
+                raise SafetyError('Decorated test methods cannot be verified as discoverable')
+            has_assertion = any(
+                isinstance(part, ast.Assert) or
+                (isinstance(part, ast.Call) and isinstance(part.func, ast.Attribute)
+                 and part.func.attr.startswith('assert'))
+                for part in ast.walk(method))
+            if not has_assertion:
+                raise SafetyError('Every generated test method must contain an assertion')
+            found.append(method.name)
+    return found
+
+
+def validate_tests(answer, *, required_checks: int = 0, previous_names=None) -> str:
     """Accept a model answer only if it is one real, non-trivial test file that targets `app`."""
     if not isinstance(answer, dict) or set(answer) != {'files'} or not isinstance(answer['files'], list):
         raise SafetyError('The AI did not return tests in the expected form')
@@ -91,6 +154,19 @@ def validate_tests(answer) -> str:
                   for n in ast.walk(tree))
     if asserts < 1:
         raise SafetyError('The tests contain no assertions, so they check nothing')
+    if type(required_checks) is not int or not 0 <= required_checks <= 20:
+        raise SafetyError('Invalid number of approved checks')
+    if required_checks:
+        discovered = _discoverable_tests(tree)
+        if previous_names is not None:
+            if not isinstance(previous_names, (set, frozenset)) or not all(
+                    isinstance(name, str) for name in previous_names):
+                raise SafetyError('Invalid prior test inventory')
+            newly_named = set(discovered) - previous_names
+            if len(newly_named) < required_checks:
+                raise SafetyError('Generated tests omitted new approved checks; not building incomplete software')
+        elif len(discovered) < required_checks:
+            raise SafetyError('Generated tests cover fewer methods than approved checks; refusing incomplete build')
     return content
 
 
@@ -130,7 +206,7 @@ def amend_test_prompt(plan: dict, old_tests: str) -> str:
         "- Return the COMPLETE new test_app.py.\n"
         "- KEEP every existing test method exactly as it is — same names, same assertions. Do not rename, "
         "remove, weaken or skip any of them.\n"
-        "- ADD one new test method per new check below, each with a real assertion.\n"
+        "- ADD one new uniquely named, discoverable unittest.TestCase method per new check below, each with a real assertion. Do not skip checks.\n"
         "- The program is the module app (import with 'from app import ...' or 'import app'). Standard library only.\n\n"
         f"EXISTING test_app.py (keep all of these tests):\n{old_tests[:20000]}\n\n"
         f"NEW CHECKS TO ADD:\n{checks}\n")
@@ -213,7 +289,7 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
                 _reset_scaffold(root)
             _say(on_event, 'writing_tests')
             answer = test_generator(model, test_prompt(plan), timeout=inference_timeout)
-            test_content = validate_tests(answer)
+            test_content = validate_tests(answer, required_checks=len(plan['content']['tests']))
             report['stage'] = 'scaffolding'
             _say(on_event, 'scaffolding')
             scaffold(root, plan, test_content)
@@ -224,7 +300,8 @@ def build_from_plan(plan_path, evidence, *, test_generator, code_generator, mode
             old_tests = (root / 'test_app.py').read_text(encoding='utf-8')
             old_names = _test_method_names(old_tests)
             answer = test_generator(model, amend_test_prompt(plan, old_tests), timeout=inference_timeout)
-            test_content = validate_tests(answer)
+            test_content = validate_tests(answer, required_checks=len(plan['content']['tests']),
+                                          previous_names=old_names)
             if not old_names <= _test_method_names(test_content):
                 raise SafetyError('The updated tests dropped or renamed existing checks; refusing to weaken your project.')
             report['stage'] = 'amending'
