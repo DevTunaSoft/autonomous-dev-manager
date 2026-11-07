@@ -55,6 +55,20 @@ class EvidenceRecoveryIntegrityTests(unittest.TestCase):
         self.assertEqual(self.code.read_bytes(), self.original)
         self.assertFalse(self.ev.exists())
 
+    def test_real_atomic_patch_writer_matches_journal_on_windows(self):
+        # Production apply_patch explicitly uses newline='', unlike
+        # Path.write_text's default translation on Windows. Verify the
+        # journal hash against bytes written by the REAL replacement routine.
+        from adm.ollama_direct import apply_patch
+        replacement = 'def value():\n    return 2\n'
+        patch_data = {'files': [{'path': 'app.py', 'content': replacement}]}
+        prepare_journal(self.root, self.ev, patch_data)
+        self.assertEqual(apply_patch(self.root, patch_data), ['app.py'])
+        self.assertEqual(self.code.read_bytes(), replacement.encode('utf-8'))
+        build._recover_interrupted(self.root, self.ev)
+        self.assertEqual(self.code.read_bytes(), self.original)
+        self.assertFalse(self.ev.exists())
+
     def test_root_and_ancestor_evidence_paths_blocked_before_deletion(self):
         for path in (self.root, self.root / 'internal', self.base):
             with self.subTest(path=str(path)), self.assertRaisesRegex(SafetyError, 'overlaps'):
