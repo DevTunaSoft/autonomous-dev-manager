@@ -489,6 +489,17 @@ def _recover_interrupted(root: Path, ev: Path) -> None:
     if contents and not ({p.name for p in contents} & {'repair-journal.json', 'ollama-direct-report.json'}):
         raise SafetyError('Recovery evidence lacks an ADM journal/report; refusing deletion')
 
+    report_path = ev / 'ollama-direct-report.json'
+    if report_path.exists():
+        try:
+            if report_path.stat().st_size > 2 * 1024 * 1024:
+                raise SafetyError('Existing repair report is too large; preserving evidence')
+            prior = json.loads(report_path.read_text(encoding='utf-8'))
+            if not isinstance(prior, dict) or not isinstance(prior.get('status'), str):
+                raise SafetyError('Malformed repair report; preserving evidence')
+        except (OSError, ValueError, RecursionError) as exc:
+            raise SafetyError('Unreadable repair report; preserving evidence') from exc
+
     journal = ev / 'repair-journal.json'
     if journal.exists():
         from .repair_recovery import recover_journal
