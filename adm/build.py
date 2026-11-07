@@ -95,6 +95,8 @@ def _discoverable_tests(tree: ast.AST) -> list[str]:
         class_names.add(node.name)
         if any(skip_decorator(dec) for dec in node.decorator_list):
             raise SafetyError('Generated tests must not skip a test class')
+        if node.decorator_list:
+            raise SafetyError('Decorated test classes cannot be verified as discoverable')
         names = set()
         for method in node.body:
             if not isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)) or not method.name.startswith('test'):
@@ -104,6 +106,8 @@ def _discoverable_tests(tree: ast.AST) -> list[str]:
             names.add(method.name)
             if any(skip_decorator(dec) for dec in method.decorator_list):
                 raise SafetyError('Generated tests must not skip approved checks')
+            if method.decorator_list:
+                raise SafetyError('Decorated test methods cannot be verified as discoverable')
             has_assertion = any(
                 isinstance(part, ast.Assert) or
                 (isinstance(part, ast.Call) and isinstance(part.func, ast.Attribute)
