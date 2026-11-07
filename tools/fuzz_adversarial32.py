@@ -4,6 +4,7 @@ from __future__ import annotations
 import random
 import tempfile
 import sys
+import json
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -54,8 +55,9 @@ with tempfile.TemporaryDirectory(prefix='adm-056-fuzz-') as temp:
             prepare_journal(root, ev, {'files': [{'path': 'app.py',
                                                   'content': 'def calculate():\n    return 4\n'}]})
             journal = ev / 'repair-journal.json'
-            body = journal.read_text(encoding='utf-8').replace(str(root), str(parent / 'foreign'), 1)
-            journal.write_text(body, encoding='utf-8')
+            body = json.loads(journal.read_text(encoding='utf-8'))
+            body['root'] = str(parent / 'foreign')
+            journal.write_text(json.dumps(body), encoding='utf-8', newline='')
             saved = journal.read_bytes()
         source_before = source.read_bytes()
         try:
